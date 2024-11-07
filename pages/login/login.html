@@ -85,7 +85,7 @@
             event.preventDefault();
             var formData = new FormData(this);
 
-            fetch("../backend/controller/loginController.php", {
+            fetch("../backend/controller/login/loginController.php", {
                 method: "POST",
                 body: formData
             })
