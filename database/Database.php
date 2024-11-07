@@ -2,9 +2,9 @@
 
 class Database {
     private $host = 'localhost';
-    private $db = 'wolchuk';
-    private $user = 'root'; // Cambia con tu usuario de base de datos
-    private $pass = ''; // Cambia con tu contraseña de base de datos
+    private $db = 'wolchukprueba';
+    private $user = 'root';
+    private $pass = '';
     private $charset = 'utf8mb4';
     private $pdo;
     private $error;
@@ -19,7 +19,7 @@ class Database {
 
         try {
             $this->pdo = new PDO($dsn, $this->user, $this->pass, $options);
-            echo "Conexión exitosa a la base de datos.";
+            // echo "Conexión exitosa a la base de datos."; // Remueve esta línea
         } catch (PDOException $e) {
             $this->error = $e->getMessage();
             echo "Error en la conexión: " . $this->error;

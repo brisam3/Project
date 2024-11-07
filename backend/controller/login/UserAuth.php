@@ -1,5 +1,5 @@
 <?php
-include_once '../../database/Database.php';
+include_once '../../../database/Database.php';
 
 class UserAuth {
     private $db;
@@ -9,20 +9,22 @@ class UserAuth {
         $this->db = $database->getConnection();
     }
 
-    public function login($correoElectronico, $contrasena) {
-        // Verificar si el correo existe
-        $sql = "SELECT * FROM usuarios WHERE correo = :correo";
+    public function login($usuario, $contrasena) {
+        // Verificar si el usuario existe
+        $sql = "SELECT * FROM usuarios WHERE usuario = :usuario";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['correo' => $correoElectronico]);
-        $user = $stmt->fetch();
-
-        if (!$user) {
-            echo "¡Error! El correo no existe";
+        $stmt->execute(['usuario' => $usuario]);
+        $userRecord = $stmt->fetch();
+    
+        // Imprime si encontró el usuario
+        if (!$userRecord) {
+            echo "¡Error! El usuario no existe";
             return false;
         }
-
+    
         // Verificar si la contraseña es correcta
-        if ($user['contrasena'] === $contrasena) {
+        echo "Contraseña en base de datos: " . $userRecord['contrasena']; // Verifica la contraseña en la base de datos
+        if ($userRecord['contrasena'] === $contrasena) {
             return true;
         } else {
             echo "¡Error! La contraseña es incorrecta";
@@ -30,3 +32,4 @@ class UserAuth {
         }
     }
 }
+?>

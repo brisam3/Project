@@ -1,62 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../../assets/" data-template="horizontal-menu-template-no-customizer">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>Login | Software Para Negocios</title>
-
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/Diseño sin título (31).ico" />
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
-    <!-- Icons -->
     <link rel="stylesheet" href="../../assets/vendor/fonts/boxicons.css" />
-
-    <!-- Core CSS -->
     <link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" />
     <link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css" />
     <link rel="stylesheet" href="../../assets/css/demo.css" />
-
-    <!-- Vendor CSS -->
     <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-
-    <!-- Helpers -->
     <script src="../../assets/vendor/js/helpers.js"></script>
     <script src="../../assets/js/config.js"></script>
 </head>
 
 <body>
-    <!-- Layout wrapper -->
     <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu ">
         <div class="layout-container">
             <div class="card mx-auto" style="margin-top: 100px !important;">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-center">
-                        <!-- Formulario de inicio de sesión -->
-                        <form class="w-px-400 border rounded p-3 p-md-5" id="Form-login" method="POST" action="../backend/controller/loginController.php">
+                        <form class="w-px-400 border rounded p-3 p-md-5" id="Form-login" method="POST">
                             <h4 class="mb-1">Bienvenido/a! 👋</h4>
                             <p class="mb-4">Por favor ingresa tu usuario y contraseña para comenzar</p>
 
-                            <!-- Campo de Correo Electrónico -->
                             <div class="mb-3">
-                                <label class="form-label" for="form-alignment-username">Correo</label>
-                                <input name="correoElectronico" type="text" id="form-alignment-username" class="form-control" placeholder="Ej: usuario@dominio.com" />
+                                <label class="form-label" for="form-alignment-username">Usuario</label>
+                                <input name="usuario" type="text" id="form-alignment-username" class="form-control" placeholder="Ej: nombre_usuario" />
                             </div>
 
-                            <!-- Campo de Contraseña -->
                             <div class="mb-3 form-password-toggle">
-                                <label class="form-label" for="password">Contraseña</label>
+                                <label class="form-label" for="contrasena">Contraseña</label>
                                 <div class="input-group input-group-merge">
                                     <input type="password" id="contrasena" class="form-control" name="contrasena" placeholder="············" aria-describedby="password">
                                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                 </div>
                             </div>
 
-                            <!-- Botón de Iniciar Sesión -->
                             <div class="d-grid gap-1">
                                 <button id="btn-Login" type="submit" class="btn btn-primary">Iniciar Sesión</button>
                             </div>
@@ -66,7 +46,6 @@
                 </div>
             </div>
         </div>
-        <!--/ Layout container -->
     </div>
 
     <!-- Core JS -->
@@ -75,29 +54,33 @@
     <script src="../../assets/vendor/js/bootstrap.js"></script>
     <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="../../assets/vendor/js/menu.js"></script>
-
-    <!-- SweetAlert2 para mostrar mensajes -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Script para manejar el envío del formulario -->
     <script>
         document.getElementById("Form-login").addEventListener("submit", function(event) {
-            event.preventDefault();
-            var formData = new FormData(this);
+            event.preventDefault(); // Previene que se recargue la página al enviar el formulario
+            
+            var formData = new FormData(this); // Obtiene los datos del formulario
 
-            fetch("../backend/controller/login/loginController.php", {
-                method: "POST",
-                body: formData
+            // Realiza la solicitud fetch al backend
+            fetch("../../backend/controller/login/loginController.php", {
+                method: "POST", // Utiliza el método POST
+                body: formData // Envía los datos del formulario al servidor
             })
-            .then(response => response.text())
+            .then(response => response.text()) // Lee la respuesta del servidor como texto
             .then(data => {
-                if (data === "success") {
-                    window.location.href = "dashboard.php"; // Redirige al dashboard o página principal
+                if (data=>status === "success") { 
+                    // Si la respuesta es "success", el login es exitoso
+                   console.log("bienvenido") // Redirige al dashboard o página principal
                 } else {
-                    Swal.fire("Error", "Correo o contraseña incorrectos", "error");
+                    Swal.fire("Error", "¡Error! El usuario o la contraseña son incorrectos.", "error");
+                    console.log(data) // Muestra un mensaje de error
                 }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
+            });
         });
     </script>
 </body>

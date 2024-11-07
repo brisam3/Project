@@ -93,7 +93,7 @@ CREATE TABLE `usuarios` (
   `idUsuario` int(100) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
-  `nombreUsuario` varchar(50) NOT NULL,
+  `usuario` varchar(50) NOT NULL,
   `correo` varchar(50) NOT NULL,
   `contrasena` varchar(15) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`idUsuario`, `nombre`, `apellido`, `nombreUsuario`, `correo`, `contrasena`, `descripcion`, `idTipoUsuario`) VALUES
+INSERT INTO `usuarios` (`idUsuario`, `nombre`, `apellido`, `usuario`, `correo`, `contrasena`, `descripcion`, `idTipoUsuario`) VALUES
 (1, 'lucas', 'casadei', 'lucaa', 'lucas@gmail.com', 'lucas', 'lukaaaaaaaaaaa', 1),
 (2, '', '', '', 'brisa@gmail.com', 'brisa', '', 1);
 
