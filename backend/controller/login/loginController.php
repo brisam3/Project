@@ -9,10 +9,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = $_POST['usuario'];
     $contrasena = $_POST['contrasena'];
 
-    // Imprime los valores para verificar si los datos son correctos
-    // Esto puede ser útil solo para depuración, recuerda eliminarlo en producción.
+    // Registro de logs para depuración (eliminar en producción)
     error_log("Usuario recibido: $usuario");
-    error_log("Contraseña recibida: $contrasena");
+    error_log("Contraseña recibida (sin imprimir por seguridad)");
 
     $auth = new UserAuth();
     $isAuthenticated = $auth->login($usuario, $contrasena);
@@ -25,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo json_encode([
             "status" => "success",
             "message" => "Inicio de sesión exitoso",
-            "usuario" => $usuario  // Incluye el nombre de usuario en la respuesta, si es necesario
+            "usuario" => $usuario
         ]);
     } else {
         // Respuesta JSON de error
