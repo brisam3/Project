@@ -1,37 +1,49 @@
 <?php
+// loginController.php - Controlador para manejar el inicio de sesión
 session_start();
-include_once '../UserAuth.php';
+include_once 'UserAuth.php';
 
-// Asegúrate de que la respuesta será en formato JSON
+// Asegúrate de que la respuesta sea en formato JSON
 header('Content-Type: application/json');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $usuario = $_POST['usuario'];
-    $contrasena = $_POST['contrasena'];
+try {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $usuario = $_POST['usuario'] ?? null;
+        $contrasena = $_POST['contrasena'] ?? null;
 
-    // Registro de logs para depuración (eliminar en producción)
-    error_log("Usuario recibido: $usuario");
-    error_log("Contraseña recibida (sin imprimir por seguridad)");
+        // Validar datos recibidos
+        if (empty($usuario) || empty($contrasena)) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "Todos los campos son obligatorios."
+            ]);
+            exit;
+        }
 
-    $auth = new UserAuth();
-    $isAuthenticated = $auth->login($usuario, $contrasena);
+        $auth = new UserAuth();
 
-    // Respuesta según el resultado de la autenticación
-    if ($isAuthenticated) {
-        $_SESSION['usuario'] = $usuario;
-
-        // Respuesta JSON de éxito
-        echo json_encode([
-            "status" => "success",
-            "message" => "Inicio de sesión exitoso",
-            "usuario" => $usuario
-        ]);
+        // Intentar iniciar sesión
+        if ($auth->login($usuario, $contrasena)) {
+            // Guardar información del usuario en la sesión
+            $_SESSION['usuario'] = $usuario;
+            echo json_encode([
+                "status" => "success",
+                "message" => "Inicio de sesión exitoso"
+            ]);
+        } else {
+            echo json_encode([
+                "status" => "error",
+                "message" => "Usuario o contraseña incorrectos."
+            ]);
+        }
     } else {
-        // Respuesta JSON de error
-        echo json_encode([
-            "status" => "error",
-            "message" => "¡Error! El usuario o la contraseña son incorrectos."
-        ]);
+        throw new Exception("Método de solicitud no válido.");
     }
+} catch (Exception $e) {
+    // Enviar una respuesta JSON con el error
+    echo json_encode([
+        "status" => "error",
+        "message" => "Error del servidor: " . $e->getMessage()
+    ]);
 }
 ?>

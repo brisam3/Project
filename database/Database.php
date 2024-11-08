@@ -19,7 +19,6 @@ class Database {
 
         try {
             $this->pdo = new PDO($dsn, $this->user, $this->pass, $options);
-            echo "Conexión exitosa a la base de datos."; // Remueve esta línea
         } catch (PDOException $e) {
             $this->error = $e->getMessage();
             echo "Error en la conexión: " . $this->error;

@@ -1,4 +1,5 @@
 <?php
+// UserAuth.php - Actualizando para agregar la funcionalidad de login
 include_once '../../../database/Database.php';
 
 class UserAuth {
@@ -9,36 +10,41 @@ class UserAuth {
         $this->db = $database->getConnection();
     }
 
-    public function login($usuario, $contrasena) {
-        // Buscar el usuario en la base de datos
-        $sql = "SELECT * FROM usuarios WHERE usuario = :usuario";
+    public function userExists($usuario) {
+        $sql = "SELECT COUNT(*) FROM usuarios WHERE usuario = :usuario";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['usuario' => $usuario]);
-        $userRecord = $stmt->fetch();
-
-        // Si el usuario no existe, devuelve false
-        if (!$userRecord) {
-            error_log("¡Error! El usuario no existe");
-            return false;
-        }
-
-        // Verificar la contraseña utilizando password_verify
-        if (password_verify($contrasena, $userRecord['contrasena'])) {
-            return true;
-        } else {
-            error_log("¡Error! La contraseña es incorrecta");
-            return false;
-        }
+        return $stmt->fetchColumn() > 0;
     }
 
-    // Método para registrar un usuario con una contraseña hasheada
-    public function register($usuario, $contrasena) {
+    public function register($usuario, $contrasena, $idTipoUsuario) {
+        // Hashear la contraseña antes de almacenarla
         $hashedPassword = password_hash($contrasena, PASSWORD_DEFAULT);
-        
-        $sql = "INSERT INTO usuarios (usuario, contrasena) VALUES (:usuario, :contrasena)";
+
+        // Preparar la consulta SQL para insertar el usuario
+        $sql = "INSERT INTO usuarios (usuario, contrasena, idTipoUsuario) VALUES (:usuario, :contrasena, :idTipoUsuario)";
         $stmt = $this->db->prepare($sql);
-        
-        return $stmt->execute(['usuario' => $usuario, 'contrasena' => $hashedPassword]);
+
+        // Ejecutar la consulta con los parámetros
+        return $stmt->execute([
+            'usuario' => $usuario,
+            'contrasena' => $hashedPassword,
+            'idTipoUsuario' => $idTipoUsuario
+        ]);
+    }
+
+    public function login($usuario, $contrasena) {
+        // Preparar la consulta para obtener la contraseña del usuario
+        $sql = "SELECT contrasena FROM usuarios WHERE usuario = :usuario";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['usuario' => $usuario]);
+        $hashedPassword = $stmt->fetchColumn();
+
+        // Verificar si la contraseña ingresada coincide con la almacenada
+        if ($hashedPassword && password_verify($contrasena, $hashedPassword)) {
+            return true;
+        }
+        return false;
     }
 }
 ?>

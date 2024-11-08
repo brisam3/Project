@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>Login | Software Para Negocios</title>
     <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/Diseño sin título (31).ico" />
     <link rel="stylesheet" href="../../assets/vendor/fonts/boxicons.css" />
@@ -15,24 +17,26 @@
 </head>
 
 <body>
-    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu ">
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
         <div class="layout-container">
             <div class="card mx-auto" style="margin-top: 100px !important;">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-center">
-                        <form class="w-px-400 border rounded p-3 p-md-5" id="Form-login" method="POST">
-                            <h4 class="mb-1">Bienvenido/a! 👋</h4>
-                            <p class="mb-4">Por favor ingresa tu usuario y contraseña para comenzar</p>
+                        <form class="w-px-400 border rounded p-3 p-md-5" id="Form-login" enctype="multipart/form-data">
+                            <h4 class="mb-1">Inicio de Sesión</h4>
+                            <p class="mb-4">Por favor ingresa tus credenciales para iniciar sesión</p>
 
                             <div class="mb-3">
-                                <label class="form-label" for="form-alignment-username" required="true">Usuario</label>
-                                <input name="usuario" type="text" id="form-alignment-username" class="form-control" placeholder="Ej: nombre_usuario" />
+                                <label class="form-label" for="usuario">Usuario</label>
+                                <input name="usuario" type="text" id="usuario" class="form-control"
+                                    placeholder="Ej: nombre_usuario" required />
                             </div>
 
                             <div class="mb-3 form-password-toggle">
                                 <label class="form-label" for="contrasena">Contraseña</label>
                                 <div class="input-group input-group-merge">
-                                    <input type="password" id="contrasena" class="form-control" name="contrasena" placeholder="············" aria-describedby="password">
+                                    <input type="password" id="contrasena" name="contrasena" class="form-control"
+                                        placeholder="··········" required />
                                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                 </div>
                             </div>
@@ -40,7 +44,6 @@
                             <div class="d-grid gap-1">
                                 <button id="btn-Login" type="submit" class="btn btn-primary">Iniciar Sesión</button>
                             </div>
-                            <br>
                         </form>
                     </div>
                 </div>
@@ -48,40 +51,41 @@
         </div>
     </div>
 
-    <!-- Core JS -->
+    <!-- Scripts JS -->
     <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="../../assets/vendor/libs/popper/popper.js"></script>
     <script src="../../assets/vendor/js/bootstrap.js"></script>
-    <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script src="../../assets/vendor/js/menu.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Script para manejar el envío del formulario -->
+    <!-- Script para manejar el envío del formulario de login -->
     <script>
-        document.getElementById("Form-login").addEventListener("submit", function(event) {
-            event.preventDefault(); // Previene que se recargue la página al enviar el formulario
-            
-            var formData = new FormData(this); // Obtiene los datos del formulario
+        document.getElementById("Form-login").addEventListener("submit", function (event) {
+            event.preventDefault(); // Previene el envío estándar del formulario
 
-            // Realiza la solicitud fetch al backend
+            var formData = new FormData(this); // Crea el objeto FormData con los datos del formulario
+
             fetch("../../backend/controller/login/loginController.php", {
-                method: "POST", // Utiliza el método POST
-                body: formData // Envía los datos del formulario al servidor
+                method: "POST",
+                body: formData
             })
-            .then(response => response.text()) // Lee la respuesta del servidor como texto
-            .then(data => {
-                if (data=>status === "success") { 
-                    // Si la respuesta es "success", el login es exitoso
-                   console.log(formData) // Redirige al dashboard o página principal
-                } else {
-                    Swal.fire("Error", "¡Error! El usuario o la contraseña son incorrectos.", "error");
-                    console.log(data) // Muestra un mensaje de error
-                }
-            })
-            .catch(error => {
-                console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
-            });
+                .then(response => response.text()) // Convierte la respuesta a JSON
+                .then(data => {
+                    console.log("Respuesta del servidor:", data);
+
+                    if (data.includes("success")) {
+                        // Registro exitoso, redirigir al usuario a otra página
+                        console.log("bienvenido")
+                    } else {
+                        // Mostrar un modal de error si hubo un problema
+                        Swal.fire("Error", "Hubo un problema al registrar el usuario.", "error");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
+                    Swal.fire("Error", "No se pudo completar el inicio de sesión. Inténtalo de nuevo.", "error");
+                });
         });
     </script>
 </body>
+
+
 </html>
