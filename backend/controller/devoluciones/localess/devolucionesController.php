@@ -69,7 +69,6 @@ class DevolucionesController {
         }
     
         return true; // Indicar que la operación fue exitosa
-    }
     
 
 
