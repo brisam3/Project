@@ -1,49 +1,26 @@
 <?php
-// loginController.php - Controlador para manejar el inicio de sesión
-session_start();
-include_once 'UserAuth.php';
+// Archivo: backend/controller/auth/loginController.php
+include '../../controller/login/UserAuth.php';
 
-// Asegúrate de que la respuesta sea en formato JSON
-header('Content-Type: application/json');
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $usuario = $_POST['usuario'];
+    $contrasena = $_POST['contrasena'];
 
-try {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $usuario = $_POST['usuario'] ?? null;
-        $contrasena = $_POST['contrasena'] ?? null;
-
-        // Validar datos recibidos
-        if (empty($usuario) || empty($contrasena)) {
-            echo json_encode([
-                "status" => "error",
-                "message" => "Todos los campos son obligatorios."
-            ]);
-            exit;
-        }
-
-        $auth = new UserAuth();
-
-        // Intentar iniciar sesión
-        if ($auth->login($usuario, $contrasena)) {
-            // Guardar información del usuario en la sesión
-            $_SESSION['usuario'] = $usuario;
-            echo json_encode([
-                "status" => "success",
-                "message" => "Inicio de sesión exitoso"
-            ]);
-        } else {
-            echo json_encode([
-                "status" => "error",
-                "message" => "Usuario o contraseña incorrectos."
-            ]);
-        }
-    } else {
-        throw new Exception("Método de solicitud no válido.");
+    // Verificar si se recibieron todos los datos necesarios
+    if (empty($usuario) || empty($contrasena)) {
+        echo json_encode(['error' => 'Por favor, ingrese el usuario y la contraseña']);
+        exit;
     }
-} catch (Exception $e) {
-    // Enviar una respuesta JSON con el error
-    echo json_encode([
-        "status" => "error",
-        "message" => "Error del servidor: " . $e->getMessage()
-    ]);
+
+    $userAuth = new UserAuth();
+    $resultado = $userAuth->login($usuario, $contrasena);
+
+    if ($resultado) {
+        session_start();
+        $_SESSION['usuario'] = $usuario;
+        echo json_encode(['success' => true, 'message' => 'Login exitoso']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Usuario o contraseña incorrectos']);
+    }
 }
 ?>
