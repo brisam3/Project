@@ -23,9 +23,12 @@ try {
         $auth = new UserAuth();
 
         // Intentar iniciar sesión
-        if ($auth->login($usuario, $contrasena)) {
-            // Guardar información del usuario en la sesión
+        $idTipoUsuario = $auth->login($usuario, $contrasena);  // Ahora obtenemos el idTipoUsuario
+        if ($idTipoUsuario) {
+            // Si el login fue exitoso, guardamos el usuario y el idTipoUsuario en la sesión
             $_SESSION['usuario'] = $usuario;
+            $_SESSION['idTipoUsuario'] = $idTipoUsuario;  // Guardamos el idTipoUsuario en la sesión
+            
             echo json_encode([
                 "status" => "success",
                 "message" => "Inicio de sesión exitoso"

@@ -1,5 +1,8 @@
 <?php
 // backend/controllers/devoluciones/locales/devolucionesController.php
+session_start();
+
+
 
 require_once '../../../../database/Database.php';
 
@@ -31,21 +34,42 @@ class DevolucionesController {
     }
 
 
-    public function registrarDevoluciones($articulos)
-    {
-        $query = "INSERT INTO devoluciones (codBarras, partida, cantidad, fecha, hora) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $this->db->prepare($query);
-        foreach ($articulos as $articulo) {
-            $stmt->execute([
-                $articulo['codBarras'],
-                $articulo['partida'],
-                $articulo['cantidad'],
-                date('Y-m-d'),
-                date('H:i:s'),
-            ]);
-        }
-        return true;
+   public function registrarDevoluciones($articulos)
+{
+    // Asegúrate de que el idUsuario y el idTipoUsuario estén disponibles en la sesión
+    $idUsuario = $_SESSION['idUsuario'] ?? null;  // Se obtiene de la sesión, si existe
+    $idTipoUsuario = $_SESSION['idTipoUsuario'] ?? null;  // Se obtiene de la sesión, si existe
+
+    // Verificar si ambos valores están presentes
+    if ($idUsuario === null || $idTipoUsuario === null) {
+        throw new Exception("No se encontró el tipo de usuario o el idUsuario en la sesión.");
     }
+
+    // Consulta SQL para insertar en la tabla 'devoluciones'
+    $query = "INSERT INTO devoluciones (codBarras, partida, cantidad, fecha, hora, idTipoDevolucion, idUsuario) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    // Preparamos la sentencia SQL
+    $stmt = $this->db->prepare($query);
+
+    // Iterar sobre los artículos y hacer la inserción
+    foreach ($articulos as $articulo) {
+        // Ejecutar la inserción para cada artículo, incluyendo el idTipoDevolucion y idUsuario de la sesión
+        $stmt->execute([
+            $articulo['codBarras'],
+            $articulo['partida'],
+            $articulo['cantidad'],
+            date('Y-m-d'),
+            date('H:i:s'),
+            $idTipoUsuario,  // El idTipoUsuario se agrega aquí
+            $idUsuario  // El idUsuario también se agrega aquí
+        ]);
+    }
+
+    return true; // Indicar que la operación fue exitosa
+}
+
+
 }
 
 // Manejo de las peticiones AJAX
