@@ -106,7 +106,7 @@
                 $('#description').val(data.descripcion);
                 $('#product-details').show();
               } else {
-                alert('Producto no encontrado.');
+         
                 $('#product-details').hide();
               }
             },
@@ -160,15 +160,18 @@
     function sendProducts() {
       if (productData.length > 0) {
         $.post(
-          '/backend/controller/devoluciones/localess/devolucionesController.php',
+          '../../backend/controller/devoluciones/localess/devolucionesController.php',
           { action: 'registrarDevoluciones', articulos: productData },
           function (response) {
             if (response.success) {
               alert('Devoluciones registradas con éxito.');
               $('#product-list').empty();
               productData.length = 0;
+              conosle.log(productData)
+              console.log("response",response)
             } else {
               alert('Ocurrió un error al registrar las devoluciones.');
+              conosle.log(productData)
             }
           },
           'json'
