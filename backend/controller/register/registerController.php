@@ -42,6 +42,7 @@ try {
 
         // Respuesta JSON según el resultado del registro
         if ($isRegistered) {
+           
             echo json_encode([
                 "status" => "success",
                 "message" => "Usuario registrado exitosamente"

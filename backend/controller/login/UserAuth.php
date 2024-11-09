@@ -1,5 +1,6 @@
 <?php
 // UserAuth.php - Actualizando para agregar la funcionalidad de login
+// UserAuth.php - Actualizando para agregar la funcionalidad de login
 include_once '../../../database/Database.php';
 
 class UserAuth {
@@ -34,17 +35,25 @@ class UserAuth {
     }
 
     public function login($usuario, $contrasena) {
-        // Preparar la consulta para obtener la contraseña del usuario
-        $sql = "SELECT contrasena FROM usuarios WHERE usuario = :usuario";
+        // Preparar la consulta para obtener la contraseña y el idUsuario
+        $sql = "SELECT idUsuario, contrasena, idTipoUsuario FROM usuarios WHERE usuario = :usuario";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['usuario' => $usuario]);
-        $hashedPassword = $stmt->fetchColumn();
-
+        
+        // Obtener los datos del usuario
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
         // Verificar si la contraseña ingresada coincide con la almacenada
-        if ($hashedPassword && password_verify($contrasena, $hashedPassword)) {
+        if ($user && password_verify($contrasena, $user['contrasena'])) {
+            // Si las credenciales son correctas, guardar los datos en la sesión
+            $_SESSION['usuario'] = $usuario;
+            $_SESSION['idUsuario'] = $user['idUsuario'];  // Guardamos el idUsuario en la sesión
+            $_SESSION['idTipoUsuario'] = $user['idTipoUsuario']; // Guardamos el idTipoUsuario en la sesión
             return true;
         }
         return false;
     }
+    
 }
+
 ?>

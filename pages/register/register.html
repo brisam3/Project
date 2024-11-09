@@ -76,25 +76,26 @@
       }
 
       fetch("../../backend/controller/register/registerController.php", {
-    method: "POST",
-    body: formData
-})
-.then(response => response.text()) // Convierte la respuesta a texto en lugar de JSON
-.then(data => {
-    console.log("Respuesta del servidor:", data);
-    
-    if (data.includes("success")) {
-        // Registro exitoso, redirigir al usuario a otra página
-       console.log("acmon");
-    } else {
-        // Mostrar un modal de error si hubo un problema
-        Swal.fire("Error", "Hubo un problema al registrar el usuario.", "error");
-    }
-})
-.catch(error => {
-    console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
-    Swal.fire("Error", "No se pudo completar el registro. Inténtalo de nuevo.", "error");
-});
+        method: "POST",
+        body: formData
+      })
+        .then(response => response.text()) // Convierte la respuesta a texto en lugar de JSON
+        .then(data => {
+          console.log("Respuesta del servidor:", data);
+
+          if (data.includes("success")) {
+            // Registro exitoso, redirigir al usuario a otra página
+
+            console.log("acmon");
+          } else {
+            // Mostrar un modal de error si hubo un problema
+            Swal.fire("Error", "Hubo un problema al registrar el usuario.", "error");
+          }
+        })
+        .catch(error => {
+          console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
+          Swal.fire("Error", "No se pudo completar el registro. Inténtalo de nuevo.", "error");
+        });
 
 
 
