@@ -1,3 +1,8 @@
+<?php
+include_once '../../backend/controller/session/checkSession.php'; // Verificar si la sesión está iniciada
+?>
+ 
+ 
  <!-- Navbar -->
 
         <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">

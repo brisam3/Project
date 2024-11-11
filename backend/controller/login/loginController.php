@@ -1,10 +1,9 @@
 <?php
-// backend/controller/auth/loginController.php
+// Archivo: backend/controller/auth/loginController.php
 session_start();
-
 include '../../controller/login/UserAuth.php';
 
-header('Content-Type: application/json');  // Asegura que la respuesta sea en formato JSON
+error_log("Inicio de loginController.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
@@ -12,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Verificar si se recibieron todos los datos necesarios
     if (empty($usuario) || empty($contrasena)) {
+        error_log("Error: Usuario o contraseña vacíos");
         echo json_encode(['success' => false, 'message' => 'Por favor, ingrese el usuario y la contraseña']);
         exit;
     }
@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $userAuth->login($usuario, $contrasena);
 
     if ($user) {
-        // Si la contraseña es correcta, devolver los datos del usuario
+        // Login exitoso
+        error_log("Login exitoso para usuario: $usuario");
         echo json_encode([
             'success' => true,
             'message' => 'Login exitoso',
@@ -28,9 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'idTipoUsuario' => $user['idTipoUsuario']
         ]);
     } else {
-        // Si la contraseña no es correcta o el usuario no existe
+        // Login fallido
+        error_log("Login fallido para usuario: $usuario");
         echo json_encode(['success' => false, 'message' => 'Usuario o contraseña incorrectos']);
     }
+} else {
+    error_log("Método de solicitud no válido");
+    echo json_encode(['success' => false, 'message' => 'Método de solicitud no válido']);
 }
-
 ?>
