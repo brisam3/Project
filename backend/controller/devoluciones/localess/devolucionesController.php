@@ -1,23 +1,22 @@
 <?php
 // backend/controllers/devoluciones/locales/devolucionesController.php
 session_start();
-
-
+// Depuración: mostrar contenido de la sesión
+header('Content-Type: application/json');
+echo json_encode($_SESSION);
+exit;
 
 require_once '../../../../database/Database.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 class DevolucionesController {
-   private $db;
+    private $db;
 
     public function __construct() {
         $database = new Database();
         $this->db = $database->getConnection();
     }
-
-    // Otros métodos del controlador
-
 
     public function buscarArticulo($codigoBarras)
     {
@@ -35,43 +34,41 @@ class DevolucionesController {
 
     public function registrarDevoluciones($articulos)
     {
-        // Asegúrate de que el idUsuario y el idTipoUsuario estén disponibles en la sesión
-        $idUsuario = $_SESSION['idUsuario'] ?? null;  // Se obtiene de la sesión, si existe
-        $idTipoUsuario = $_SESSION['idTipoUsuario'] ?? null;  // Se obtiene de la sesión, si existe
-    
-        // Verificar si ambos valores están presentes
-        if ($idUsuario === null || $idTipoUsuario === null) {
+        // Validar que los datos de sesión existen antes de acceder a ellos
+        if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['idTipoUsuario'])) {
             throw new Exception("No se encontró el tipo de usuario o el idUsuario en la sesión.");
         }
-    
-        // Obtener la fecha y hora actual (incluyendo los microsegundos)
- 
-        $hora = date('Y-m-d H:i:s.u');  // Fecha y hora con microsegundos
-    
-        // Consulta SQL para insertar en la tabla 'devoluciones'
-        $query = "INSERT INTO devoluciones (codBarras, partida, cantidad, hora, idTipoDevolucion, idUsuario) 
-                  VALUES (?, ?, ?, ?, ?, ?)";
-    
-        // Preparamos la sentencia SQL
+
+        $idUsuario = $_SESSION['idUsuario'];
+        $idTipoUsuario = $_SESSION['idTipoUsuario'];
+
+        // Insertar un nuevo registro en la tabla `detalleDevoluciones` con la fecha y hora actual
+        $detalleQuery = "INSERT INTO detalleDevoluciones (fechaHora) VALUES (NOW())";
+        $detalleStmt = $this->db->prepare($detalleQuery);
+        $detalleStmt->execute();
+        $idDetalleDevolucion = $this->db->lastInsertId();
+
+        // Consulta para insertar en la tabla `devoluciones` sin el campo `hora`
+        $query = "INSERT INTO devoluciones (codBarras, partida, cantidad, idTipoDevolucion, idUsuario, descripcion, idDetalleDevolucion) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         $stmt = $this->db->prepare($query);
-    
+
         // Iterar sobre los artículos y hacer la inserción
         foreach ($articulos as $articulo) {
-            // Ejecutar la inserción para cada artículo, incluyendo el idTipoDevolucion y idUsuario de la sesión
             $stmt->execute([
                 $articulo['codBarras'],
                 $articulo['partida'],
                 $articulo['cantidad'],
-                $hora,   // Hora actual con microsegundos
-                $idTipoUsuario,  // El idTipoUsuario se agrega aquí
-                $idUsuario  // El idUsuario también se agrega aquí
+                $idTipoUsuario,
+                $idUsuario,
+                $articulo['descripcion'],
+                $idDetalleDevolucion  // Usamos el mismo idDetalleDevolucion para todos los artículos
             ]);
         }
-    
-        return true; // Indicar que la operación fue exitosa
-    
 
-
+        return true;  // Retornar true para indicar éxito
+    }
 }
 
 // Manejo de las peticiones AJAX
@@ -79,23 +76,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     $controller = new DevolucionesController();
     if (isset($_POST['action'])) {
-        switch ($_POST['action']) {
-            case 'buscarArticulo':
-                $codigoBarras = $_POST['codBarras'];
-                $articulo = $controller->buscarArticulo($codigoBarras);
-                echo json_encode($articulo);
-                break;
+        try {
+            switch ($_POST['action']) {
+                case 'buscarArticulo':
+                    $codigoBarras = $_POST['codBarras'];
+                    $articulo = $controller->buscarArticulo($codigoBarras);
+                    echo json_encode($articulo);
+                    break;
 
-            case 'registrarDevoluciones':
-                $articulos = $_POST['articulos'];
-                $success = $controller->registrarDevoluciones($articulos);
-                echo json_encode(['success' => $success]);
-                break;
+                case 'registrarDevoluciones':
+                    $articulos = $_POST['articulos'];
+                    $success = $controller->registrarDevoluciones($articulos);
+                    echo json_encode(['success' => $success]);
+                    break;
+
+                default:
+                    echo json_encode(['error' => 'Acción no válida']);
+                    break;
+            }
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
         }
     }
     exit;
-}}
+}
 ?>
-
-<!-- Updated HTML -->
-

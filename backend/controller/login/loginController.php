@@ -1,5 +1,7 @@
 <?php
 // Archivo: backend/controller/auth/loginController.php
+session_start(); // Iniciar la sesión al principio del archivo
+
 include '../../controller/login/UserAuth.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,12 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $userAuth = new UserAuth();
-    $resultado = $userAuth->login($usuario, $contrasena);
+    $user = $userAuth->login($usuario, $contrasena);
 
-    if ($resultado) {
-        session_start();
-        $_SESSION['usuario'] = $usuario;
-        echo json_encode(['success' => true, 'message' => 'Login exitoso']);
+    if ($user) {
+        // `login` retorna el usuario, que contiene `idUsuario` e `idTipoUsuario`
+        echo json_encode([
+            'success' => true,
+            'message' => 'Login exitoso',
+            'idUsuario' => $user['idUsuario'],        // Devolver el idUsuario en la respuesta
+            'idTipoUsuario' => $user['idTipoUsuario'] // Devolver también el idTipoUsuario en la respuesta
+        ]);
+        
     } else {
         echo json_encode(['success' => false, 'message' => 'Usuario o contraseña incorrectos']);
     }
