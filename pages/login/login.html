@@ -1,54 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
     <title>Login | Software Para Negocios</title>
-    <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/Diseño sin título (31).ico" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../assets/img/favicon/Diseño sin título (31).ico"
+    />
     <link rel="stylesheet" href="../../assets/vendor/fonts/boxicons.css" />
     <link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" />
-    <link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css" />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendor/css/rtl/theme-default.css"
+    />
     <link rel="stylesheet" href="../../assets/css/demo.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link
+      rel="stylesheet"
+      href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css"
+    />
     <script src="../../assets/vendor/js/helpers.js"></script>
     <script src="../../assets/js/config.js"></script>
-</head>
+  </head>
 
-<body>
-    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
-        <div class="layout-container">
-            <div class="card mx-auto" style="margin-top: 100px !important;">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <form class="w-px-400 border rounded p-3 p-md-5" id="Form-login" enctype="multipart/form-data">
-                            <h4 class="mb-1">Inicio de Sesión</h4>
-                            <p class="mb-4">Por favor ingresa tus credenciales para iniciar sesión</p>
+  <body>
+    <div
+      class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu"
+    >
+      <div class="layout-container">
+        <div class="card mx-auto" style="margin-top: 100px !important">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-center">
+              <form
+                class="w-px-400 border rounded p-3 p-md-5"
+                id="Form-login"
+                enctype="multipart/form-data"
+              >
+                <h4 class="mb-1">Inicio de Sesión</h4>
+                <p class="mb-4">
+                  Por favor ingresa tus credenciales para iniciar sesión
+                </p>
 
-                            <div class="mb-3">
-                                <label class="form-label" for="usuario">Usuario</label>
-                                <input name="usuario" type="text" id="usuario" class="form-control"
-                                    placeholder="Ej: nombre_usuario" required />
-                            </div>
-
-                            <div class="mb-3 form-password-toggle">
-                                <label class="form-label" for="contrasena">Contraseña</label>
-                                <div class="input-group input-group-merge">
-                                    <input type="password" id="contrasena" name="contrasena" class="form-control"
-                                        placeholder="··········" required />
-                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                </div>
-                            </div>
-
-                            <div class="d-grid gap-1">
-                                <button id="btn-Login" type="submit" class="btn btn-primary">Iniciar Sesión</button>
-                            </div>
-                        </form>
-                    </div>
+                <div class="mb-3">
+                  <label class="form-label" for="usuario">Usuario</label>
+                  <input
+                    name="usuario"
+                    type="text"
+                    id="usuario"
+                    class="form-control"
+                    placeholder="Ej: nombre_usuario"
+                    required
+                  />
                 </div>
+
+                <div class="mb-3 form-password-toggle">
+                  <label class="form-label" for="contrasena">Contraseña</label>
+                  <div class="input-group input-group-merge">
+                    <input
+                      type="password"
+                      id="contrasena"
+                      name="contrasena"
+                      class="form-control"
+                      placeholder="··········"
+                      required
+                    />
+                    <span class="input-group-text cursor-pointer"
+                      ><i class="bx bx-hide"></i
+                    ></span>
+                  </div>
+                </div>
+
+                <div class="d-grid gap-1">
+                  <button id="btn-Login" type="submit" class="btn btn-primary">
+                    Iniciar Sesión
+                  </button>
+                </div>
+              </form>
             </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Scripts JS -->
@@ -58,35 +93,49 @@
 
     <!-- Script para manejar el envío del formulario de login -->
     <script>
-        document.getElementById("Form-login").addEventListener("submit", function (event) {
-            event.preventDefault(); // Previene el envío estándar del formulario
+      document
+        .getElementById("Form-login")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Previene el envío estándar del formulario
 
-            var formData = new FormData(this); // Crea el objeto FormData con los datos del formulario
+          var formData = new FormData(this); // Crea el objeto FormData con los datos del formulario
 
-            fetch("../../backend/controller/login/loginController.php", {
-                method: "POST",
-                body: formData
-            })
-                .then(response => response.text()) // Convierte la respuesta a JSON
-                .then(data => {
-                    console.log("Respuesta del servidor:", data);
+          fetch("../../backend/controller/login/loginController.php", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json()) // Convierte la respuesta a JSON
+            .then((data) => {
+              console.log("Respuesta del servidor:", data);
 
-                    if (data.includes("success")) {
-                        // Registro exitoso, redirigir al usuario a otra página
-                        console.log("bienvenido")
-                        window.location.href = "../devoluciones/vistaDevolucionesLocales.html";
-                    } else {
-                        // Mostrar un modal de error si hubo un problema
-                        Swal.fire("Error", "Hubo un problema al registrar el usuario.", "error");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
-                    Swal.fire("Error", "No se pudo completar el inicio de sesión. Inténtalo de nuevo.", "error");
+              if (data.success) {
+                // Mostrar SweetAlert de éxito y redirigir
+                Swal.fire({
+                  title: "Bienvenido",
+                  text: data.message, // Mensaje del servidor
+                  icon: "success",
+                }).then(() => {
+                  window.location.href =
+                    "../devoluciones/vistaDevolucionesLocales.html";
                 });
+              } else {
+                // Mostrar SweetAlert de error
+                Swal.fire({
+                  title: "Error",
+                  text: data.message || "Usuario o contraseña incorrectos",
+                  icon: "error",
+                });
+              }
+            })
+            .catch((error) => {
+              console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
+              Swal.fire(
+                "Error",
+                "No se pudo completar el inicio de sesión. Inténtalo de nuevo.",
+                "error"
+              );
+            });
         });
     </script>
-</body>
-
-
+  </body>
 </html>
