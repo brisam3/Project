@@ -9,14 +9,16 @@ error_log("Script iniciado correctamente.");
 
 try {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $nombre = $_POST['nombre'] ?? null;
+        $apellido = $_POST['apellido'] ?? null;
         $usuario = $_POST['usuario'] ?? null;
         $contrasena = $_POST['contrasena'] ?? null;
         $idTipoUsuario = $_POST['idTipoUsuario'] ?? null;
 
-        error_log("Datos recibidos: usuario={$usuario}, contrasena={$contrasena}, idTipoUsuario={$idTipoUsuario}");
+        error_log("Datos recibidos: nombre={$nombre}, apellido={$apellido}, usuario={$usuario}, contrasena={$contrasena}, idTipoUsuario={$idTipoUsuario}");
 
         // Validar datos recibidos
-        if (empty($usuario) || empty($contrasena) || empty($idTipoUsuario)) {
+        if (empty($nombre) || empty($apellido) || empty($usuario) || empty($contrasena) || empty($idTipoUsuario)) {
             echo json_encode([
                 "status" => "error",
                 "message" => "Todos los campos son obligatorios."
@@ -38,7 +40,7 @@ try {
         }
 
         // Registrar al usuario
-        $isRegistered = $auth->register($usuario, $contrasena, $idTipoUsuario);
+        $isRegistered = $auth->register($nombre, $apellido, $usuario, $contrasena, $idTipoUsuario);
 
         // Respuesta JSON según el resultado del registro
         if ($isRegistered) {
