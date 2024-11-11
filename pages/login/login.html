@@ -58,33 +58,35 @@
 
     <!-- Script para manejar el envío del formulario de login -->
     <script>
-        document.getElementById("Form-login").addEventListener("submit", function (event) {
-            event.preventDefault(); // Previene el envío estándar del formulario
+        // Script para manejar el envío del formulario de login
+document.getElementById("Form-login").addEventListener("submit", function (event) {
+    event.preventDefault(); // Previene el envío estándar del formulario
 
-            var formData = new FormData(this); // Crea el objeto FormData con los datos del formulario
+    var formData = new FormData(this); // Crea el objeto FormData con los datos del formulario
 
-            fetch("../../backend/controller/login/loginController.php", {
-                method: "POST",
-                body: formData
-            })
-                .then(response => response.text()) // Convierte la respuesta a JSON
-                .then(data => {
-                    console.log("Respuesta del servidor:", data);
-
-                    if (data.includes("success")) {
-                        // Registro exitoso, redirigir al usuario a otra página
-                        console.log("bienvenido")
-                        window.location.href = "../devoluciones/vistaDevolucionesLocales.html";
-                    } else {
-                        // Mostrar un modal de error si hubo un problema
-                        Swal.fire("Error", "Hubo un problema al registrar el usuario.", "error");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
-                    Swal.fire("Error", "No se pudo completar el inicio de sesión. Inténtalo de nuevo.", "error");
-                });
+    fetch("../../backend/controller/login/loginController.php", {  // Asegúrate de que la URL sea correcta
+        method: "POST",
+        body: formData
+    })
+        .then(response => response.text()) // Convierte la respuesta a JSON
+        .then(data => {
+            console.log("Respuesta del servidor:", data);
+            // Verificar si 'success' es true en la respuesta
+            if (data=>success === true) {
+                // Login exitoso, redirigir al usuario a otra página
+                console.log("data", data)
+                window.location.href = "../devoluciones/vistaDevolucionesLocales.html";
+            } else {
+                // Mostrar un modal de error si hubo un problema
+                Swal.fire("Error", data.message, "error");
+            }
+        })
+        .catch(error => {
+            console.error("Error en la solicitud:", error); // Muestra cualquier error en la consola
+            Swal.fire("Error", "No se pudo completar el inicio de sesión. Inténtalo de nuevo.", "error");
         });
+});
+
     </script>
 </body>
 
