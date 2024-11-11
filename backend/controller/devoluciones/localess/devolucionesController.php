@@ -1,11 +1,13 @@
 <?php
 // backend/controllers/devoluciones/locales/devolucionesController.php
-session_start();
-// Depuración: mostrar contenido de la sesión
-header('Content-Type: application/json');
-echo json_encode($_SESSION);
-exit;
 
+// Depuración: imprimir el contenido de la sesión en los logs del servidor
+session_start();
+if (!isset($_SESSION['idUsuario'])) {
+    // Redirigir al usuario de vuelta a la página de inicio de sesión si no está autenticado
+    header("Location: ../path/to/loginPage.html");
+    exit();
+}
 require_once '../../../../database/Database.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -36,8 +38,14 @@ class DevolucionesController {
     {
         // Validar que los datos de sesión existen antes de acceder a ellos
         if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['idTipoUsuario'])) {
-            throw new Exception("No se encontró el tipo de usuario o el idUsuario en la sesión.");
+            // Enviar la sesión completa como parte de la respuesta JSON
+            echo json_encode([
+                'error' => "No se encontró el tipo de usuario o el idUsuario en la sesión.",
+                'session' => $_SESSION
+            ]);
+            exit;
         }
+        
 
         $idUsuario = $_SESSION['idUsuario'];
         $idTipoUsuario = $_SESSION['idTipoUsuario'];

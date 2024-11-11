@@ -20,13 +20,15 @@ class UserAuth {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Verificar si la contraseña ingresada coincide con la almacenada
+            // Verificar si la contraseña ingresada coincide con la almacenada
         if ($user && password_verify($contrasena, $user['contrasena'])) {
-            // Si las credenciales son correctas, guardar los datos en la sesión
             $_SESSION['usuario'] = $usuario;
             $_SESSION['idUsuario'] = $user['idUsuario'];
             $_SESSION['idTipoUsuario'] = $user['idTipoUsuario'];
-            return $user;  // Retornar los datos del usuario
+            return $user;  // Retorna los datos del usuario
         }
+
+        
 
         return false;
     }

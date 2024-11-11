@@ -1,8 +1,10 @@
 <?php
-// Archivo: backend/controller/auth/loginController.php
-session_start(); // Iniciar la sesión al principio del archivo
+// backend/controller/auth/loginController.php
+session_start();
 
 include '../../controller/login/UserAuth.php';
+
+header('Content-Type: application/json');  // Asegura que la respuesta sea en formato JSON
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
@@ -10,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Verificar si se recibieron todos los datos necesarios
     if (empty($usuario) || empty($contrasena)) {
-        echo json_encode(['error' => 'Por favor, ingrese el usuario y la contraseña']);
+        echo json_encode(['success' => false, 'message' => 'Por favor, ingrese el usuario y la contraseña']);
         exit;
     }
 
@@ -18,16 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $userAuth->login($usuario, $contrasena);
 
     if ($user) {
-        // `login` retorna el usuario, que contiene `idUsuario` e `idTipoUsuario`
+        // Si la contraseña es correcta, devolver los datos del usuario
         echo json_encode([
             'success' => true,
             'message' => 'Login exitoso',
-            'idUsuario' => $user['idUsuario'],        // Devolver el idUsuario en la respuesta
-            'idTipoUsuario' => $user['idTipoUsuario'] // Devolver también el idTipoUsuario en la respuesta
+            'idUsuario' => $user['idUsuario'],
+            'idTipoUsuario' => $user['idTipoUsuario']
         ]);
-        
     } else {
+        // Si la contraseña no es correcta o el usuario no existe
         echo json_encode(['success' => false, 'message' => 'Usuario o contraseña incorrectos']);
     }
 }
+
 ?>
