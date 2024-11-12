@@ -76,23 +76,22 @@
                                     <h5 class="mb-0">Artículos Cargados</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="invoice-list-table table border-top">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>#ID</th>
-                                                    <th><i class="bx bx-trending-up"></i></th>
-                                                    <th>Descripción</th>
-                                                    <th>Lote</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="product-list">
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <div class="table-responsive">
+  <table class="invoice-list-table table border-top">
+    <thead>
+      <tr>
+        <th>#ID</th> <!-- Mostrará codBejerman -->
+        <th>Descripción</th> <!-- Mostrará descripcion -->
+        <th>Lote</th> <!-- Mostrará batch -->
+        <th>Cantidad</th> <!-- Mostrará quantity -->
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="product-list">
+    </tbody>
+  </table>
+</div>
+
                                 </div>
                             </div>
                             <!-- Contenedor centrado para el botón Enviar -->
@@ -124,7 +123,10 @@
                                             <div class="mb-3">
                                                 <label class="form-label" for="quantity">Cantidad</label>
                                                 <input type="number" class="form-control" id="quantity" placeholder="Ingrese la cantidad" />
+                                            
+
                                             </div>
+                                                <input type="hidden" id="codBejerman" />
                                             <button type="button" class="btn btn-primary" onclick="addProduct()">Agregar Producto</button>
                                         </div>
                                     </form>
@@ -176,6 +178,7 @@
               if (data && data.codBarras) {
                 $('#description').val(data.descripcion);
                 $('#product-details').show();
+                $('#codBejerman').val(data.codBejerman);
               } else {
                 $('#product-details').hide();
               }
@@ -191,41 +194,48 @@
     });
 
     function addProduct() {
-      const barcode = $('#barcode').val();
-      const batch = $('#batch').val();
-      const quantity = $('#quantity').val();
-      const description = $('#description').val();
+  const barcode = $('#barcode').val();
+  const batch = $('#batch').val();
+  const quantity = $('#quantity').val();
+  const description = $('#description').val();
+  const codBejerman = $('#codBejerman').val(); 
 
-      if (barcode && batch && quantity && description) {
-        productData.push({ 
-          codBarras: barcode, 
-          partida: batch, 
-          cantidad: quantity, 
-          descripcion: description 
-        });
+  if (barcode && batch && quantity && description && codBejerman) {
+    productData.push({ 
+      codBejerman: codBejerman,
+      codBarras: barcode, 
+      partida: batch, 
+      cantidad: quantity, 
+      descripcion: description 
+    });
 
-        const row = `
-          <tr>
-            <td><i class="bx bx-box"></i></td>
-            <td>${barcode}</td>
-            <td><i class="bx bx-trending-up"></i></td>
-            <td>${description}</td>
-            <td>${batch}</td>
-            <td>${quantity}</td>
-            <td><button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)"><span class="tf-icons bx bx bx-trash"></span></button></td>
-          </tr>
-        `;
-        $('#product-list').append(row);
+    const row = `
+      <tr>
+        <td>${codBejerman}</td> <!-- Columna para codBejerman -->
+        <td>${description}</td> <!-- Columna para descripcion -->
+        <td>${batch}</td> <!-- Columna para batch -->
+        <td>${quantity}</td> <!-- Columna para quantity -->
+        <td>
+          <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
+            <span class="tf-icons bx bx-trash"></span>
+          </button>
+        </td>
+      </tr>
+    `;
+    $('#product-list').append(row);
 
-        $('#barcode').val('');
-        $('#batch').val('');
-        $('#quantity').val('');
-        $('#description').val('');
-        $('#product-details').hide();
-      } else {
-        alert('Por favor complete todos los campos.');
-      }
-    }
+    // Limpiar campos después de agregar el producto
+    $('#barcode').val('');
+    $('#batch').val('');
+    $('#quantity').val('');
+    $('#description').val('');
+    $('#codBejerman').val(''); 
+    $('#product-details').hide();
+  } else {
+    alert('Por favor complete todos los campos.');
+  }
+}
+
 
     function removeProduct(button) {
       const row = $(button).closest('tr');
