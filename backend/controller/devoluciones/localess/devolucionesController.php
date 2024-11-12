@@ -34,49 +34,59 @@ class DevolucionesController {
         return $result;
     }
 
-    public function registrarDevoluciones($articulos)
-    {
-        // Validar que los datos de sesión existen antes de acceder a ellos
-        if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['idTipoUsuario'])) {
-            // Enviar la sesión completa como parte de la respuesta JSON
-            echo json_encode([
-                'error' => "No se encontró el tipo de usuario o el idUsuario en la sesión.",
-                'session' => $_SESSION
-            ]);
-            exit;
-        }
-        
+  public function registrarDevoluciones($articulos)
+{
+    if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['idTipoUsuario'])) {
+        echo json_encode([
+            'error' => "No se encontró el tipo de usuario o el idUsuario en la sesión.",
+            'session' => $_SESSION
+        ]);
+        exit;
+    }
 
-        $idUsuario = $_SESSION['idUsuario'];
-        $idTipoUsuario = $_SESSION['idTipoUsuario'];
+    $idUsuario = $_SESSION['idUsuario'];
+    $idTipoUsuario = $_SESSION['idTipoUsuario'];
 
-        // Insertar un nuevo registro en la tabla `detalleDevoluciones` con la fecha y hora actual
-        $detalleQuery = "INSERT INTO detalleDevoluciones (fechaHora) VALUES (NOW())";
-        $detalleStmt = $this->db->prepare($detalleQuery);
-        $detalleStmt->execute();
-        $idDetalleDevolucion = $this->db->lastInsertId();
+    // Insertar un nuevo registro en la tabla `detalleDevoluciones` con la fecha y hora actual
+    $detalleQuery = "INSERT INTO detalleDevoluciones (fechaHora) VALUES (NOW())";
+    $detalleStmt = $this->db->prepare($detalleQuery);
+    $detalleStmt->execute();
+    $idDetalleDevolucion = $this->db->lastInsertId();
 
-        // Consulta para insertar en la tabla `devoluciones` sin el campo `hora`
-        $query = "INSERT INTO devoluciones (codBarras, partida, cantidad, idTipoDevolucion, idUsuario, descripcion, idDetalleDevolucion) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+    // Consulta para insertar en la tabla `devoluciones` usando `codBejerman`
+    $query = "INSERT INTO devoluciones (codBejerman, partida, cantidad, idTipoDevolucion, idUsuario, descripcion, idDetalleDevolucion) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        $stmt = $this->db->prepare($query);
+    $stmt = $this->db->prepare($query);
 
-        // Iterar sobre los artículos y hacer la inserción
-        foreach ($articulos as $articulo) {
+    foreach ($articulos as $articulo) {
+        // Obtener el `codBejerman` del artículo basado en `codBarras`
+        $codigoBarras = $articulo['codBarras'];
+        $articuloData = $this->buscarArticulo($codigoBarras);
+
+        if ($articuloData && isset($articuloData['codBejerman'])) {
+            $codBejerman = $articuloData['codBejerman'];
+
+            // Insertar en la tabla `devoluciones`
             $stmt->execute([
-                $articulo['codBarras'],
+                $codBejerman,
                 $articulo['partida'],
                 $articulo['cantidad'],
                 $idTipoUsuario,
                 $idUsuario,
                 $articulo['descripcion'],
-                $idDetalleDevolucion  // Usamos el mismo idDetalleDevolucion para todos los artículos
+                $idDetalleDevolucion
             ]);
+        } else {
+            // Log de error si no se encuentra el `codBejerman`
+            error_log("No se encontró el `codBejerman` para el artículo con código de barras $codigoBarras.");
         }
-
-        return true;  // Retornar true para indicar éxito
     }
+
+    return true;
+}
+
+
 }
 
 // Manejo de las peticiones AJAX
