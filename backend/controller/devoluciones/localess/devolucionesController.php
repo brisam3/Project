@@ -22,7 +22,7 @@ class DevolucionesController {
 
     public function buscarArticulo($codigoBarras)
     {
-        $query = "SELECT * FROM stock WHERE codBarras = ?";
+        $query = "SELECT * FROM articulos WHERE codBarras = ?";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$codigoBarras]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);

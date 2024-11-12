@@ -48,7 +48,7 @@
   <script src="../../assets/vendor/js/template-customizer.js"></script>
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
   <script src="../../assets/js/config.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -233,29 +233,45 @@
     }
 
     function sendProducts() {
-      if (productData.length > 0) {
-          $.post(
-              '../../backend/controller/devoluciones/localess/devolucionesController.php',
-              { 
-                  action: 'registrarDevoluciones', 
-                  articulos: productData
-              },
-              function (response) {
-                  if (response.success) {
-                      alert('Devoluciones registradas con éxito.');
-                      $('#product-list').empty();
-                      productData.length = 0;
-                      console.log("response", response);
-                  } else {
-                      alert('Ocurrió un error al registrar las devoluciones.');
-                  }
-              },
-              'json'
-          );
-      } else {
-          alert('No hay productos para enviar.');
-      }
-    }
+  if (productData.length > 0) {
+    $.post(
+      '../../backend/controller/devoluciones/localess/devolucionesController.php',
+      { 
+        action: 'registrarDevoluciones', 
+        articulos: productData
+      },
+      function (response) {
+        if (response.success) {
+          Swal.fire({
+            title: '¡Éxito!',
+            text: 'Devoluciones registradas con éxito.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          }).then(() => {
+            $('#product-list').empty();
+            productData.length = 0;
+          });
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al registrar las devoluciones.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      },
+      'json'
+    );
+  } else {
+    Swal.fire({
+      title: 'Advertencia',
+      text: 'No hay productos para enviar.',
+      icon: 'warning',
+      confirmButtonText: 'Aceptar'
+    });
+  }
+}
+
 </script>
 </body>
 </html>
