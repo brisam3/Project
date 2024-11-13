@@ -29,7 +29,7 @@ class AccessController {
     }
     
     public function denyAccess() {
-        echo "<script>alert('Acceso denegado'); window.location.href = 'wol/pages/mainPage/mainPage.php';</script>";
+        echo "<script>alert('Acceso denegado'); window.location.href = 'https://softwareparanegociosformosa.com/wol/pages/mainPage/mainPage.php';</script>";
         exit;
     }
 }
