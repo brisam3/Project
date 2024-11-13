@@ -7,8 +7,8 @@ if (session_status() === PHP_SESSION_NONE) {
 class AccessController {
     private $permissions = [
         1 => ['/pages/devoluciones/vistaDevolucionesLocales.php'],
-        8 => ['/pages/devoluciones/preventa/vistaDevolucionesPreventa.php'],
-        2 => ['/pages/devoluciones/deposito/verDevoluciones.php'],
+        2 => ['/pages/devoluciones/preventa/vistaDevolucionesPreventa.php'],
+        3 => ['/pages/devoluciones/deposito/verDevoluciones.php'],
         4 => ['/pages/administracion/vistaAdministracion.php'],
         5 => ['/pages/gerencia/vistaGerencia.php'],
         6 => ['/pages/contaduria/vistaContaduria.php'],
@@ -29,7 +29,7 @@ class AccessController {
     }
     
     public function denyAccess() {
-        echo "<script>alert('Acceso denegado'); window.location.href = '/project/pages/mainPage/mainPage.php';</script>";
+        echo "<script>alert('Acceso denegado'); window.location.href = '/pages/mainPage/mainPage.php';</script>";
         exit;
     }
 }

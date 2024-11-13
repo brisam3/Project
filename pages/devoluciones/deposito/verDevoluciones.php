@@ -43,8 +43,8 @@ if (!$accessController->checkAccess('/pages/devoluciones/deposito/verDevolucione
 </head>
 
 <body>
-  <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
-    <div class="layout-container">
+<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+<div class="layout-container">
 
 
       <?php
@@ -54,6 +54,7 @@ if (!$accessController->checkAccess('/pages/devoluciones/deposito/verDevolucione
       ?>
 
 <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+  
     <div class="layout-container">
       <div class="layout-page">
         <div class="content-wrapper">

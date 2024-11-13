@@ -1,15 +1,30 @@
 <?php
 
 class Database {
-    private $host = 'localhost';
-    private $db = 'wolchuk';
-    private $user = 'root';
-    private $pass = '';
+    private $host;
+    private $db;
+    private $user;
+    private $pass;
     private $charset = 'utf8mb4';
     private $pdo;
     private $error;
 
     public function __construct() {
+        // Verificar si está en local o producción
+        if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            // Credenciales para local
+            $this->host = 'localhost';
+            $this->db = 'wolchuk';
+            $this->user = 'root';
+            $this->pass = '';
+        } else {
+            // Credenciales para producción
+            $this->host = 'localhost';
+            $this->db = 'u277628716_wolbd';
+            $this->user = 'u277628716_wolbd';
+            $this->pass = 'Cf4b1a7123';
+        }
+
         $dsn = "mysql:host=$this->host;dbname=$this->db;charset=$this->charset";
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -29,4 +44,6 @@ class Database {
         return $this->pdo;
     }
 }
+
+
 ?>
