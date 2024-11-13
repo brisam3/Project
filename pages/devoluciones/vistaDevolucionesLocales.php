@@ -1,3 +1,20 @@
+<?php
+// Incluir el controlador de acceso
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include '../../backend/controller/access/AccessController.php';
+
+$accessController = new AccessController();
+
+// Verificar si el acceso está permitido
+if (!$accessController->checkAccess('/pages/devoluciones/vistaDevolucionesLocales.php')) {
+    $accessController->denyAccess();
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 
 <html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
@@ -48,6 +65,8 @@
   <script src="../../assets/vendor/js/template-customizer.js"></script>
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
   <script src="../../assets/js/config.js"></script>
+
+
 
 </head>
 

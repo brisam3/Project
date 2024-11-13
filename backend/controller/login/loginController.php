@@ -1,5 +1,5 @@
 <?php
-// Archivo: backend/controller/auth/loginController.php
+// Archivo: backend/controller/login/loginController.php
 session_start();
 include '../../controller/login/UserAuth.php';
 
