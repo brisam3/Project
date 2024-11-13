@@ -1,5 +1,10 @@
 <?php
-include_once '../../backend/controller/session/checkSession.php'; // Verificar si la sesión está iniciada
+
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/checkSession.php';
+
+
+
 ?>
 
 
