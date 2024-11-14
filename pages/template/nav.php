@@ -466,6 +466,23 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
               <div data-i18n="Sistemas">Sistemas</div>
             </a>
           </li>
+
+          <li class="menu-item">
+            <a href="javascript:void(0)" class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons bx bx-bus"></i>
+
+                  <div data-i18n="Choferes">Choferes</div>
+                </a>
+                <ul class="menu-sub">
+                  <li class="menu-item">
+                    <a href="../cierreCaja/cierreChoferes.php" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-bus"></i>
+
+                <div data-i18n="Cierre Choferes">Cierre Choferes</div>
+              </a>
+            </li>
+
+          
         </ul>
       </div>
     </aside>

@@ -13,6 +13,8 @@
   <meta name="description" content="" />
 
   <!-- Favicon -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.1/css/boxicons.min.css" rel="stylesheet" integrity="sha512-cfBUsnQh7OSdceLgoYe8n5f4gR8wMSAEPr7iZYswqlN4OrcKUYxxCa5XPrp2XrtH0nXGGaOb7SfiI4Rkzr3psA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
 
   <!-- Fonts -->
@@ -150,6 +152,7 @@
 
   <!-- Core JS -->
   <!-- build:js assets/vendor/js/core.js -->
+
   <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
   <script src="../../assets/vendor/libs/popper/popper.js"></script>
   <script src="../../assets/vendor/js/bootstrap.js"></script>
