@@ -1,5 +1,10 @@
 <?php
-include_once '../../backend/controller/session/checkSession.php'; // Verificar si la sesión está iniciada
+
+
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/checkSession.php';
+
+
+
 ?>
 
 
@@ -404,12 +409,25 @@ include_once '../../backend/controller/session/checkSession.php'; // Verificar s
           </li>
 
           <!-- Depósito -->
+          
+          
+
           <li class="menu-item">
-            <a href="javascript:void(0)" class="menu-link">
+            <a href="javascript:void(0)" class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons bx bx-package"></i>
+              <div data-i18n="Deposito">Deposito</div>
+            </a>
+            <ul class="menu-sub">
+            <li class="menu-item">
+            <a href="../devoluciones/deposito/verDevoluciones.php" class="menu-link">
               <i class="menu-icon tf-icons bx bx-package"></i>
               <div data-i18n="Depósito">Depósito</div>
             </a>
           </li>
+            </ul>
+          </li>
+
+          
 
           <!-- Administración -->
           <li class="menu-item">

@@ -1,3 +1,19 @@
+<?php
+// Incluir el controlador de acceso
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include '../../../backend/controller/access/AccessController.php';
+
+$accessController = new AccessController();
+
+// Verificar si el acceso está permitido
+if (!$accessController->checkAccess('/pages/devoluciones/deposito/verDevoluciones.php')) {
+    $accessController->denyAccess();
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../../../assets/" data-template="horizontal-menu-template-no-customizer">
 <head>
@@ -27,7 +43,18 @@
 </head>
 
 <body>
-  <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+<div class="layout-container">
+
+
+      <?php
+
+      include "../../template/nav.php";
+
+      ?>
+
+<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+  
     <div class="layout-container">
       <div class="layout-page">
         <div class="content-wrapper">

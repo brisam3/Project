@@ -1,7 +1,7 @@
 <?php
 // Archivo: backend/controller/login/UserAuth.php
 include_once '../../../database/Database.php';
-include_once '../session/SessionController.php';
+include_once '../session/checkSession.php';
 
 class UserAuth {
     private $db;

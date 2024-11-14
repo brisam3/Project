@@ -1,6 +1,10 @@
 <?php
 // Archivo: checkSession.php
-session_start(); // Asegúrate de iniciar la sesión
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Asegúrate de iniciar la sesión
 
 if (!isset($_SESSION['idUsuario'])) {
     // Si no hay sesión iniciada, redirigir al login
