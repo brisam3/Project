@@ -1,3 +1,19 @@
+<?php
+// Incluir el controlador de acceso
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include '../../backend/controller/access/AccessController.php';
+
+$accessController = new AccessController();
+
+// Verificar si el acceso está permitido
+if (!$accessController->checkAccess('/pages/cierreCaja/cierreLocales.php')) {
+    $accessController->denyAccess();
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../../assets/" data-template="horizontal-menu-template">
 <head>
@@ -131,28 +147,51 @@
     });
     
     function confirmarCierreCaja() {
-      const efectivo = parseFloat(document.getElementById('total-efectivo').value) || 0;
-      const mercadoPago = parseFloat(document.getElementById('total-mercadopago').value) || 0;
-      const transferencias = parseFloat(document.getElementById('total-transferencias').value) || 0;
-      const cheques = parseFloat(document.getElementById('total-cheques').value) || 0;
-      const cuentaCorriente = parseFloat(document.getElementById('total-cuenta-corriente').value) || 0;
-      const gastos = parseFloat(document.getElementById('total-gastos').value) || 0;
-      
-      const totalCierre = efectivo + mercadoPago + transferencias + cheques + cuentaCorriente - gastos;
-      
-      Swal.fire({
-        title: 'Confirmar Cierre de Caja',
-        text: `¿Está seguro que desea realizar el cierre de caja? Total: $${totalCierre.toFixed(2)}`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, confirmar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire('Cierre Confirmado', 'El cierre de caja se ha realizado con éxito.', 'success');
+  const efectivo = parseFloat(document.getElementById('total-efectivo').value) || 0;
+  const mercadoPago = parseFloat(document.getElementById('total-mercadopago').value) || 0;
+  const transferencias = parseFloat(document.getElementById('total-transferencias').value) || 0;
+  const cheques = parseFloat(document.getElementById('total-cheques').value) || 0;
+  const cuentaCorriente = parseFloat(document.getElementById('total-cuenta-corriente').value) || 0;
+  const gastos = parseFloat(document.getElementById('total-gastos').value) || 0;
+  
+  Swal.fire({
+    title: 'Confirmar Cierre de Caja',
+    text: `¿Está seguro que desea realizar el cierre de caja?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, confirmar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Realizar petición AJAX al controlador PHP
+      $.ajax({
+        url: '../../backend/controller/locales/cierreCaja/CierreCaja.php', // Ajusta la ruta según tu estructura
+        type: 'POST',
+        data: {
+          efectivo: efectivo,
+          mercado_pago: mercadoPago,
+          transferencias: transferencias,
+          cheques: cheques,
+          cuenta_corriente: cuentaCorriente,
+          gastos: gastos
+        },
+        success: function(response) {
+          const res = JSON.parse(response);
+          if (res.success) {
+            Swal.fire('Cierre Confirmado', res.success, 'success');
+          } else {
+            Swal.fire('Error', res.error, 'error');
+          }
+        },
+        error: function() {
+          Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
         }
       });
     }
+  });
+}
+
+
   </script>
 </body>
 </html>

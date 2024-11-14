@@ -395,6 +395,12 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                   <div data-i18n="Generar Devolución">Generar Devolución</div>
                 </a>
               </li>
+              <li class="menu-item">
+                <a href="../cierreCaja/cierreLocales.php" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-store"></i>
+                  <div data-i18n="Cierre de Caja">Cierre de Caja</div>
+                </a>
+              </li>
             </ul>
           </li>
 
