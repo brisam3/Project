@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../../../database/Database.php';
+require_once '../../../database/Database.php';
 
 if (!isset($_SESSION['idUsuario'])) {
     // Redirigir al usuario de vuelta a la página de inicio de sesión si no está autenticado

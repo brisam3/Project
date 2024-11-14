@@ -1,0 +1,288 @@
+<?php
+// Incluir el controlador de acceso
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include '../../backend/controller/access/AccessController.php';
+
+$accessController = new AccessController();
+
+// Verificar si el acceso está permitido
+if (!$accessController->checkAccess('/pages/cierreCaja/cierreChoferes.php')) {
+    $accessController->denyAccess();
+    exit;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../../assets/" data-template="horizontal-menu-template">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <title>Cierre de Caja - Chofer | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+  <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
+  <link rel="stylesheet" href="../../assets/vendor/fonts/boxicons.css" />
+  <link rel="stylesheet" href="../../assets/vendor/fonts/fontawesome.css" />
+  <link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" />
+  <link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css" />
+  <link rel="stylesheet" href="../../assets/css/demo.css" />
+  <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+  <link rel="stylesheet" href="../../assets/vendor/libs/typeahead-js/typeahead.css" />
+  <script src="../../assets/vendor/js/helpers.js"></script>
+  <script src="../../assets/js/config.js"></script>
+</head>
+<body>
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+    <div class="layout-container">
+      <!-- Nav -->
+      <?php include "../template/nav.php"; ?>
+      <!-- Page content -->
+      <div class="layout-page">
+        <div class="content-wrapper">
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Formulario /</span> Cierre de Caja - Chofer</h4>
+            <div class="row">
+              <!-- Columna Izquierda - Formulario de Cierre -->
+              <div class="col-xl-6">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="mb-0">Resumen de Cierre de Caja del Chofer</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table border-top">
+                        <thead>
+                          <tr>
+                            <th>Medio de Pago</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <td>
+                                <i class="bx bx-user"></i> Preventista
+                            </td>
+                            <td>
+                                <select id="idUsuarioPreventista" class="form-control">
+                                    <option value="8">Movil101-Mica</option>
+                                    <option value="9">Movil102-Gustavo</option>
+                                    <option value="10">Movil103-Leo</option>
+                                    <option value="11">Movil104-Alexander</option>
+                                    <option value="12">Movil105-Diego</option>
+                                    <option value="13">Movil106-Cristian</option>
+                                    <option value="14">Movil107-Marianela</option>
+                                    <option value="15">Movil8-Guille</option>
+                                    <option value="16">Movil9-Soledad</option>
+                                </select>
+                            </td>
+                        </tr>
+                          <tr>
+                            <td><i class="bx bx-money"></i> Efectivo</td>
+                            <td><input type="number" id="total-efectivo" class="form-control" readonly placeholder="0" /></td>
+                            <td><button type="button" class="btn btn-primary" onclick="abrirModalBilletes()">Ingresar Billetes</button></td>
+                          </tr>
+                          <tr>
+                            <td><i class="bx bx-transfer"></i> Transferencias</td>
+                            <td><input type="number" id="total-transferencias" class="form-control" placeholder="0" /></td>
+                          </tr>
+                          <tr>
+                            <td><i class="bx bxl-mercadopago"></i> Mercado Pago</td>
+                            <td><input type="number" id="total-mercadopago" class="form-control" placeholder="0" /></td>
+                          </tr>
+                          <tr>
+                            <td><i class="bx bx-credit-card"></i> Cheques</td>
+                            <td><input type="number" id="total-cheques" class="form-control" placeholder="0" /></td>
+                          </tr>
+                          <tr>
+                            <td><i class="bx bx-receipt"></i> Fiados</td>
+                            <td><input type="number" id="total-fiados" class="form-control" placeholder="0" /></td>
+                          </tr>
+                          <tr>
+                            <td><i class="bx bx-wallet"></i> Gastos</td>
+                            <td><input type="number" id="total-gastos" class="form-control" placeholder="0" /></td>
+                          </tr>
+                          <tr>
+                            <td><i class="bx bx-money-withdraw"></i> Pago Secretario</td>
+                            <td><input type="number" id="pago-secretario" class="form-control" placeholder="0" /></td>
+                          </tr>
+                          <tr>
+                            <td><i class="bx bx-error"></i> MEC Faltante</td>
+                            <td><input type="number" id="total-mec-faltante" class="form-control" placeholder="0" /></td>
+                          </tr>
+                          <tr>
+                            <td><i class="bx bx-x-circle"></i> Total Rechazos</td>
+                            <td><input type="number" id="total-rechazos" class="form-control" placeholder="0" /></td>
+                          </tr>
+                          <input type="hidden" id="total_general" name="total_general" />
+                          <input type="hidden" id="total_menos_gastos" name="total_menos_gastos" />
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="text-center mt-3">
+                      <button type="button" class="btn btn-primary" onclick="confirmarCierreCaja()">Confirmar Cierre</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Columna Derecha - Total Acumulado -->
+              <div class="col-xl-6">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="mb-0">Total Acumulado</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="text-center">
+                      <h3 id="total-acumulado">$0.00</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para ingresar billetes -->
+  <div id="modalBilletes" class="modal" tabindex="-1" style="display:none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ingreso de Billetes</h5>
+          <button type="button" class="btn-close" onclick="cerrarModalBilletes()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3"><label>Billetes de 10000</label><input type="number" id="billetes_10000" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+          <div class="mb-3"><label>Billetes de 2000</label><input type="number" id="billetes_2000" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+          <div class="mb-3"><label>Billetes de 1000</label><input type="number" id="billetes_1000" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+          <div class="mb-3"><label>Billetes de 500</label><input type="number" id="billetes_500" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+          <div class="mb-3"><label>Billetes de 200</label><input type="number" id="billetes_200" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+          <div class="mb-3"><label>Billetes de 100</label><input type="number" id="billetes_100" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+          <div class="mb-3"><label>Billetes de 50</label><input type="number" id="billetes_50" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+          <div class="mb-3"><label>Billetes de 20</label><input type="number" id="billetes_20" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+          <div class="mb-3"><label>Billetes de 10</label><input type="number" id="billetes_10" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="cerrarModalBilletes()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="../../assets/vendor/libs/popper/popper.js"></script>
+  <script src="../../assets/vendor/js/bootstrap.js"></script>
+  <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function abrirModalBilletes() {
+      document.getElementById('modalBilletes').style.display = 'block';
+    }
+
+    function cerrarModalBilletes() {
+      document.getElementById('modalBilletes').style.display = 'none';
+    }
+
+    function calcularTotalEfectivo() {
+      const billetes_10000 = parseInt(document.getElementById('billetes_10000').value) || 0;
+      const billetes_2000 = parseInt(document.getElementById('billetes_2000').value) || 0;
+      const billetes_1000 = parseInt(document.getElementById('billetes_1000').value) || 0;
+      const billetes_500 = parseInt(document.getElementById('billetes_500').value) || 0;
+      const billetes_200 = parseInt(document.getElementById('billetes_200').value) || 0;
+      const billetes_100 = parseInt(document.getElementById('billetes_100').value) || 0;
+      const billetes_50 = parseInt(document.getElementById('billetes_50').value) || 0;
+      const billetes_20 = parseInt(document.getElementById('billetes_20').value) || 0;
+      const billetes_10 = parseInt(document.getElementById('billetes_10').value) || 0;
+
+      const total = (billetes_10000 * 10000) + (billetes_2000 * 2000) + (billetes_1000 * 1000) +
+                    (billetes_500 * 500) + (billetes_200 * 200) + (billetes_100 * 100) +
+                    (billetes_50 * 50) + (billetes_20 * 20) + (billetes_10 * 10);
+
+      document.getElementById('total-efectivo').value = total.toFixed(2);
+      actualizarTotalAcumulado();
+    }
+
+    function actualizarTotalAcumulado() {
+      const efectivo = parseFloat(document.getElementById('total-efectivo').value) || 0;
+      const mercadoPago = parseFloat(document.getElementById('total-mercadopago').value) || 0;
+      const transferencias = parseFloat(document.getElementById('total-transferencias').value) || 0;
+      const cheques = parseFloat(document.getElementById('total-cheques').value) || 0;
+      const fiados = parseFloat(document.getElementById('total-fiados').value) || 0;
+      const gastos = parseFloat(document.getElementById('total-gastos').value) || 0;
+      const pagoSecretario = parseFloat(document.getElementById('pago-secretario').value) || 0;
+      const mecFaltante = parseFloat(document.getElementById('total-mec-faltante').value) || 0;
+      const rechazos = parseFloat(document.getElementById('total-rechazos').value) || 0;
+
+      const totalGeneral = efectivo + mercadoPago + transferencias + cheques + fiados + gastos + pagoSecretario + mecFaltante + rechazos;
+      document.getElementById('total-acumulado').innerText = `$${totalGeneral.toFixed(2)}`;
+
+      const totalMenosGastos = totalGeneral - gastos - pagoSecretario;
+
+      document.getElementById('total_general').value = totalGeneral.toFixed(2);
+      document.getElementById('total_menos_gastos').value = totalMenosGastos.toFixed(2);
+    }
+
+    function guardarCierreCajaChofer() {
+      const idUsuarioPreventista = document.getElementById('idUsuarioPreventista').value;
+      const totalEfectivo = document.getElementById('total-efectivo')?.value || 0;
+      const totalTransferencias = document.getElementById('total-transferencias')?.value || 0;
+      const totalMercadoPago = document.getElementById('total-mercadopago')?.value || 0;
+      const totalCheques = document.getElementById('total-cheques')?.value || 0;
+      const totalFiados = document.getElementById('total-fiados')?.value || 0;
+      const totalGastos = document.getElementById('total-gastos')?.value || 0;
+      const pagoSecretario = document.getElementById('pago-secretario')?.value || 0;
+      const totalMecFaltante = document.getElementById('total-mec-faltante')?.value || 0;
+      const totalRechazos = document.getElementById('total-rechazos')?.value || 0;
+      const totalGeneral = document.getElementById('total_general')?.value || 0;
+      const totalMenosGastos = document.getElementById('total_menos_gastos')?.value || 0;
+
+      $.ajax({
+        url: '../../backend/controller/cierreCaja/CierreCajaChoferes.php',
+        type: 'POST',
+        data: {
+          total_efectivo: parseFloat(totalEfectivo),
+          total_transferencias: parseFloat(totalTransferencias),
+          total_mercadopago: parseFloat(totalMercadoPago),
+          total_cheques: parseFloat(totalCheques),
+          total_fiados: parseFloat(totalFiados),
+          total_gastos: parseFloat(totalGastos),
+          pago_secretario: parseFloat(pagoSecretario),
+          total_mec_faltante: parseFloat(totalMecFaltante),
+          total_rechazos: parseFloat(totalRechazos),
+          idUsuarioPreventista: idUsuarioPreventista,
+          total_general: parseFloat(totalGeneral),
+          total_menos_gastos: parseFloat(totalMenosGastos)
+        },
+        success: function(response) {
+          Swal.fire('Cierre Guardado', 'El cierre de caja se ha guardado exitosamente', 'success');
+        }
+      });
+    }
+
+    function confirmarCierreCaja() {
+      const totalGeneral = parseFloat(document.getElementById('total_general').value) || 0;
+
+      Swal.fire({
+        title: 'Confirmar Cierre de Caja',
+        text: `¿Está seguro que desea realizar el cierre de caja? Total General: $${totalGeneral.toFixed(2)}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, confirmar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          guardarCierreCajaChofer();
+        }
+      });
+    }
+
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('input', actualizarTotalAcumulado);
+    });
+  </script>
+</body>
+</html>

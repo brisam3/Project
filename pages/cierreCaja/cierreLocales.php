@@ -165,7 +165,7 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreLocales.php')) {
     if (result.isConfirmed) {
       // Realizar petición AJAX al controlador PHP
       $.ajax({
-        url: '../../backend/controller/locales/cierreCaja/CierreCaja.php', // Ajusta la ruta según tu estructura
+        url: '../../backend/controller/cierreCaja/CierreCajaLocales.php', // Ajusta la ruta según tu estructura
         type: 'POST',
         data: {
           efectivo: efectivo,

@@ -58,7 +58,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
             </g>
           </svg>
         </span>
-        <span class="app-brand-text demo menu-text fw-bolder">Sneat</span>
+        <span class="app-brand-text demo menu-text fw-bolder">Wol</span>
       </a>
 
       <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
@@ -376,7 +376,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
         <ul class="menu-inner">
           <!-- Inicio -->
           <li class="menu-item active">
-            <a href="javascript:void(0)" class="menu-link">
+            <a href="../../pages/mainPage/mainPage.php" class="menu-link">
               <i class="menu-icon tf-icons bx bx-home-circle"></i>
               <div data-i18n="Inicio">Inicio</div>
             </a>

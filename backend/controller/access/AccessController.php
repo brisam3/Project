@@ -11,7 +11,8 @@ if (session_status() === PHP_SESSION_NONE) {
             4 => ['/pages/administracion/vistaAdministracion.php'],
             5 => ['/pages/gerencia/vistaGerencia.php'],
             6 => ['/pages/contaduria/vistaContaduria.php'],
-            7 => ['/pages/sistemas/vistaSistemas.php']
+            7 => ['/pages/sistemas/vistaSistemas.php'],
+            8 => ['/pages/cierreCaja/cierreChoferes.php']
         ];
     
     public function checkAccess($page) {
