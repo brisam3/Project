@@ -478,7 +478,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                     <a href="../cierreCaja/cierreChoferes.php" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-bus"></i>
 
-                <div data-i18n="Cierre Choferes">Cierre Choferes</div>
+                <div data-i18n="Cierre de Caja">Cierre de Caja</div>
               </a>
             </li>
 
