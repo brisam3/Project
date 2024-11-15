@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 13, 2024 at 12:56 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 15-11-2024 a las 01:02:40
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `wolchuk`
+-- Base de datos: `wolchuk`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `articulos`
+-- Estructura de tabla para la tabla `articulos`
 --
 
 CREATE TABLE `articulos` (
@@ -35,7 +35,7 @@ CREATE TABLE `articulos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `articulos`
+-- Volcado de datos para la tabla `articulos`
 --
 
 INSERT INTO `articulos` (`idArticulos`, `codBejerman`, `descripcion`, `codBarras`) VALUES
@@ -2761,7 +2761,26 @@ INSERT INTO `articulos` (`idArticulos`, `codBejerman`, `descripcion`, `codBarras
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalledevoluciones`
+-- Estructura de tabla para la tabla `cierrecaja`
+--
+
+CREATE TABLE `cierrecaja` (
+  `idCierreCaja` int(11) NOT NULL,
+  `idUsuario` int(11) NOT NULL,
+  `fecha_cierre` datetime NOT NULL DEFAULT current_timestamp(),
+  `efectivo` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `mercado_pago` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `transferencias` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `cheques` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `cuenta_corriente` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `gastos` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `total_acumulado` decimal(10,2) GENERATED ALWAYS AS (`efectivo` + `mercado_pago` + `transferencias` + `cheques` + `cuenta_corriente` - `gastos`) STORED
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalledevoluciones`
 --
 
 CREATE TABLE `detalledevoluciones` (
@@ -2769,23 +2788,10 @@ CREATE TABLE `detalledevoluciones` (
   `fechaHora` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `detalledevoluciones`
---
-
-INSERT INTO `detalledevoluciones` (`idDetalleDevolucion`, `fechaHora`) VALUES
-(1, '2024-11-12 15:36:50'),
-(2, '2024-11-12 15:36:56'),
-(3, '2024-11-12 16:54:00'),
-(4, '2024-11-12 16:54:03'),
-(5, '2024-11-12 16:56:31'),
-(6, '2024-11-12 16:56:46'),
-(7, '2024-11-12 16:59:01');
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `devoluciones`
+-- Estructura de tabla para la tabla `devoluciones`
 --
 
 CREATE TABLE `devoluciones` (
@@ -2800,25 +2806,43 @@ CREATE TABLE `devoluciones` (
   `idDetalleDevolucion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `devoluciones`
+-- Estructura de tabla para la tabla `rendicion_choferes`
 --
 
-INSERT INTO `devoluciones` (`idDevolucion`, `codBejerman`, `descripcion`, `partida`, `cantidad`, `codBarras`, `idUsuario`, `idTipoDevolucion`, `idDetalleDevolucion`) VALUES
-(3, 'ASRN22', 'AGUA SAN REMO NO GASIFICADA X1500CC', '33', 33, '', 1, 1, 3),
-(4, 'ASRN22', 'AGUA SAN REMO NO GASIFICADA X1500CC', '3323', 3223, '', 1, 1, 3),
-(5, 'ASRN22', 'AGUA SAN REMO NO GASIFICADA X1500CC', '33', 33, '', 1, 1, 4),
-(6, 'ASRN22', 'AGUA SAN REMO NO GASIFICADA X1500CC', '3323', 3223, '', 1, 1, 4),
-(7, 'ASRN22', 'AGUA SAN REMO NO GASIFICADA X1500CC', '33', 33, '', 1, 1, 5),
-(8, 'ASRN22', 'AGUA SAN REMO NO GASIFICADA X1500CC', '3323', 3223, '', 1, 1, 5),
-(9, 'ASRN22', 'AGUA SAN REMO NO GASIFICADA X1500CC', '233', 33, '', 1, 1, 6),
-(10, 'DCCO66', 'DOBLE COLA X3000CC', '453534', 534, '', 1, 1, 7),
-(11, 'DCNA11', 'DOBLE COLA NARANJA 2250CC', '4', 4, '', 1, 1, 7);
+CREATE TABLE `rendicion_choferes` (
+  `id` int(11) NOT NULL,
+  `idUsuarioChofer` int(11) NOT NULL,
+  `idUsuarioPreventista` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `total_efectivo` decimal(10,2) DEFAULT 0.00,
+  `total_transferencias` decimal(10,2) DEFAULT 0.00,
+  `total_mercadopago` decimal(10,2) DEFAULT 0.00,
+  `total_cheques` decimal(10,2) DEFAULT 0.00,
+  `total_fiados` decimal(10,2) DEFAULT 0.00,
+  `total_gastos` decimal(10,2) DEFAULT 0.00,
+  `pago_secretario` decimal(10,2) DEFAULT 0.00,
+  `total_general` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `total_menos_gastos` decimal(10,2) DEFAULT 0.00,
+  `billetes_10000` int(11) DEFAULT 0,
+  `billetes_2000` int(11) DEFAULT 0,
+  `billetes_1000` int(11) DEFAULT 0,
+  `billetes_500` int(11) DEFAULT 0,
+  `billetes_200` int(11) DEFAULT 0,
+  `billetes_100` int(11) DEFAULT 0,
+  `billetes_50` int(11) DEFAULT 0,
+  `billetes_20` int(11) DEFAULT 0,
+  `billetes_10` int(11) DEFAULT 0,
+  `total_mec_faltante` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `total_rechazos` decimal(10,2) NOT NULL DEFAULT 0.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tipodevoluciones`
+-- Estructura de tabla para la tabla `tipodevoluciones`
 --
 
 CREATE TABLE `tipodevoluciones` (
@@ -2827,7 +2851,7 @@ CREATE TABLE `tipodevoluciones` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tipodevoluciones`
+-- Volcado de datos para la tabla `tipodevoluciones`
 --
 
 INSERT INTO `tipodevoluciones` (`idDevolucion`, `descripcion`) VALUES
@@ -2837,7 +2861,7 @@ INSERT INTO `tipodevoluciones` (`idDevolucion`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tipousuarios`
+-- Estructura de tabla para la tabla `tipousuarios`
 --
 
 CREATE TABLE `tipousuarios` (
@@ -2846,7 +2870,7 @@ CREATE TABLE `tipousuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tipousuarios`
+-- Volcado de datos para la tabla `tipousuarios`
 --
 
 INSERT INTO `tipousuarios` (`idTipoUsuario`, `descripcion`) VALUES
@@ -2856,44 +2880,67 @@ INSERT INTO `tipousuarios` (`idTipoUsuario`, `descripcion`) VALUES
 (4, 'Administracion'),
 (5, 'Gerencia'),
 (6, 'Contaduría'),
-(7, 'Sistemas');
+(7, 'Sistemas'),
+(8, 'Chofer');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuarios`
+-- Estructura de tabla para la tabla `usuarios`
 --
 
 CREATE TABLE `usuarios` (
   `idUsuario` int(100) NOT NULL,
   `nombre` varchar(50) NOT NULL,
-  `apellido` varchar(50) NOT NULL,
+  `apellido` varchar(50) DEFAULT NULL,
   `usuario` varchar(50) NOT NULL,
-  `correo` varchar(50) NOT NULL,
+  `correo` varchar(50) DEFAULT NULL,
   `contrasena` varchar(200) NOT NULL,
-  `descripcion` varchar(50) NOT NULL,
+  `descripcion` varchar(50) DEFAULT NULL,
   `idTipoUsuario` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `usuarios`
+-- Volcado de datos para la tabla `usuarios`
 --
 
 INSERT INTO `usuarios` (`idUsuario`, `nombre`, `apellido`, `usuario`, `correo`, `contrasena`, `descripcion`, `idTipoUsuario`) VALUES
-(1, 'prueba', 'prueba', 'prueba', '', '$2y$10$iuUT/K3HSDH0Zid8wDhozORFOAJeLhXUBF.FcOJjeQLYEV4qcp5x.', '', 1);
+(1, 'Miguel', 'Miguel', 'Miguel', NULL, '$2y$10$kIwBUWeYlw0CT2tHJfMTBuFKaeyVWNV7pfC06rjIHMppKNHnVa3qi', NULL, 8),
+(2, 'Diego', 'Diego', 'Diego', NULL, '$2y$10$2Xbcg1wfrbfVLs61QzKMke/bqK.ohqh21uBgqN8ziwoCoiTF41JPu', NULL, 8),
+(3, 'Mario', 'Mario', 'Mario', NULL, '$2y$10$WjXAWnqYqR2RHNnmiKruWu2lXXKMwsApZg/DA3CiFcNIodEw4PBYy', NULL, 8),
+(4, 'Lean', 'Lean', 'Lean', NULL, '$2y$10$4wXdW5hLeArMb3AutFOtluIJbO/UGj6RMj/ORIEfgm4wX5K1AenJ.', NULL, 8),
+(5, 'Matias', 'Matias', 'Matias', NULL, '$2y$10$g3eAiu2hbcN5r5ty7qGq1esCVpIJP8IlHrE6c.Z6GLjRrUloZiFsK', NULL, 8),
+(6, 'Hugo', 'Hugo', 'Hugo', NULL, '$2y$10$jZvR6dKwfZQQIn37z29CAOOVwKMYKYm.p5R9DoD/KK2Fwb9Ic.Jim', NULL, 8),
+(7, 'Carlos', 'Carlos', 'Carlos', NULL, '$2y$10$NJxARmbS2i8N3euA4zqqyu2g1Yq5hm35JY25O0ERn/VEIUgMgAM7y', NULL, 8),
+(8, 'Mica', 'Mica', '101', NULL, '$2y$10$NuU1c29h4RSBuVOKs7onpOFtj3TrjSo7pZ3esezgKOFxD96nlA0X.', NULL, 2),
+(9, 'Gustavo', 'Gustavo', '102', NULL, '$2y$10$q2g4BIVoQoQqaj3HpPfODuxEvMGup475vD/LWIHksyVedTf5GKe8m', NULL, 2),
+(10, 'Leo(Chillo)', 'Leo(Chillo)', '103', NULL, '$2y$10$gX5AreS4y6hMGNQdXXeQGucGiZy79zOOpEV23iItEP.jFosTbcyVe', NULL, 2),
+(11, 'Alexander', 'Alexander', '104', NULL, '$2y$10$IPD5Hic4jub9WQ7bwfuh2eATbh63Zr4H7QPv4Pg99/Px8rFX3z90u', NULL, 2),
+(12, 'Diego', 'Diego', '105', NULL, '$2y$10$1zslUWVZ6s7/btpZTcVQ4O7ljwCM2fftarcJY3KSB7Fd/Kl6JQl6S', NULL, 2),
+(13, 'Cristian', 'Cristian', '106', NULL, '$2y$10$OGKy9Gx19Q0e.wlg5wJ9j.OuO6Qm8RLI3n2EHE6YkO6kapLjWB3KC', NULL, 2),
+(14, 'Marianela', 'Marianela', '107', NULL, '$2y$10$DOeazcGBo0ge0F3/jcpStuU6UIHOU8TixwvRbKovRjwSe6WPhDgNO', NULL, 2),
+(15, 'Guille', 'Guille', '108', NULL, '$2y$10$4tuyMmAyDigMU3v/7TqfHOcq/G.y09fUloJwABpcAhpdjfx2hJ6fG', NULL, 2),
+(16, 'Soledad', 'Soledad', '121', NULL, '$2y$10$aAW7tiW7LqHqolJLJ.gO4uf3M4K/cr4AmNeS6qYCDgzAOOl2OGdzm', NULL, 2);
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `detalledevoluciones`
+-- Indices de la tabla `cierrecaja`
+--
+ALTER TABLE `cierrecaja`
+  ADD PRIMARY KEY (`idCierreCaja`),
+  ADD KEY `user_id` (`idUsuario`);
+
+--
+-- Indices de la tabla `detalledevoluciones`
 --
 ALTER TABLE `detalledevoluciones`
   ADD PRIMARY KEY (`idDetalleDevolucion`);
 
 --
--- Indexes for table `devoluciones`
+-- Indices de la tabla `devoluciones`
 --
 ALTER TABLE `devoluciones`
   ADD PRIMARY KEY (`idDevolucion`),
@@ -2903,72 +2950,106 @@ ALTER TABLE `devoluciones`
   ADD KEY `idDetalleDevolucion` (`idDetalleDevolucion`);
 
 --
--- Indexes for table `tipodevoluciones`
+-- Indices de la tabla `rendicion_choferes`
+--
+ALTER TABLE `rendicion_choferes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `chofer_id` (`idUsuarioChofer`),
+  ADD KEY `idUsuario` (`idUsuarioChofer`),
+  ADD KEY `idUsuarioPreventista` (`idUsuarioPreventista`);
+
+--
+-- Indices de la tabla `tipodevoluciones`
 --
 ALTER TABLE `tipodevoluciones`
   ADD PRIMARY KEY (`idDevolucion`);
 
 --
--- Indexes for table `tipousuarios`
+-- Indices de la tabla `tipousuarios`
 --
 ALTER TABLE `tipousuarios`
   ADD PRIMARY KEY (`idTipoUsuario`);
 
 --
--- Indexes for table `usuarios`
+-- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`idUsuario`),
   ADD KEY `idTipoUsuario` (`idTipoUsuario`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `detalledevoluciones`
+-- AUTO_INCREMENT de la tabla `cierrecaja`
+--
+ALTER TABLE `cierrecaja`
+  MODIFY `idCierreCaja` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `detalledevoluciones`
 --
 ALTER TABLE `detalledevoluciones`
-  MODIFY `idDetalleDevolucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idDetalleDevolucion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `devoluciones`
+-- AUTO_INCREMENT de la tabla `devoluciones`
 --
 ALTER TABLE `devoluciones`
-  MODIFY `idDevolucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idDevolucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT for table `tipodevoluciones`
+-- AUTO_INCREMENT de la tabla `rendicion_choferes`
+--
+ALTER TABLE `rendicion_choferes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `tipodevoluciones`
 --
 ALTER TABLE `tipodevoluciones`
   MODIFY `idDevolucion` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `tipousuarios`
+-- AUTO_INCREMENT de la tabla `tipousuarios`
 --
 ALTER TABLE `tipousuarios`
-  MODIFY `idTipoUsuario` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idTipoUsuario` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `usuarios`
+-- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `idUsuario` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idUsuario` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `devoluciones`
+-- Filtros para la tabla `cierrecaja`
+--
+ALTER TABLE `cierrecaja`
+  ADD CONSTRAINT `cierrecaja_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuario`);
+
+--
+-- Filtros para la tabla `devoluciones`
 --
 ALTER TABLE `devoluciones`
   ADD CONSTRAINT `devoluciones_ibfk_3` FOREIGN KEY (`idTipoDevolucion`) REFERENCES `tipodevoluciones` (`idDevolucion`),
-  ADD CONSTRAINT `devoluciones_ibfk_4` FOREIGN KEY (`idDetalleDevolucion`) REFERENCES `detalledevoluciones` (`idDetalleDevolucion`),
-  ADD CONSTRAINT `devoluciones_ibfk_5` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuario`);
+  ADD CONSTRAINT `devoluciones_ibfk_5` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuario`),
+  ADD CONSTRAINT `devoluciones_ibfk_6` FOREIGN KEY (`idDetalleDevolucion`) REFERENCES `detalledevoluciones` (`idDetalleDevolucion`);
 
 --
--- Constraints for table `usuarios`
+-- Filtros para la tabla `rendicion_choferes`
+--
+ALTER TABLE `rendicion_choferes`
+  ADD CONSTRAINT `rendicion_choferes_ibfk_1` FOREIGN KEY (`idUsuarioChofer`) REFERENCES `usuarios` (`idUsuario`),
+  ADD CONSTRAINT `rendicion_choferes_ibfk_2` FOREIGN KEY (`idUsuarioPreventista`) REFERENCES `usuarios` (`idUsuario`);
+
+--
+-- Filtros para la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`idTipoUsuario`) REFERENCES `tipousuarios` (`idTipoUsuario`);
