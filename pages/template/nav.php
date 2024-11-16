@@ -376,7 +376,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
         <ul class="menu-inner">
           <!-- Inicio -->
           <li class="menu-item active">
-            <a href="../../pages/mainPage/mainPage.php" class="menu-link">
+          <a href="/project/pages/mainPage/mainPage.php" class="menu-link">
               <i class="menu-icon tf-icons bx bx-home-circle"></i>
               <div data-i18n="Inicio">Inicio</div>
             </a>
@@ -390,13 +390,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
             </a>
             <ul class="menu-sub">
               <li class="menu-item">
-                <a href="../devoluciones/vistaDevolucionesLocales.php" class="menu-link">
+                <a href="/project/pages/devoluciones/vistaDevolucionesLocales.php" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-store"></i>
                   <div data-i18n="Generar Devolución">Generar Devolución</div>
                 </a>
               </li>
               <li class="menu-item">
-                <a href="../cierreCaja/cierreLocales.php" class="menu-link">
+                <a href="/project/pages/cierreCaja/cierreLocales.php" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-store"></i>
                   <div data-i18n="Cierre de Caja">Cierre de Caja</div>
                 </a>
@@ -425,7 +425,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
             </a>
             <ul class="menu-sub">
             <li class="menu-item">
-            <a href="../devoluciones/deposito/verDevoluciones.php" class="menu-link">
+            <a href="/project/pages/devoluciones/deposito/verDevoluciones.php" class="menu-link">
               <i class="menu-icon tf-icons bx bx-package"></i>
               <div data-i18n="Depósito">Depósito</div>
             </a>
@@ -437,10 +437,18 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
 
           <!-- Administración -->
           <li class="menu-item">
-            <a href="javascript:void(0)" class="menu-link">
+            <a href="javascript:void(0)" class="menu-link menu-toggle">
               <i class="menu-icon tf-icons bx bx-cog"></i>
               <div data-i18n="Administración">Administración</div>
             </a>
+            <ul class="menu-sub">
+              <li class="menu-item">
+                <a href="/project/pages/administracion/reportes/reportes.php" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-store"></i>
+                  <div data-i18n="Reporte">Reporte</div>
+                </a>
+              </li>
+            </ul>
           </li>
 
           <!-- Gerencia -->
@@ -475,7 +483,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                 </a>
                 <ul class="menu-sub">
                   <li class="menu-item">
-                    <a href="../cierreCaja/cierreChoferes.php" class="menu-link">
+                    <a href="/project/pages/cierreCaja/cierreChoferes.php" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-bus"></i>
 
                 <div data-i18n="Cierre de Caja">Cierre de Caja</div>
@@ -486,4 +494,23 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
         </ul>
       </div>
     </aside>
+
+    <script>
+      // JavaScript para manejar el tema oscuro
+document.addEventListener('DOMContentLoaded', function () {
+  const navbar = document.getElementById('layout-navbar');
+  const themeToggle = document.querySelector('.style-switcher-toggle');
+
+  // Aplicar tema almacenado
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.body.classList.toggle('dark-theme', savedTheme === 'dark');
+
+  // Cambiar tema al hacer clic
+  themeToggle.addEventListener('click', function () {
+    const isDark = document.body.classList.toggle('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+});
+
+    </script>
     <!-- / Menu -->

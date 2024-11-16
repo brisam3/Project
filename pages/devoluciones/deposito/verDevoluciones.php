@@ -135,6 +135,8 @@ if (!$accessController->checkAccess('/pages/devoluciones/deposito/verDevolucione
 });
 
 // Función para ver detalles de un detalleDevolucion específico
+
+// Función para ver detalles de un detalleDevolucion específico
 function verDetalles(idDetalleDevolucion) {
   $.ajax({
     url: '../../../backend/controller/deposito/verDevoluciones.php',
@@ -144,13 +146,13 @@ function verDetalles(idDetalleDevolucion) {
     success: function (data) {
       const articulos = data.trim().split("\n");
       let html = '<table class="table">';
-      html += '<thead><tr><th>Código de Barras</th><th>Partida</th><th>Cantidad</th><th>Descripción</th></tr></thead>';
+      html += '<thead><tr><th>Código Bejerman</th><th>Partida</th><th>Cantidad</th><th>Descripción</th></tr></thead>';
       html += '<tbody>';
       articulos.forEach(function (articulo) {
-        const [codBarras, partida, cantidad, descripcion] = articulo.split(" | ");
+        const [codBejerman, partida, cantidad, descripcion] = articulo.split(" | ");
         html += `
           <tr>
-            <td>${codBarras}</td>
+            <td>${codBejerman}</td> <!-- Aquí cambiamos de codBarras a codBejerman -->
             <td>${partida}</td>
             <td>${cantidad}</td>
             <td>${descripcion}</td>
@@ -167,6 +169,9 @@ function verDetalles(idDetalleDevolucion) {
     },
   });
 }
+
+
+
   </script>
 </body>
 </html>

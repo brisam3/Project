@@ -99,7 +99,7 @@ if (!$accessController->checkAccess('/pages/devoluciones/vistaDevolucionesLocale
   <table class="invoice-list-table table border-top">
     <thead>
       <tr>
-        <th>#ID</th> <!-- Mostrará codBejerman -->
+        <th>Cod Bejerman</th> <!-- Mostrará codBejerman -->
         <th>Descripción</th> <!-- Mostrará descripcion -->
         <th>Lote</th> <!-- Mostrará batch -->
         <th>Cantidad</th> <!-- Mostrará quantity -->

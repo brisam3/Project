@@ -350,5 +350,6 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreChoferes.php')) {
       input.addEventListener('input', actualizarTotalAcumulado);
     });
   </script>
+  
 </body>
 </html>

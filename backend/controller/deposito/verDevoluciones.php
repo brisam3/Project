@@ -23,12 +23,18 @@ class DetalleDevolucionesController {
     }
 
     // Obtener los artículos de un detalle de devolución específico
-    public function verDetalleDevolucion($idDetalleDevolucion) {
-        $query = "SELECT codBarras, partida, cantidad, descripcion FROM devoluciones WHERE idDetalleDevolucion = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([$idDetalleDevolucion]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+   // Obtener los artículos de un detalle de devolución específico
+public function verDetalleDevolucion($idDetalleDevolucion) {
+    // Cambiar 'codBarras' por 'codBejerman' en la consulta SQL
+    $query = "SELECT codBejerman, partida, cantidad, descripcion FROM devoluciones WHERE idDetalleDevolucion = ?";
+    $stmt = $this->db->prepare($query);
+    $stmt->execute([$idDetalleDevolucion]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
+
 }
 
 // Manejo de las peticiones AJAX
@@ -51,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $articulos = $controller->verDetalleDevolucion($idDetalleDevolucion);
 
                 foreach ($articulos as $articulo) {
-                    echo $articulo['codBarras'] . " | " . $articulo['partida'] . " | " . $articulo['cantidad'] . " | " . $articulo['descripcion'] . "\n";
+                    echo $articulo['codBejerman'] . " | " . $articulo['partida'] . " | " . $articulo['cantidad'] . " | " . $articulo['descripcion'] . "\n";
                 }
                 break;
         }
