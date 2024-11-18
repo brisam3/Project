@@ -14,12 +14,12 @@ class CierreCajaController
 
     public function guardarCierreCaja()
     {
-        if (!isset($_SESSION['idTipoUsuario'])) {
+        if (!isset($_SESSION['idUsuario'])) {
             echo json_encode(['error' => 'Usuario no autenticado']);
             exit;
         }
     
-        $idUsuario = $_SESSION['idTipoUsuario'];
+        $idUsuario = $_SESSION['idUsuario'];
     
         // Obtener datos del formulario
         $billetes_10000 = isset($_POST['billetes_10000']) ? (int)$_POST['billetes_10000'] : 0;

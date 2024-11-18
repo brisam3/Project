@@ -445,7 +445,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
               <li class="menu-item">
                 <a href="/project/pages/administracion/reportes/reportes.php" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-store"></i>
-                  <div data-i18n="Reporte">Reporte</div>
+                  <div data-i18n="Subir Reporte Diario">Reporte</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="/project/pages/administracion/reportes/acumulado.php" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-store"></i>
+                  <div data-i18n="Reporte ventas">Reporte Ventas</div>
                 </a>
               </li>
             </ul>
@@ -469,7 +475,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
 
           <!-- Sistemas -->
           <li class="menu-item">
-            <a href="javascript:void(0)" class="menu-link">
+            <a href="javascript:void(0)" class="menu-link  menu-toggle">
               <i class="menu-icon tf-icons bx bx-laptop"></i>
               <div data-i18n="Sistemas">Sistemas</div>
             </a>
