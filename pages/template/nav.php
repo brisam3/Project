@@ -449,7 +449,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                 </a>
               </li>
               <li class="menu-item">
-                <a href="/project/pages/administracion/reportes/acumulado.php" class="menu-link">
+                <a href="/project/pages/administracion/reportes/reporteVentas.php" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-store"></i>
                   <div data-i18n="Reporte ventas">Reporte Ventas</div>
                 </a>

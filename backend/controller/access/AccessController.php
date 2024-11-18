@@ -5,13 +5,21 @@ if (session_status() === PHP_SESSION_NONE) {
 }
     class AccessController {
         private $permissions = [
+            //locales
             1 => ['/pages/devoluciones/vistaDevolucionesLocales.php', '/pages/cierreCaja/cierreLocales.php'],
+            //preventa
             2 => ['/pages/devoluciones/preventa/vistaDevolucionesPreventa.php'],
+            //deposito
             3 => ['/pages/devoluciones/deposito/verDevoluciones.php'],
-            4 => ['/pages/administracion/vistaAdministracion.php'],
+            //administracion
+            4 => ['/pages/administracion/vistaAdministracion.php', '/pages/administracion/reporteVentas.php'],
+            //gerencia
             5 => ['/pages/gerencia/vistaGerencia.php'],
+            //contaduria
             6 => ['/pages/contaduria/vistaContaduria.php'],
+            //sistemas
             7 => ['/pages/sistemas/vistaSistemas.php'],
+            //chofer
             8 => ['/pages/cierreCaja/cierreChoferes.php']
         ];
     
