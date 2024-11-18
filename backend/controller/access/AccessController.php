@@ -6,21 +6,21 @@ if (session_status() === PHP_SESSION_NONE) {
     class AccessController {
         private $permissions = [
             //locales
-            1 => ['/pages/devoluciones/vistaDevolucionesLocales.php', '/pages/cierreCaja/cierreLocales.php'],
+            1 => ['../devoluciones/vistaDevolucionesLocales.php', '../cierreCaja/cierreLocales.php'],
             //preventa
-            2 => ['/pages/devoluciones/preventa/vistaDevolucionesPreventa.php'],
+            2 => ['../devoluciones/preventa/vistaDevolucionesPreventa.php'],
             //deposito
-            3 => ['/pages/devoluciones/deposito/verDevoluciones.php'],
+            3 => ['../devoluciones/deposito/verDevoluciones.php'],
             //administracion
-            4 => ['/pages/administracion/reportes/reportes.php', '/pages/administracion/reportes/reporteVentas.php'],
+            4 => ['../administracion/reportes/reportes.php', '../administracion/reportes/reporteVentas.php'],
             //gerencia
-            5 => ['/pages/gerencia/vistaGerencia.php'],
+            5 => ['../gerencia/vistaGerencia.php'],
             //contaduria
-            6 => ['/pages/contaduria/vistaContaduria.php'],
+            6 => ['../contaduria/vistaContaduria.php'],
             //sistemas
-            7 => ['/pages/sistemas/vistaSistemas.php'],
+            7 => ['../sistemas/vistaSistemas.php'],
             //chofer
-            8 => ['/pages/cierreCaja/cierreChoferes.php']
+            8 => ['../cierreCaja/cierreChoferes.php']
         ];
     
     public function checkAccess($page) {
@@ -37,7 +37,7 @@ if (session_status() === PHP_SESSION_NONE) {
     }
     
     public function denyAccess() {
-        echo "<script>alert('Acceso denegado'); window.location.href = '/project/pages/mainPage/mainPage.php';</script>";
+        echo "<script>alert('Acceso denegado'); window.location.href = '../mainPage/mainPage.php';</script>";
         exit;
     }
     
