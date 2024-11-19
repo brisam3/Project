@@ -85,7 +85,7 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                             <div class="container-xxl flex-grow-1 container-p-y">
                            
 
-                                    <!-- SECCION CENTRAL: Resumenes -->
+        <!-- SECCION CENTRAL: Resumenes -->
                                     <div class="row">
                                         <!-- Total Ventas Card -->
                                         <div class="col-md-4 col-lg-3 col-sm-6 mb-4">

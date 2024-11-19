@@ -6,39 +6,48 @@ if (session_status() === PHP_SESSION_NONE) {
     class AccessController {
         private $permissions = [
             //locales
-            1 => ['../devoluciones/vistaDevolucionesLocales.php', '../cierreCaja/cierreLocales.php'],
+            1 => ['/pages/devoluciones/vistaDevolucionesLocales.php', '/pages/cierreCaja/cierreLocales.php'],
             //preventa
-            2 => ['../devoluciones/preventa/vistaDevolucionesPreventa.php'],
+            2 => ['/pages/devoluciones/preventa/vistaDevolucionesPreventa.php'],
             //deposito
-            3 => ['../devoluciones/deposito/verDevoluciones.php'],
+            3 => ['/pages/devoluciones/deposito/verDevoluciones.php'],
             //administracion
-            4 => ['../administracion/reportes/reportes.php', '../administracion/reportes/reporteVentas.php'],
+            4 => ['/pages/administracion/reportes/reportes.php', '/pages/administracion/reportes/reporteVentas.php'],
             //gerencia
-            5 => ['../gerencia/vistaGerencia.php'],
+            5 => ['/pages/gerencia/vistaGerencia.php'],
             //contaduria
             6 => ['../contaduria/vistaContaduria.php'],
             //sistemas
             7 => ['../sistemas/vistaSistemas.php'],
             //chofer
-            8 => ['../cierreCaja/cierreChoferes.php']
+            8 => ['/pages/cierreCaja/cierreChoferes.php']
         ];
     
     public function checkAccess($page) {
         if (!isset($_SESSION['idTipoUsuario'])) {
             error_log("Acceso denegado: idTipoUsuario no definido en la sesión.");
+            $this->logSessionInConsole();
             return false;
         }
 
         $idTipoUsuario = $_SESSION['idTipoUsuario'];
         if (isset($this->permissions[$idTipoUsuario]) && in_array($page, $this->permissions[$idTipoUsuario])) {
+            $this->logSessionInConsole();
             return true;
+            
         }
+        $this->logSessionInConsole();
         return false;
     }
     
     public function denyAccess() {
-        echo "<script>alert('Acceso denegado'); window.location.href = '../mainPage/mainPage.php';</script>";
+        echo "<script>alert('Acceso denegado'); window.location.href = '/project/pages/mainPage/mainPage.php';  </script>";
         exit;
+    }
+
+    private function logSessionInConsole() {
+        // Imprimir el contenido de la sesión en la consola de JavaScript
+        echo "<script>console.log('Contenido de la sesión: ', " . json_encode($_SESSION) . ");</script>";
     }
     
 }
