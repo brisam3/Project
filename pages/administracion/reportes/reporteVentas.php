@@ -83,203 +83,203 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                     <div class="layout-page">
                         <div class="content-wrapper">
                             <div class="container-xxl flex-grow-1 container-p-y">
-                           
-
-        <!-- SECCION CENTRAL: Resumenes -->
-                                    <div class="row">
-                                        <!-- Total Ventas Card -->
-                                        <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-success rounded">
-                                                            <i class="bx bx-credit-card fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Total Ventas</span>
-                                                            <h4 class="card-title mb-1">$1,200</h4>
-                                                            <small class="text-success"><i
-                                                                    class="bx bx-up-arrow-alt"></i> +12%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Total Choferes Card -->
-                                        <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-primary rounded">
-                                                            <i class="bx bx-truck fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Total Choferes</span>
-                                                            <h4 class="card-title mb-1">500</h4>
-                                                            <small class="text-success"><i
-                                                                    class="bx bx-up-arrow-alt"></i> +8%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Total Locales Card -->
-                                        <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-warning rounded">
-                                                            <i class="bx bx-store-alt fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Total Locales</span>
-                                                            <h4 class="card-title mb-1">30</h4>
-                                                            <small class="text-danger"><i
-                                                                    class="bx bx-down-arrow-alt"></i> -5%</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
 
-
-
-
-
-
-
-
-
-                                        <!-- Tablas de Resúmenes -->
-                                        <!-- Tablas de Resúmenes -->
-                                        <div class="row">
-                                            <!-- Ventas por Movil -->
-                                            <div class="col-md-6 mb-4">
-                                                <div class="card">
+                                <!-- SECCION CENTRAL: Resumenes -->
+                                <div class="row">
+                                    <!-- Total Ventas Card -->
+                                    <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
+                                        <div class="card shadow-sm">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
                                                     <div
-                                                        class="card-header d-flex justify-content-between align-items-center">
-                                                        <h5 class="card-title mb-0">Ventas por Móvil</h5>
+                                                        class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-success rounded">
+                                                        <i class="bx bx-credit-card fs-2 text-white"></i>
                                                     </div>
-                                                    <div class="card-body">
-                                                        <table class="table table-striped table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Preventista</th>
-                                                                    <th>Movil</th>
-                                                                    <th>Total Ventas</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>Mica</td>
-                                                                    <td>Movil 1</td>
-                                                                    <td>$300</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Gustavo</td>
-                                                                    <td>Movil 2</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Chilo</td>
-                                                                    <td>Movil 3</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Alexander</td>
-                                                                    <td>Movil 4</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Diego</td>
-                                                                    <td>Movil 5</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Cristian</td>
-                                                                    <td>Movil 6</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Marianela</td>
-                                                                    <td>Movil 7</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Guille</td>
-                                                                    <td>Movil 8</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Soledad</td>
-                                                                    <td>Movil 9</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Totales por Medios de Pago -->
-                                            <div class="col-md-6 mb-4">
-                                                <div class="card">
-                                                    <div
-                                                        class="card-header d-flex justify-content-between align-items-center">
-                                                        <h5 class="card-title mb-0">Totales por Medios de Pago</h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <table class="table table-striped table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Medio de Pago</th>
-                                                                    <th>Total Ventas</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>Efectivo</td>
-                                                                    <td>$40</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Mercado Pago</td>
-                                                                    <td>$1500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Transferencia</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Cheques</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Cuenta Corriente</td>
-                                                                    <td>$500</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
+                                                    <div class="ms-3">
+                                                        <span class="fw-semibold d-block">Total Ventas</span>
+                                                        <h4 class="card-title mb-1">$1,200</h4>
+                                                        <small class="text-success"><i class="bx bx-up-arrow-alt"></i>
+                                                            +12%</small>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
+
+                                    <!-- Total Choferes Card -->
+                                    <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
+                                        <div class="card shadow-sm">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div
+                                                        class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-primary rounded">
+                                                        <i class="bx bx-truck fs-2 text-white"></i>
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <span class="fw-semibold d-block">Total Choferes</span>
+                                                        <h4 class="card-title mb-1">500</h4>
+                                                        <small class="text-success"><i class="bx bx-up-arrow-alt"></i>
+                                                            +8%</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Total Locales Card -->
+                                    <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
+                                        <div class="card shadow-sm">
+                                            <div class="card-body">
+                                                <div class="d-flex align-items-center">
+                                                    <div
+                                                        class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-warning rounded">
+                                                        <i class="bx bx-store-alt fs-2 text-white"></i>
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <span class="fw-semibold d-block">Total Locales</span>
+                                                        <h4 class="card-title mb-1">30</h4>
+                                                        <small class="text-danger"><i class="bx bx-down-arrow-alt"></i>
+                                                            -5%</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+
+
+
+                                    <!-- Tablas de Resúmenes -->
+                                    <!-- Tablas de Resúmenes -->
+                                    <div class="row">
+                                        <!-- Ventas por Movil -->
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card">
+                                                <div
+                                                    class="card-header d-flex justify-content-between align-items-center">
+                                                    <h5 class="card-title mb-0">Ventas por Móvil</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table table-striped table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Preventista</th>
+                                                                <th>Movil</th>
+                                                                <th>Total Ventas</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Mica</td>
+                                                                <td>Movil 1</td>
+                                                                <td>$300</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Gustavo</td>
+                                                                <td>Movil 2</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Chilo</td>
+                                                                <td>Movil 3</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Alexander</td>
+                                                                <td>Movil 4</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Diego</td>
+                                                                <td>Movil 5</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Cristian</td>
+                                                                <td>Movil 6</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Marianela</td>
+                                                                <td>Movil 7</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Guille</td>
+                                                                <td>Movil 8</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Soledad</td>
+                                                                <td>Movil 9</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Totales por Medios de Pago -->
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card">
+                                                <div
+                                                    class="card-header d-flex justify-content-between align-items-center">
+                                                    <h5 class="card-title mb-0">Totales por Medios de Pago</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table table-striped table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Medio de Pago</th>
+                                                                <th>Total Ventas</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Efectivo</td>
+                                                                <td>$40</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Mercado Pago</td>
+                                                                <td>$1500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Transferencia</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Cheques</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Cuenta Corriente</td>
+                                                                <td>$500</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
+
+    </div>
     </div>
 
 
@@ -306,7 +306,7 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
     <!-- Page JS -->
     <script src="../../../assets/js/dashboards-analytics.js"></script>
 
-
+    
 </body>
 
 </html>

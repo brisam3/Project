@@ -662,6 +662,61 @@
     <script src="../../../assets/js/main.js"></script>
     <!-- Page JS -->
     <script src="../../../assets/js/dashboards-analytics.js"></script>
+    
+
+    
+    <script>
+        // Función para obtener los datos de la tabla 'cierrecaja'
+        function obtenerResumenDiario() {
+            fetch('../../../backend/controller/administracion/reporteVentas.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'obtenerResumen'  // Acción para obtener los datos de 'cierrecaja'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Resumen Diario:', data);
+                mostrarResumenCierrecaja(data);  // Llamamos a la función para mostrar los datos en la tabla
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Función para obtener los datos de la tabla 'rendicion_choferes'
+        function obtenerRendicionChoferes() {
+            fetch('../../../backend/controller/administracion/reporteVentas.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'obtenerRendicionChoferes'  // Acción para obtener los datos de 'rendicion_choferes'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Rendición Choferes:', data);
+                mostrarRendicionChoferes(data);  // Llamamos a la función para mostrar los datos en la tabla
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+
+        // Ejecutar las funciones al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            obtenerResumenDiario();  // Obtiene el resumen de cierre de caja
+            obtenerRendicionChoferes();  // Obtiene la rendición de choferes
+        });
+    </script>
+      
+   
 
 </body>
 
