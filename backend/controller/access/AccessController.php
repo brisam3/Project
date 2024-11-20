@@ -41,7 +41,7 @@ if (session_status() === PHP_SESSION_NONE) {
     }
     
     public function denyAccess() {
-        echo "<script>alert('Acceso denegado'); window.location.href = '/project/pages/mainPage/mainPage.php';  </script>";
+        echo "<script>alert('Acceso denegado'); window.location.href = 'https://softwareparanegociosformosa.com/wol/pages/mainPage/mainPage.php';  </script>";
         exit;
     }
 
