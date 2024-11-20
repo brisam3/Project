@@ -1,4 +1,69 @@
-<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+<!DOCTYPE html>
+<html lang="es" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
+    data-assets-path="../../../assets/" data-template="horizontal-menu-template">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>Resumen, Preventa y Locales</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.1/css/boxicons.min.css" rel="stylesheet"
+        integrity="sha512-cfBUsnQh7OSdceLgoYe8n5f4gR8wMSAEPr7iZYswqlN4OrcKUYxxCa5XPrp2XrtH0nXGGaOb7SfiI4Rkzr3psA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="icon" type="image/x-icon" href="../../../assets/img/favicon/favicon.ico" />
+    <link href="https://unpkg.com/boxicons/css/boxicons.min.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../../../assets/vendor/fonts/boxicons.css" />
+    <link rel="stylesheet" href="../../../assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="../../../assets/vendor/fonts/flag-icons.css" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="../../../assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../../../assets/vendor/css/rtl/theme-default.css"
+        class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="../../../assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="../../../assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="../../../assets/vendor/libs/apex-charts/apex-charts.css" />
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Helpers -->
+    <script src="../../../assets/vendor/js/helpers.js"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+    <script src="../../../assets/vendor/js/template-customizer.js"></script>
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="../../../assets/js/config.js"></script>
+
+</head>
+
+<body>
+
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+        <div class="layout-container">
+
+            <!-- Navigation -->
+            <?php include "../../template/nav.php"; ?>
+            <!-- /Navigation -->
+
+            <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
                 <div class="layout-container">
                     <div class="layout-page">
                         <div class="content-wrapper">
@@ -22,12 +87,21 @@
                                     </li>
                                 </ul>
 
-                                <!-- TAB CONTENT -->
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane fade show active" id="resumen" role="tabpanel"
                                         aria-labelledby="resumen-tab">
-                                        <!-- Contenido de Resumen Diario -->
+
                                         <div class="row">
+                                            <div class="col-md-4 mb-4">
+                                                <label for="fecha" class="form-label">Seleccionar Fecha</label>
+                                                <input type="date" class="form-control" id="fecha" name="fecha"
+                                                    onchange="fetchData()">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <!-- Total Ventas Card -->
                                             <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
                                                 <div class="card shadow-sm">
                                                     <div class="card-body">
@@ -38,7 +112,9 @@
                                                             </div>
                                                             <div class="ms-3">
                                                                 <span class="fw-semibold d-block">Total Ventas</span>
-                                                                <h4 class="card-title mb-1">$1,200</h4>
+                                                                <h4 class="card-title mb-1" id="totales-ventas">
+                                                                    $1,200
+                                                                </h4>
                                                                 <small class="text-success"><i
                                                                         class="bx bx-up-arrow-alt"></i> +12%</small>
                                                             </div>
@@ -46,6 +122,8 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+
 
                                             <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
                                                 <div class="card shadow-sm">
@@ -53,50 +131,174 @@
                                                         <div class="d-flex align-items-center">
                                                             <div
                                                                 class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-primary rounded">
-                                                                <i class="bx bx-truck fs-2 text-white"></i>
+                                                                <i class="bx bx-taxi fs-2 text-white"></i>
                                                             </div>
                                                             <div class="ms-3">
                                                                 <span class="fw-semibold d-block">Total Choferes</span>
-                                                                <h4 class="card-title mb-1">500</h4>
+                                                                <h4 class="card-title mb-1" id="total-ventas-choferes">
+                                                                    500</h4>
                                                                 <small class="text-success"><i
-                                                                        class="bx bx-up-arrow-alt"></i> +8%</small>
+                                                                        class="bx bx-up-arrow-alt"></i>
+                                                                    +8%</small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="tab-pane fade" id="preventa" role="tabpanel"
-                                        aria-labelledby="preventa-tab">
-                                        <!-- Contenido de Preventa -->
-                                        <div class="row">
+
+                                            <!-- Total Locales Card -->
                                             <div class="col-md-4 col-lg-3 col-sm-6 mb-4">
                                                 <div class="card shadow-sm">
                                                     <div class="card-body">
                                                         <div class="d-flex align-items-center">
                                                             <div
-                                                                class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-success rounded">
-                                                                <i class="bx bx-credit-card fs-2 text-white"></i>
+                                                                class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-warning rounded">
+                                                                <i class="bx bx-store-alt fs-2 text-white"></i>
                                                             </div>
                                                             <div class="ms-3">
-                                                                <span class="fw-semibold d-block">Total Ventas</span>
-                                                                <h4 class="card-title mb-1">$1,200</h4>
-                                                                <small class="text-success"><i
-                                                                        class="bx bx-up-arrow-alt"></i> +12%</small>
+                                                                <span class="fw-semibold d-block">Total Locales</span>
+                                                                <h4 class="card-title mb-1" id="total-ventas-locales">30
+                                                                </h4>
+                                                                <small class="text-danger"><i
+                                                                        class="bx bx-down-arrow-alt"></i>
+                                                                    -5%</small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- Tablas de Resúmenes -->
+                                            <div class="row">
+                                                <!-- Ventas por Movil -->
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="card">
+                                                        <div
+                                                            class="card-header d-flex justify-content-between align-items-center">
+                                                            <h5 class="card-title mb-0">Ventas por Móvil</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table table-striped table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Preventista</th>
+                                                                        <th>Movil</th>
+                                                                        <th>Total Ventas</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="ventas-por-movil">
+                                                                    <tr>
+                                                                        <td>Mica</td>
+                                                                        <td>Movil 1</td>
+                                                                        <td id="8">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Gustavo</td>
+                                                                        <td>Movil 2</td>
+                                                                        <td id="9">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Chilo</td>
+                                                                        <td>Movil 3</td>
+                                                                        <td id="10">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Alexander</td>
+                                                                        <td>Movil 4</td>
+                                                                        <td id="11">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Diego</td>
+                                                                        <td>Movil 5</td>
+                                                                        <td id="12">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Cristian</td>
+                                                                        <td>Movil 6</td>
+                                                                        <td id="13">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Marianela</td>
+                                                                        <td>Movil 7</td>
+                                                                        <td id="14">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Guille</td>
+                                                                        <td>Movil 8</td>
+                                                                        <td id="15">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Soledad</td>
+                                                                        <td>Movil 9</td>
+                                                                        <td id="16">$0</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Totales por Medios de Pago -->
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="card">
+                                                        <div
+                                                            class="card-header d-flex justify-content-between align-items-center">
+                                                            <h5 class="card-title mb-0">Totales por Medios de Pago</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table table-striped table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Medio de Pago</th>
+                                                                        <th>Total Ventas</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="totales-medios-pago">
+                                                                    <tr>
+                                                                        <td>Efectivo</td>
+                                                                        <td id="total_efectivo">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Mercado Pago</td>
+                                                                        <td id="total_mercadopago">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Transferencia</td>
+                                                                        <td id="total_transferencia">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Cheques</td>
+                                                                        <td id="total_cheques">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Fiados</td>
+                                                                        <td id="total_fiados">$0</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
                                         </div>
                                     </div>
 
+                                    <!-- Preventa -->
+                                    <div class="tab-pane fade" id="preventa" role="tabpanel"
+                                        aria-labelledby="preventa-tab">
+                                        <div class="row">
+                                            <h1>xd</h1>
+                                        </div>
+                                    </div>
+
+                                    <!-- Locales -->
                                     <div class="tab-pane fade" id="locales" role="tabpanel"
                                         aria-labelledby="locales-tab">
-                                        <!-- Contenido de Locales -->
-                                        <!-- Agrega contenido aquí si es necesario -->
+                                        <div class="row">
+                                            <h1>xd</h1>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -104,3 +306,101 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <script src="../../../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../../assets/vendor/js/bootstrap.js"></script>
+    <script src="../../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../../../assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../../assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../../assets/vendor/js/menu.js"></script>
+    <!-- Vendors JS -->
+    <script src="../../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <!-- Main JS -->
+    <script src="../../../assets/js/main.js"></script>
+    <!-- Page JS -->
+    <script src="../../../assets/js/dashboards-analytics.js"></script>
+
+    <script>
+    function fetchData() {
+        var fecha = document.getElementById('fecha').value; // Obtener la fecha seleccionada
+
+        // Realizar la solicitud al backend
+        fetch('../../../backend/controller/administracion/pt.php?fecha=' + fecha)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Datos recibidos del backend:", data); // Imprimir los datos en consola
+
+                if (data.error) {
+                    console.error(data.error); // Manejo de errores
+                    return;
+                }
+
+                // Actualizar la tabla de ventas por móvil con los datos recibidos
+                data.ventas.forEach(venta => {
+                    var preventistaId = venta.idUsuarioPreventista;
+                    var totalVentas = parseFloat(venta.total_menos_gastos); // Convertir a número flotante
+
+                    // Buscar la celda correspondiente por id del preventista
+                    var celda = document.getElementById(preventistaId);
+                    if (celda) {
+                        // Actualizar el valor de la celda y formatear el número con dos decimales
+                        celda.innerText = '$' + totalVentas.toFixed(
+                        2); // Usamos toFixed(2) para mostrar dos decimales
+                    }
+                });
+
+                // Sumar los valores de cada medio de pago y actualizar las celdas correspondientes
+                var mediosPago = data.mediosPago[0]; // Asumiendo que solo hay un conjunto de resultados
+
+                // Sumar y actualizar los valores en la tabla de medios de pago
+                document.getElementById('total_efectivo').innerText = '$' + parseFloat(mediosPago.total_efectivo ||
+                    0).toFixed(2);
+                document.getElementById('total_mercadopago').innerText = '$' + parseFloat(mediosPago
+                    .total_mercadopago || 0).toFixed(2);
+                document.getElementById('total_transferencia').innerText = '$' + parseFloat(mediosPago
+                    .total_transferencias || 0).toFixed(2);
+                document.getElementById('total_cheques').innerText = '$' + parseFloat(mediosPago.total_cheques || 0)
+                    .toFixed(2);
+                document.getElementById('total_fiados').innerText = '$' + parseFloat(mediosPago.total_fiados || 0)
+                    .toFixed(2);
+
+                // Sumar todos los "total_menos_gastos" para el total de ventas
+                var totalVentas = data.ventas.reduce((acc, venta) => acc + parseFloat(venta.total_menos_gastos), 0);
+
+                // Formatear el total de ventas como una cantidad en formato moneda
+                totalVentas = totalVentas.toFixed(2); // Aseguramos que el resultado tenga dos decimales
+
+                // Actualizar el card de "Total Ventas" usando el id "total-ventas"
+                document.getElementById('total-ventas-choferes').innerText = '$' + totalVentas;
+
+                // Sumar "total_menos_gastos" de los cierres de caja
+                var totalCierreCaja = data.totalCierreCaja; // Este valor viene del backend, ya es un número
+
+                // Verificar si totalCierreCaja es null o 0
+                if (totalCierreCaja === null) {
+                    totalCierreCaja = 0; // O puedes manejar el caso como prefieras
+                }
+
+                // Sumar ambos valores: total de ventas + cierre de caja
+                var sumaTotal = totalCierreCaja + totalVentas;
+
+                // Actualizar la card de "Total Ventas" con la suma de ventas y cierre de caja
+                document.getElementById('total-ventas-locales').innerText = '$' + sumaTotal.toFixed(2);
+                document.getElementById('totales-ventas').innerText = '$' + sumaTotal.toFixed(2);
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
+    }
+    </script>
+
+
+
+
+</body>
+
+</html>
