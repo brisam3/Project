@@ -112,7 +112,7 @@
                                                             </div>
                                                             <div class="ms-3">
                                                                 <span class="fw-semibold d-block">Total Ventas</span>
-                                                                <h4 class="card-title mb-1" id="totales-ventas">
+                                                                <h4 class="card-title mb-1" id="total-ventas">
                                                                     $1,200
                                                                 </h4>
                                                                 <small class="text-success"><i
@@ -348,8 +348,7 @@
                     var celda = document.getElementById(preventistaId);
                     if (celda) {
                         // Actualizar el valor de la celda y formatear el número con dos decimales
-                        celda.innerText = '$' + totalVentas.toFixed(
-                        2); // Usamos toFixed(2) para mostrar dos decimales
+                        celda.innerText = '$' + totalVentas.toFixed(2); // Usamos toFixed(2) para mostrar dos decimales
                     }
                 });
 
@@ -357,46 +356,42 @@
                 var mediosPago = data.mediosPago[0]; // Asumiendo que solo hay un conjunto de resultados
 
                 // Sumar y actualizar los valores en la tabla de medios de pago
-                document.getElementById('total_efectivo').innerText = '$' + parseFloat(mediosPago.total_efectivo ||
-                    0).toFixed(2);
-                document.getElementById('total_mercadopago').innerText = '$' + parseFloat(mediosPago
-                    .total_mercadopago || 0).toFixed(2);
-                document.getElementById('total_transferencia').innerText = '$' + parseFloat(mediosPago
-                    .total_transferencias || 0).toFixed(2);
-                document.getElementById('total_cheques').innerText = '$' + parseFloat(mediosPago.total_cheques || 0)
-                    .toFixed(2);
-                document.getElementById('total_fiados').innerText = '$' + parseFloat(mediosPago.total_fiados || 0)
-                    .toFixed(2);
+                document.getElementById('total_efectivo').innerText = '$' + parseFloat(mediosPago.total_efectivo || 0).toFixed(2);
+                document.getElementById('total_mercadopago').innerText = '$' + parseFloat(mediosPago.total_mercadopago || 0).toFixed(2);
+                document.getElementById('total_transferencia').innerText = '$' + parseFloat(mediosPago.total_transferencias || 0).toFixed(2);
+                document.getElementById('total_cheques').innerText = '$' + parseFloat(mediosPago.total_cheques || 0).toFixed(2);
+                document.getElementById('total_fiados').innerText = '$' + parseFloat(mediosPago.total_fiados || 0).toFixed(2);
 
                 // Sumar todos los "total_menos_gastos" para el total de ventas
                 var totalVentas = data.ventas.reduce((acc, venta) => acc + parseFloat(venta.total_menos_gastos), 0);
 
                 // Formatear el total de ventas como una cantidad en formato moneda
-                totalVentas = totalVentas.toFixed(2); // Aseguramos que el resultado tenga dos decimales
+                totalVentas = parseFloat(totalVentas.toFixed(2)); // Aseguramos que el resultado tenga dos decimales
 
                 // Actualizar el card de "Total Ventas" usando el id "total-ventas"
-                document.getElementById('total-ventas-choferes').innerText = '$' + totalVentas;
+                document.getElementById('total-ventas-choferes').innerText = '$' + totalVentas.toFixed(2);
 
                 // Sumar "total_menos_gastos" de los cierres de caja
-                var totalCierreCaja = data.totalCierreCaja; // Este valor viene del backend, ya es un número
+                var totalCierreCaja = parseFloat(data.totalCierreCaja); // Aseguramos que totalCierreCaja sea un número
 
                 // Verificar si totalCierreCaja es null o 0
-                if (totalCierreCaja === null) {
-                    totalCierreCaja = 0; // O puedes manejar el caso como prefieras
+                if (isNaN(totalCierreCaja)) {
+                    totalCierreCaja = 0; // Si no es un número válido, asignar 0
                 }
 
                 // Sumar ambos valores: total de ventas + cierre de caja
-                var sumaTotal = totalCierreCaja + totalVentas;
+                var sumaTotal = totalVentas + totalCierreCaja; // Ahora sumaTotal debería ser un número válido
 
-                // Actualizar la card de "Total Ventas" con la suma de ventas y cierre de caja
-                document.getElementById('total-ventas-locales').innerText = '$' + sumaTotal.toFixed(2);
-                document.getElementById('totales-ventas').innerText = '$' + sumaTotal.toFixed(2);
+                // Asegurarse de que sumaTotal es un número y luego formatear como moneda
+                document.getElementById('total-ventas-locales').innerText = '$' + totalCierreCaja.toFixed(2);
+                document.getElementById('total-ventas').innerText = '$' + sumaTotal.toFixed(2);
             })
             .catch(error => {
                 console.error('Error al obtener los datos:', error);
             });
     }
-    </script>
+</script>
+
 
 
 
