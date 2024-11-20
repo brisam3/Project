@@ -113,7 +113,7 @@
                                                             <div class="ms-3">
                                                                 <span class="fw-semibold d-block">Total Ventas</span>
                                                                 <h4 class="card-title mb-1" id="total-ventas">
-                                                                    $1,200
+                                                                    $
                                                                 </h4>
                                                                 <small class="text-success"><i
                                                                         class="bx bx-up-arrow-alt"></i> +12%</small>
@@ -136,10 +136,10 @@
                                                             <div class="ms-3">
                                                                 <span class="fw-semibold d-block">Total Choferes</span>
                                                                 <h4 class="card-title mb-1" id="total-ventas-choferes">
-                                                                    500</h4>
+                                                                    $</h4>
                                                                 <small class="text-success"><i
                                                                         class="bx bx-up-arrow-alt"></i>
-                                                                    +8%</small>
+                                                                    +%</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -158,7 +158,7 @@
                                                             </div>
                                                             <div class="ms-3">
                                                                 <span class="fw-semibold d-block">Total Locales</span>
-                                                                <h4 class="card-title mb-1" id="total-ventas-locales">30
+                                                                <h4 class="card-title mb-1" id="total-ventas-locales">$
                                                                 </h4>
                                                                 <small class="text-danger"><i
                                                                         class="bx bx-down-arrow-alt"></i>
