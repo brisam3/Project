@@ -1,92 +1,112 @@
 <?php
-// backend/controllers/resumen/ResumenController.php
 
-session_start();
 
-// Verifica si el usuario está autenticado
-if (!isset($_SESSION['idUsuario'])) {
-    // Redirige al usuario al login si no está autenticado
-    echo json_encode(['error' => 'Usuario no autenticado']);
-    exit();
-}
+// Incluir archivo de conexión
+include '../../../database/Database.php';
 
-require_once '../../../database/Database.php';
+// Mostrar todos los errores para depuración
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-date_default_timezone_set('America/Argentina/Buenos_Aires');
+// Configurar el encabezado para devolver JSON
+header('Content-Type: application/json');
 
-class ResumenController {
-    private $db;
-
-    public function __construct() {
-        // Establece la conexión con la base de datos
-        $database = new Database();
-        $this->db = $database->getConnection();
-    }
-
-    // Método para obtener los datos de la tabla 'cierrecaja'
-    public function obtenerResumenDiario() {
-        $query = "SELECT * FROM cierrecaja";  // Consulta la tabla 'cierrecaja'
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);  // Obtiene todos los registros
-
-        // Si no se encuentran registros, retornar un mensaje de error en JSON
-        if (!$result) {
-            return ['error' => 'No se encontraron registros en la tabla "cierrecaja".'];
-        }
-
-        return $result;  // Retorna los resultados obtenidos
-    }
-
-    // Método para obtener los datos de la tabla 'rendicion_choferes'
-    public function obtenerRendicionChoferes() {
-        $query = "SELECT * FROM rendicion_choferes";  // Consulta la tabla 'rendicion_choferes'
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);  // Obtiene todos los registros
-
-        // Si no se encuentran registros, retornar un mensaje de error en JSON
-        if (!$result) {
-            return ['error' => 'No se encontraron registros en la tabla "rendicion_choferes".'];
-        }
-
-        return $result;  // Retorna los resultados obtenidos
-    }
-}
-
-// Manejo de las peticiones AJAX
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header('Content-Type: application/json');  // Asegúrate de que la respuesta sea en formato JSON
-    $controller = new ResumenController();
-
-    if (isset($_POST['action'])) {
-        try {
-            switch ($_POST['action']) {
-                case 'obtenerResumen':
-                    // Llama al método para obtener el resumen de cierrecaja
-                    $resumen = $controller->obtenerResumenDiario();
-                    echo json_encode($resumen);
-                    break;
-
-                case 'obtenerRendicionChoferes':
-                    // Llama al método para obtener la rendición de choferes
-                    $rendicionChoferes = $controller->obtenerRendicionChoferes();
-                    echo json_encode($rendicionChoferes);
-                    break;
-
-                default:
-                    // Si la acción no es válida, devolver un error
-                    echo json_encode(['error' => 'Acción no válida']);
-                    break;
-            }
-        } catch (Exception $e) {
-            // Manejo de excepciones y errores en la base de datos
-            echo json_encode(['error' => 'Error en la ejecución: ' . $e->getMessage()]);
-        }
-    } else {
-        // Si no se pasa una acción, devolver un error
-        echo json_encode(['error' => 'No se especificó una acción']);
-    }
+// Verificar si se recibió una fecha
+if (!isset($_GET['fecha']) || empty($_GET['fecha'])) {
+    http_response_code(400);
+    echo json_encode(["error" => "No se proporcionó una fecha"]);
     exit;
 }
+
+$fecha = $_GET['fecha'];
+
+try {
+    // Crear la conexión usando el método getConnection
+    $database = new Database();
+    $pdo = $database->getConnection();  // Obtener la conexión a la base de datos
+
+    // Consulta para "Ventas por Móvil"
+    $ventasQuery = "
+        SELECT idUsuarioPreventista, total_menos_gastos 
+        FROM rendicion_choferes 
+        WHERE fecha = :fecha
+    ";
+    $stmtVentas = $pdo->prepare($ventasQuery);
+    $stmtVentas->execute(['fecha' => $fecha]);
+    $ventas = $stmtVentas->fetchAll(PDO::FETCH_ASSOC);
+
+    // Registro de depuración
+    error_log("Ventas por móvil: " . print_r($ventas, true));
+
+    // Sumar todos los valores de "total_menos_gastos"
+    $totalVentas = array_reduce($ventas, function($sum, $venta) {
+        return $sum + (float) $venta['total_menos_gastos'];
+    }, 0);
+
+    // Consulta para "Totales por Medios de Pago"
+    $mediosPagoQuery = "
+        SELECT 
+            total_efectivo,
+            total_transferencias,
+            total_mercadopago,
+            total_cheques,
+            total_fiados
+        FROM rendicion_choferes
+        WHERE fecha = :fecha
+    ";
+    $stmtMediosPago = $pdo->prepare($mediosPagoQuery);
+    $stmtMediosPago->execute(['fecha' => $fecha]);
+    $mediosPago = $stmtMediosPago->fetchAll(PDO::FETCH_ASSOC);
+
+    // Registro de depuración
+    error_log("Medios de pago: " . print_r($mediosPago, true));
+
+    // Sumar los totales de los medios de pago
+    $totalesMediosPago = [
+        "total_efectivo" => 0,
+        "total_mercadopago" => 0,
+        "total_transferencia" => 0,
+        "total_cheques" => 0,
+        "total_fiados" => 0
+    ];
+
+    foreach ($mediosPago as $medio) {
+        $totalesMediosPago['total_efectivo'] += (float) $medio['total_efectivo'];
+        $totalesMediosPago['total_mercadopago'] += (float) $medio['total_mercadopago'];
+        $totalesMediosPago['total_transferencia'] += (float) $medio['total_transferencias'];
+        $totalesMediosPago['total_cheques'] += (float) $medio['total_cheques'];
+        $totalesMediosPago['total_fiados'] += (float) $medio['total_fiados'];
+    }
+
+    // Consulta para "Cierre de Caja"
+    $cierreCajaQuery = "
+        SELECT total_menos_gastos
+        FROM cierrecaja
+        WHERE fecha_cierre = :fecha
+    ";
+    $stmtCierreCaja = $pdo->prepare($cierreCajaQuery);
+    $stmtCierreCaja->execute(['fecha' => $fecha]);
+    $cierreCaja = $stmtCierreCaja->fetchAll(PDO::FETCH_ASSOC);
+
+    // Sumar todos los "total_menos_gastos" del cierre de caja
+    $totalCierreCaja = array_reduce($cierreCaja, function($sum, $cierre) {
+        return $sum + (float) $cierre['total_menos_gastos'];
+    }, 0);
+
+    // Registro de depuración
+    error_log("Cierre de caja: " . print_r($cierreCaja, true));
+
+    // Respuesta en JSON
+    echo json_encode([
+        "ventas" => $ventas,
+        "mediosPago" => $mediosPago,
+        "totalVentas" => $totalVentas,
+        "totalCierreCaja" => $totalCierreCaja,
+        "totalesMediosPago" => $totalesMediosPago
+    ]);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(["error" => "Error en el servidor: " . $e->getMessage()]);
+}
+
 ?>
