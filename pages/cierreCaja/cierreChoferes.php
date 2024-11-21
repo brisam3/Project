@@ -304,7 +304,7 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreChoferes.php')) {
     function actualizarTotalAcumulado() {
         const efectivo = parseFloat(document.getElementById('total-efectivo').value) || 0;
         const mercadoPago = parseFloat(document.getElementById('total-mercadopago').value) || 0;
-        const transferencias = parseFloat(document.getElementById('total-transferencias').value) || 0;
+        const transferencias = parseFloat(document.getElementById('total-transferencia').value) || 0;
         const cheques = parseFloat(document.getElementById('total-cheques').value) || 0;
         const fiados = parseFloat(document.getElementById('total-fiados').value) || 0;
         const gastos = parseFloat(document.getElementById('total-gastos').value) || 0;
@@ -325,7 +325,7 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreChoferes.php')) {
     function guardarCierreCajaChofer() {
         const idUsuarioPreventista = document.getElementById('idUsuarioPreventista').value;
         const totalEfectivo = document.getElementById('total-efectivo')?.value || 0;
-        const totalTransferencias = document.getElementById('total-transferencias')?.value || 0;
+        const totalTransferencia = document.getElementById('total-transferencia')?.value || 0;
         const totalMercadoPago = document.getElementById('total-mercadopago')?.value || 0;
         const totalCheques = document.getElementById('total-cheques')?.value || 0;
         const totalFiados = document.getElementById('total-fiados')?.value || 0;
@@ -341,7 +341,7 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreChoferes.php')) {
             type: 'POST',
             data: {
                 total_efectivo: parseFloat(totalEfectivo),
-                total_transferencias: parseFloat(totalTransferencias),
+                total_transferencia: parseFloat(totalTransferencia),
                 total_mercadopago: parseFloat(totalMercadoPago),
                 total_cheques: parseFloat(totalCheques),
                 total_fiados: parseFloat(totalFiados),
