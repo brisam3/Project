@@ -35,19 +35,19 @@ class CierreCajaController
         $efectivo = isset($_POST['efectivo']) ? (float)$_POST['efectivo'] : 0;
         $mercadoPago = isset($_POST['mercado_pago']) ? (float)$_POST['mercado_pago'] : 0;
         $transferencias = isset($_POST['transferencias']) ? (float)$_POST['transferencias'] : 0;
-        $cheques = isset($_POST['cheques']) ? (float)$_POST['cheques'] : 0;
+        $cambios = isset($_POST['cambios']) ? (float)$_POST['cambios'] : 0;
         $cuentaCorriente = isset($_POST['cuenta_corriente']) ? (float)$_POST['cuenta_corriente'] : 0;
         $gastos = isset($_POST['gastos']) ? (float)$_POST['gastos'] : 0;
     
         // Calcular total general y total menos gastos
-        $totalGeneral = $efectivo + $mercadoPago + $transferencias + $cheques + $cuentaCorriente + $gastos;
+        $totalGeneral = $efectivo + $mercadoPago + $transferencias + $cambios + $cuentaCorriente + $gastos;
         $totalMenosGastos = $totalGeneral - $gastos;
     
         // Agregar logs de depuración aquí
         error_log('Efectivo: ' . $efectivo);
         error_log('Mercado Pago: ' . $mercadoPago);
         error_log('Transferencias: ' . $transferencias);
-        error_log('Cheques: ' . $cheques);
+        error_log('Cambios: ' . $cambios);
         error_log('Cuenta Corriente: ' . $cuentaCorriente);
         error_log('Gastos: ' . $gastos);
         error_log('Total General Calculado: ' . $totalGeneral);
@@ -56,11 +56,11 @@ class CierreCajaController
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO cierreCaja 
-                (idUsuario, fecha_cierre, efectivo, mercado_pago, transferencias, cheques, cuenta_corriente, gastos,
+                (idUsuario, fecha_cierre, efectivo, mercado_pago, transferencias, cambios, cuenta_corriente, gastos,
                  billetes_10000, billetes_2000, billetes_1000, billetes_500, billetes_200, billetes_100, billetes_50, 
                  billetes_20, billetes_10, total_general, total_menos_gastos)
                 VALUES 
-                (:idUsuario, NOW(), :efectivo, :mercadoPago, :transferencias, :cheques, :cuentaCorriente, :gastos,
+                (:idUsuario, NOW(), :efectivo, :mercadoPago, :transferencias, :cambios, :cuentaCorriente, :gastos,
                  :billetes_10000, :billetes_2000, :billetes_1000, :billetes_500, :billetes_200, :billetes_100, :billetes_50, 
                  :billetes_20, :billetes_10, :totalGeneral, :totalMenosGastos)
             ");
@@ -70,7 +70,7 @@ class CierreCajaController
             $stmt->bindParam(':efectivo', $efectivo);
             $stmt->bindParam(':mercadoPago', $mercadoPago);
             $stmt->bindParam(':transferencias', $transferencias);
-            $stmt->bindParam(':cheques', $cheques);
+            $stmt->bindParam(':cambios', $cambios);
             $stmt->bindParam(':cuentaCorriente', $cuentaCorriente);
             $stmt->bindParam(':gastos', $gastos);
     

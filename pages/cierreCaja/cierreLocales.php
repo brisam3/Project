@@ -84,8 +84,10 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreLocales.php')) {
                             <td><button type="button" class="btn btn-primary" onclick="abrirModalBilletes()">Ingresar Billetes</button></td>
                           </tr>
                           <tr><td><i class="bx bxl-mercadopago"></i> Mercado Pago</td><td><input type="number" id="total-mercadopago" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
-                          <tr><td><i class="bx bx-transfer"></i> Transferencias</td><td><input type="number" id="total-transferencias" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
-                          <tr><td><i class="bx bx-credit-card"></i> Cheques</td><td><input type="number" id="total-cheques" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
+                          <tr><td><i class="bx bx-credit-card"></i>
+                          PayWay</td><td><input type="number" id="total-transferencias" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
+                          <tr><td><i class="bx bx-transfer"></i>
+                          </i>Cambio</td><td><input type="number" id="total-cambios" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
                           <tr><td><i class="bx bx-receipt"></i> Cuenta Corriente</td><td><input type="number" id="total-cuenta-corriente" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
                           <tr><td><i class="bx bx-wallet"></i> Gastos</td><td><input type="number" id="total-gastos" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
                         </tbody>
@@ -184,11 +186,11 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreLocales.php')) {
       const efectivo = parseFloat(document.getElementById('total-efectivo').value) || 0;
       const mercadoPago = parseFloat(document.getElementById('total-mercadopago').value) || 0;
       const transferencias = parseFloat(document.getElementById('total-transferencias').value) || 0;
-      const cheques = parseFloat(document.getElementById('total-cheques').value) || 0;
+      const cambios = parseFloat(document.getElementById('total-cambios').value) || 0;
       const cuentaCorriente = parseFloat(document.getElementById('total-cuenta-corriente').value) || 0;
       const gastos = parseFloat(document.getElementById('total-gastos').value) || 0;
 
-      const totalAcumulado = efectivo + mercadoPago + transferencias + cheques + cuentaCorriente;
+      const totalAcumulado = efectivo + mercadoPago + transferencias + cambios + cuentaCorriente;
       document.getElementById('total-acumulado').innerText = `$${totalAcumulado.toFixed(2)}`;
     }
 
@@ -225,7 +227,7 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreLocales.php')) {
         efectivo: parseFloat(document.getElementById('total-efectivo').value) || 0,
         mercado_pago: parseFloat(document.getElementById('total-mercadopago').value) || 0,
         transferencias: parseFloat(document.getElementById('total-transferencias').value) || 0,
-        cheques: parseFloat(document.getElementById('total-cheques').value) || 0,
+        cambios: parseFloat(document.getElementById('total-cambios').value) || 0,
         cuenta_corriente: parseFloat(document.getElementById('total-cuenta-corriente').value) || 0,
         gastos: parseFloat(document.getElementById('total-gastos').value) || 0,
         total_general: totalAcumulado,
