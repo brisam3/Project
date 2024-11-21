@@ -73,7 +73,7 @@ try {
     foreach ($mediosPago as $medio) {
         $totalesMediosPago['total_efectivo'] += (float) $medio['total_efectivo'];
         $totalesMediosPago['total_mercadopago'] += (float) $medio['total_mercadopago'];
-        $totalesMediosPago['total_transferencia'] += (float) $medio['total_transferencias'];
+        $totalesMediosPago['total_transferencia'] += (float) $medio['total_transferencia'];
         $totalesMediosPago['total_cheques'] += (float) $medio['total_cheques'];
         $totalesMediosPago['total_fiados'] += (float) $medio['total_fiados'];
     }
