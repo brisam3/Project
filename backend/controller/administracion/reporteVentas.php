@@ -81,7 +81,7 @@ try {
     // Consulta para "Cierre de Caja"
     $cierreCajaQuery = "
         SELECT total_menos_gastos
-        FROM cierrecaja
+        FROM cierreCaja
         WHERE fecha_cierre = :fecha
     ";
     $stmtCierreCaja = $pdo->prepare($cierreCajaQuery);
