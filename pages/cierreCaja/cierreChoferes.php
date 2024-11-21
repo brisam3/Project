@@ -132,7 +132,7 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreChoferes.php')) {
                                                     </tr>
                                                     <tr>
                                                         <td><i class="bx bx-transfer"></i> Transferencias</td>
-                                                        <td><input type="number" id="total-transferencias"
+                                                        <td><input type="number" id="total-transferencia"
                                                                 class="form-control" placeholder="0" /></td>
                                                     </tr>
                                                     <tr>
