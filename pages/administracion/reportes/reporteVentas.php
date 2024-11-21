@@ -75,7 +75,7 @@
                                             data-bs-target="#resumen" type="button" role="tab" aria-controls="resumen"
                                             aria-selected="true">Resumen Diario</button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <!--     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="preventa-tab" data-bs-toggle="tab"
                                             data-bs-target="#preventa" type="button" role="tab" aria-controls="preventa"
                                             aria-selected="false">Preventa</button>
@@ -84,7 +84,7 @@
                                         <button class="nav-link" id="locales-tab" data-bs-toggle="tab"
                                             data-bs-target="#locales" type="button" role="tab" aria-controls="locales"
                                             aria-selected="false">Locales</button>
-                                    </li>
+                                    </li> -->
                                 </ul>
 
                                 <div class="tab-content" id="myTabContent">
@@ -286,20 +286,20 @@
                                     </div>
 
                                     <!-- Preventa -->
-                                    <div class="tab-pane fade" id="preventa" role="tabpanel"
+                                    <!-- <div class="tab-pane fade" id="preventa" role="tabpanel"
                                         aria-labelledby="preventa-tab">
                                         <div class="row">
                                             <h1>Preventa</h1>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <!-- Locales -->
-                                    <div class="tab-pane fade" id="locales" role="tabpanel"
+                                    <!-- <div class="tab-pane fade" id="locales" role="tabpanel"
                                         aria-labelledby="locales-tab">
                                         <div class="row">
                                             <h1>Locales</h1>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -357,7 +357,8 @@
                 // Actualizar la tabla de ventas por móvil con los datos recibidos
                 data.ventas.forEach(venta => {
                     var preventistaId = venta.idUsuarioPreventista;
-                    var totalVentas = parseFloat(venta.total_menos_gastos) || 0; // Convertir a número flotante
+                    var totalVentas = parseFloat(venta.total_menos_gastos) ||
+                    0; // Convertir a número flotante
 
                     // Buscar la celda correspondiente por id del preventista
                     var celda = document.getElementById(preventistaId);
@@ -372,14 +373,20 @@
                 // Sumar los valores de cada medio de pago y actualizar las celdas correspondientes
                 var mediosPago = data.mediosPago[0] || {}; // Asignar un objeto vacío si no hay datos
 
-                document.getElementById('total_efectivo').innerText = '$' + parseFloat(mediosPago.total_efectivo || 0).toFixed(2);
-                document.getElementById('total_mercadopago').innerText = '$' + parseFloat(mediosPago.total_mercadopago || 0).toFixed(2);
-                document.getElementById('total_transferencia').innerText = '$' + parseFloat(mediosPago.total_transferencias || 0).toFixed(2);
-                document.getElementById('total_cheques').innerText = '$' + parseFloat(mediosPago.total_cheques || 0).toFixed(2);
-                document.getElementById('total_fiados').innerText = '$' + parseFloat(mediosPago.total_fiados || 0).toFixed(2);
+                document.getElementById('total_efectivo').innerText = '$' + parseFloat(mediosPago.total_efectivo ||
+                    0).toFixed(2);
+                document.getElementById('total_mercadopago').innerText = '$' + parseFloat(mediosPago
+                    .total_mercadopago || 0).toFixed(2);
+                document.getElementById('total_transferencia').innerText = '$' + parseFloat(mediosPago
+                    .total_transferencias || 0).toFixed(2);
+                document.getElementById('total_cheques').innerText = '$' + parseFloat(mediosPago.total_cheques || 0)
+                    .toFixed(2);
+                document.getElementById('total_fiados').innerText = '$' + parseFloat(mediosPago.total_fiados || 0)
+                    .toFixed(2);
 
                 // Sumar todos los "total_menos_gastos" para el total de ventas
-                var totalVentas = data.ventas.reduce((acc, venta) => acc + parseFloat(venta.total_menos_gastos || 0), 0);
+                var totalVentas = data.ventas.reduce((acc, venta) => acc + parseFloat(venta.total_menos_gastos ||
+                    0), 0);
 
                 // Asegurar el formato de dos decimales
                 totalVentas = parseFloat(totalVentas.toFixed(2));
@@ -406,7 +413,7 @@
                 console.error('Error al obtener los datos:', error);
             });
     }
-</script>
+    </script>
 
 
 
