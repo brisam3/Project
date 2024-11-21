@@ -1,18 +1,4 @@
-<?php
-// Incluir el controlador de acceso
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-include '../../backend/controller/access/AccessController.php';
 
-$accessController = new AccessController();
-
-// Verificar si el acceso está permitido
-if (!$accessController->checkAccess('/pages/register/register.php')) {
-    $accessController->denyAccess();
-    exit;
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
