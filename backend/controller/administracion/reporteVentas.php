@@ -47,9 +47,9 @@ try {
     $mediosPagoQuery = "
         SELECT 
             total_efectivo,
-            total_transferencias,
+            total_payway,
             total_mercadopago,
-            total_cheques,
+            total_cambios,
             total_fiados
         FROM rendicion_choferes
         WHERE fecha = :fecha
@@ -65,16 +65,16 @@ try {
     $totalesMediosPago = [
         "total_efectivo" => 0,
         "total_mercadopago" => 0,
-        "total_transferencia" => 0,
-        "total_cheques" => 0,
+        "total_payway" => 0,
+        "total_cambios" => 0,
         "total_fiados" => 0
     ];
 
     foreach ($mediosPago as $medio) {
         $totalesMediosPago['total_efectivo'] += (float) $medio['total_efectivo'];
         $totalesMediosPago['total_mercadopago'] += (float) $medio['total_mercadopago'];
-        $totalesMediosPago['total_transferencia'] += (float) $medio['total_transferencias'];
-        $totalesMediosPago['total_cheques'] += (float) $medio['total_cheques'];
+        $totalesMediosPago['total_payway'] += (float) $medio['total_payway'];
+        $totalesMediosPago['total_cambios'] += (float) $medio['total_cambios'];
         $totalesMediosPago['total_fiados'] += (float) $medio['total_fiados'];
     }
 

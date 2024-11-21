@@ -281,12 +281,12 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                                                                         <td id="total_mercadopago">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Transferencia</td>
-                                                                        <td id="total_transferencia">$0</td>
+                                                                        <td>Payway</td>
+                                                                        <td id="total_payway">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Cheques</td>
-                                                                        <td id="total_cheques">$0</td>
+                                                                        <td>Cambios</td>
+                                                                        <td id="total_cambios">$0</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Fiados</td>
@@ -395,9 +395,9 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                     0).toFixed(2);
                 document.getElementById('total_mercadopago').innerText = '$' + parseFloat(mediosPago
                     .total_mercadopago || 0).toFixed(2);
-                document.getElementById('total_transferencia').innerText = '$' + parseFloat(mediosPago
-                    .total_transferencias || 0).toFixed(2);
-                document.getElementById('total_cheques').innerText = '$' + parseFloat(mediosPago.total_cheques || 0)
+                document.getElementById('total_payway').innerText = '$' + parseFloat(mediosPago
+                    .total_payway || 0).toFixed(2);
+                document.getElementById('total_cambios').innerText = '$' + parseFloat(mediosPago.total_cambios || 0)
                     .toFixed(2);
                 document.getElementById('total_fiados').innerText = '$' + parseFloat(mediosPago.total_fiados || 0)
                     .toFixed(2);
