@@ -1,4 +1,11 @@
-
+<?php
+session_start();
+if (!isset($_SESSION['idUsuario'])) {
+  // Redirigir al usuario de vuelta a la página de inicio de sesión si no está autenticado
+  header("Location: ../path/to/loginPage.html");
+  exit();
+}
+?>
 
 <!DOCTYPE html>
 
