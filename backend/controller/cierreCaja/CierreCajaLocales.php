@@ -40,7 +40,7 @@ class CierreCajaController
         $gastos = isset($_POST['gastos']) ? (float)$_POST['gastos'] : 0;
     
         // Calcular total general y total menos gastos
-        $totalGeneral = $efectivo + $mercadoPago + $transferencias + $cheques + $cuentaCorriente;
+        $totalGeneral = $efectivo + $mercadoPago + $transferencias + $cheques + $cuentaCorriente + $gastos;
         $totalMenosGastos = $totalGeneral - $gastos;
     
         // Agregar logs de depuración aquí
