@@ -1,7 +1,12 @@
 <?php
 // backend/controllers/devoluciones/locales/detalleDevolucionesController.php
-session_start();
 
+session_start();
+if (!isset($_SESSION['idUsuario'])) {
+  // Redirigir al usuario de vuelta a la página de inicio de sesión si no está autenticado
+  header("Location: https://softwareparanegociosformosa.com/wol/pages/login/login.html");
+  exit();
+}
 require_once '../../../database/Database.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');

@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['idUsuario'])) {
+  // Redirigir al usuario de vuelta a la página de inicio de sesión si no está autenticado
+  header("Location: https://softwareparanegociosformosa.com/wol/pages/login/login.html");
+  exit();
+}
 require_once '../../../database/Database.php';
 
 class CierreCajaChoferController {
@@ -19,7 +25,7 @@ class CierreCajaChoferController {
         }
 
         $total_efectivo = (float)$_POST['total_efectivo'];
-        $total_transferencias = (float)$_POST['total_transferencias'];
+        $total_transferencia = (float)$_POST['total_transferencia'];
         $total_mercadopago = (float)$_POST['total_mercadopago'];
         $total_cheques = (float)$_POST['total_cheques'];
         $total_fiados = (float)$_POST['total_fiados'];
@@ -36,17 +42,17 @@ class CierreCajaChoferController {
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO rendicion_choferes
-                (idUsuarioChofer, fecha, total_efectivo, total_transferencias, total_mercadopago, total_cheques, 
+                (idUsuarioChofer, fecha, total_efectivo, total_transferencia, total_mercadopago, total_cheques, 
                 total_fiados, total_gastos, pago_secretario, total_mec_faltante, total_rechazos, 
                 idUsuarioPreventista, total_general, total_menos_gastos)
-                VALUES (:idUsuarioChofer, CURDATE(), :total_efectivo, :total_transferencias, :total_mercadopago, 
+                VALUES (:idUsuarioChofer, CURDATE(), :total_efectivo, :total_transferencia, :total_mercadopago, 
                 :total_cheques, :total_fiados, :total_gastos, :pago_secretario, :total_mec_faltante, 
                 :total_rechazos, :idUsuarioPreventista, :total_general, :total_menos_gastos)
             ");
 
             $stmt->bindParam(':idUsuarioChofer', $idUsuarioChofer);
             $stmt->bindParam(':total_efectivo', $total_efectivo);
-            $stmt->bindParam(':total_transferencias', $total_transferencias);
+            $stmt->bindParam(':total_transferencia', $total_transferencia);
             $stmt->bindParam(':total_mercadopago', $total_mercadopago);
             $stmt->bindParam(':total_cheques', $total_cheques);
             $stmt->bindParam(':total_fiados', $total_fiados);
