@@ -396,7 +396,7 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                 document.getElementById('total_mercadopago').innerText = '$' + parseFloat(mediosPago
                     .total_mercadopago || 0).toFixed(2);
                 document.getElementById('total_transferencia').innerText = '$' + parseFloat(mediosPago
-                    .total_transferencias || 0).toFixed(2);
+                    .total_transferencia || 0).toFixed(2);
                 document.getElementById('total_cheques').innerText = '$' + parseFloat(mediosPago.total_cheques || 0)
                     .toFixed(2);
                 document.getElementById('total_fiados').innerText = '$' + parseFloat(mediosPago.total_fiados || 0)
