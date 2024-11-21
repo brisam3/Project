@@ -47,7 +47,7 @@ try {
     $mediosPagoQuery = "
         SELECT 
             total_efectivo,
-            total_transferencias,
+            total_transferencia,
             total_mercadopago,
             total_cheques,
             total_fiados
