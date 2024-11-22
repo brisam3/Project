@@ -187,7 +187,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                 </div>
                                             </div>
                                             <!-- Tablas de Resúmenes -->
-                                            <div class="row" style="--bs-gutter-x: 0 !important; padding-left: 0 !important; padding-right: 0 !important;">
+                                            <div class="row" style="--bs-gutter-x: 0.5rem !important; padding-left: 0 !important; padding-right: 0 !important;">
                                                 <!-- Ventas por Movil -->
                                                 <div class="col-md-6 mb-4">
                                                     <div class="card">
