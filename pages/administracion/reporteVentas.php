@@ -3,12 +3,12 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-include '../../../backend/controller/access/AccessController.php';
+include '../../backend/controller/access/AccessController.php';
 
 $accessController = new AccessController();
 
 // Verificar si el acceso está permitido
-if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVentas.php')) {
+if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) {
     $accessController->denyAccess();
     exit;
 }
@@ -18,7 +18,7 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
 
 <!DOCTYPE html>
 <html lang="es" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
-    data-assets-path="../../../assets/" data-template="horizontal-menu-template">
+    data-assets-path="../../assets/" data-template="horizontal-menu-template">
 
 <head>
     <meta charset="utf-8" />
@@ -30,7 +30,7 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
         integrity="sha512-cfBUsnQh7OSdceLgoYe8n5f4gR8wMSAEPr7iZYswqlN4OrcKUYxxCa5XPrp2XrtH0nXGGaOb7SfiI4Rkzr3psA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="icon" type="image/x-icon" href="../../../assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
     <link href="https://unpkg.com/boxicons/css/boxicons.min.css" rel="stylesheet">
 
     <!-- Fonts -->
@@ -41,20 +41,20 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
         rel="stylesheet" />
 
     <!-- Icons -->
-    <link rel="stylesheet" href="../../../assets/vendor/fonts/boxicons.css" />
-    <link rel="stylesheet" href="../../../assets/vendor/fonts/fontawesome.css" />
-    <link rel="stylesheet" href="../../../assets/vendor/fonts/flag-icons.css" />
+    <link rel="stylesheet" href="../../assets/vendor/fonts/boxicons.css" />
+    <link rel="stylesheet" href="../../assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="../../assets/vendor/fonts/flag-icons.css" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="../../../assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="../../../assets/vendor/css/rtl/theme-default.css"
+    <link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css"
         class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="../../../assets/css/demo.css" />
+    <link rel="stylesheet" href="../../assets/css/demo.css" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="../../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-    <link rel="stylesheet" href="../../../assets/vendor/libs/typeahead-js/typeahead.css" />
-    <link rel="stylesheet" href="../../../assets/vendor/libs/apex-charts/apex-charts.css" />
+    <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="../../assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="../../assets/vendor/libs/apex-charts/apex-charts.css" />
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
@@ -62,13 +62,13 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Helpers -->
-    <script src="../../../assets/vendor/js/helpers.js"></script>
+    <script src="../../assets/vendor/js/helpers.js"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-    <script src="../../../assets/vendor/js/template-customizer.js"></script>
+    <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="../../../assets/js/config.js"></script>
+    <script src="../../assets/js/config.js"></script>
 
 </head>
 
@@ -78,7 +78,7 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
         <div class="layout-container">
 
             <!-- Navigation -->
-            <?php include "../../template/nav.php"; ?>
+            <?php include "../template/nav.php"; ?>
             <!-- /Navigation -->
 
             <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
@@ -133,8 +133,8 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                                                                 <h4 class="card-title mb-1" id="total-ventas">
                                                                     $
                                                                 </h4>
-                                                                <small class="text-success"><i
-                                                                        class="bx bx-up-arrow-alt"></i> +12%</small>
+                                                            <!--     <small class="text-success"><i
+                                                                        class="bx bx-up-arrow-alt"></i> +12%</small>  -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -155,9 +155,9 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                                                                 <span class="fw-semibold d-block">Total Choferes</span>
                                                                 <h4 class="card-title mb-1" id="total-ventas-choferes">
                                                                     $</h4>
-                                                                <small class="text-success"><i
-                                                                        class="bx bx-up-arrow-alt"></i>
-                                                                    +%</small>
+                                                              <!--  <small class="text-success"><i
+                                                                        class="bx bx-up-arrow-alt"></i> 
+                                                                    +%</small>  -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -178,9 +178,9 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                                                                 <span class="fw-semibold d-block">Total Locales</span>
                                                                 <h4 class="card-title mb-1" id="total-ventas-locales">$
                                                                 </h4>
-                                                                <small class="text-danger"><i
+                                                             <!--   <small class="text-danger"><i
                                                                         class="bx bx-down-arrow-alt"></i>
-                                                                    -5%</small>
+                                                                    -5%</small>  -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -200,54 +200,44 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Preventista</th>
-                                                                        <th>Movil</th>
                                                                         <th>Total Ventas</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="ventas-por-movil">
                                                                     <tr>
-                                                                        <td>Mica</td>
-                                                                        <td>Movil 1</td>
+                                                                        <td>Mica - Movil 1</td>
                                                                         <td id="8">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Gustavo</td>
-                                                                        <td>Movil 2</td>
+                                                                        <td>Gustavo - Movil 2</td>
                                                                         <td id="9">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Chilo</td>
-                                                                        <td>Movil 3</td>
+                                                                        <td>Chilo - Movil 3</td>
                                                                         <td id="10">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Alexander</td>
-                                                                        <td>Movil 4</td>
+                                                                        <td>Alexander - Movil 4</td>
                                                                         <td id="11">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Diego</td>
-                                                                        <td>Movil 5</td>
+                                                                        <td>Diego - Movil 5</td>
                                                                         <td id="12">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Cristian</td>
-                                                                        <td>Movil 6</td>
+                                                                        <td>Cristian - Movil 6</td>
                                                                         <td id="13">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Marianela</td>
-                                                                        <td>Movil 7</td>
+                                                                        <td>Marianela - Movil 7</td>
                                                                         <td id="14">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Guille</td>
-                                                                        <td>Movil 8</td>
+                                                                        <td>Guille - Movil 8</td>
                                                                         <td id="15">$0</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>Soledad</td>
-                                                                        <td>Movil 9</td>
+                                                                        <td>Soledad - Movil 9</td>
                                                                         <td id="16">$0</td>
                                                                     </tr>
                                                                 </tbody>
@@ -327,20 +317,38 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
         </div>
     </div>
 
-    <script src="../../../assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="../../../assets/vendor/libs/popper/popper.js"></script>
-    <script src="../../../assets/vendor/js/bootstrap.js"></script>
-    <script src="../../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script src="../../../assets/vendor/libs/hammer/hammer.js"></script>
-    <script src="../../../assets/vendor/libs/i18n/i18n.js"></script>
-    <script src="../../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
-    <script src="../../../assets/vendor/js/menu.js"></script>
-    <!-- Vendors JS -->
-    <script src="../../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
-    <!-- Main JS -->
-    <script src="../../../assets/js/main.js"></script>
-    <!-- Page JS -->
-    <script src="../../../assets/js/dashboards-analytics.js"></script>
+   <!-- Overlay -->
+<div class="layout-overlay layout-menu-toggle"></div>
+
+<!-- Drag Target Area To SlideIn Menu On Small Screens -->
+<div class="drag-target"></div>
+
+<!--/ Layout wrapper -->
+
+<!-- Core JS -->
+<!-- build:js assets/vendor/js/core.js -->
+
+<script src="../../../assets/vendor/libs/jquery/jquery.js"></script>
+<script src="../../../assets/vendor/libs/popper/popper.js"></script>
+<script src="../../../assets/vendor/js/bootstrap.js"></script>
+<script src="../../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+<script src="../../../assets/vendor/libs/hammer/hammer.js"></script>
+<script src="../../../assets/vendor/libs/i18n/i18n.js"></script>
+<script src="../../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
+
+<script src="../../../assets/vendor/js/menu.js"></script>
+<!-- endbuild -->
+
+<!-- Vendors JS -->
+<script src="../../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+
+<!-- Main JS -->
+<script src="../../../assets/js/main.js"></script>
+
+<!-- Page JS -->
+<script src="../../../assets/js/dashboards-analytics.js"></script>
+
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -357,7 +365,7 @@ if (!$accessController->checkAccess('/pages/administracion/reportes/reporteVenta
         }
 
         // Realizar la solicitud al backend
-        fetch('../../../backend/controller/administracion/reporteVentas.php?fecha=' + fecha)
+        fetch('../../backend/controller/administracion/reporteVentas.php?fecha=' + fecha)
             .then(response => response.json())
             .then(data => {
                 console.log("Datos recibidos del backend:", data); // Imprimir los datos en consola
