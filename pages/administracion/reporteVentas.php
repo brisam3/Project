@@ -196,7 +196,6 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                             <h5 class="card-title mb-0">Ventas por Móvil</h5>
                                                         </div>
                                                         <div class="card-body">
-                                                        <div class="table-responsive">
                                                             <table class="table table-striped table-bordered">
                                                                 <thead>
                                                                     <tr>
@@ -243,20 +242,18 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <!-- Totales por Medios de Pago -->
-                                                <div class="col-md-6 mb-4">
+                                                <div class="col-md-6 mb-4" >
                                                     <div class="card">
                                                         <div
                                                             class="card-header d-flex justify-content-between align-items-center">
                                                             <h5 class="card-title mb-0">Totales por Medios de Pago</h5>
                                                         </div>
                                                         <div class="card-body">
-                                                        <div class="table-responsive">
                                                             <table class="table table-striped table-bordered">
                                                                 <thead>
                                                                     <tr>
@@ -287,7 +284,6 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
