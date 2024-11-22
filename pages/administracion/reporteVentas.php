@@ -196,6 +196,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                             <h5 class="card-title mb-0">Ventas por Móvil</h5>
                                                         </div>
                                                         <div class="card-body">
+                                                        <div class="table-responsive">
                                                             <table class="table table-striped table-bordered">
                                                                 <thead>
                                                                     <tr>
@@ -242,6 +243,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -254,6 +256,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                             <h5 class="card-title mb-0">Totales por Medios de Pago</h5>
                                                         </div>
                                                         <div class="card-body">
+                                                        <div class="table-responsive">
                                                             <table class="table table-striped table-bordered">
                                                                 <thead>
                                                                     <tr>
@@ -284,6 +287,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
