@@ -8,7 +8,7 @@ if (!isset($_SESSION['idUsuario'])) {
     header("Location: https://softwareparanegociosformosa.com/wol/pages/login/login.html");
     exit();
 }
-require_once '../../../../database/Database.php';
+require_once '../../../database/Database.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
@@ -54,8 +54,8 @@ class DevolucionesController {
     $idDetalleDevolucion = $this->db->lastInsertId();
 
     // Consulta para insertar en la tabla `devoluciones` usando `codBejerman`
-    $query = "INSERT INTO devoluciones (codBejerman, partida, cantidad, idTipoDevolucion, idUsuario, descripcion, idDetalleDevolucion) 
-              VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO devoluciones (codBejerman, partida, cantidad, idTipoDevolucion, idUsuario, descripcion, idDetalleDevolucion, codBarras) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $this->db->prepare($query);
 
@@ -75,7 +75,8 @@ class DevolucionesController {
                 $idTipoUsuario,
                 $idUsuario,
                 $articulo['descripcion'],
-                $idDetalleDevolucion
+                $idDetalleDevolucion,
+                $codigoBarras
             ]);
         } else {
             // Log de error si no se encuentra el `codBejerman`

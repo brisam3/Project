@@ -274,8 +274,7 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
 
             function sendProducts() {
                 if (productData.length > 0) {
-                    $.post(
-                        '../../backend/controller/locales/DevolucionesController.php', {
+                    $.post('../../backend/controller/locales/DevolucionesController.php', {
                             action: 'registrarDevoluciones',
                             articulos: productData
                         },

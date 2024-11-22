@@ -7,7 +7,10 @@ if (!isset($_SESSION['idUsuario'])) {
   header("Location: https://softwareparanegociosformosa.com/wol/pages/login/login.html");
   exit();
 }
-require_once '../../../database/Database.php';
+
+require_once('../../../database/Database.php');
+
+
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
