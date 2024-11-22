@@ -450,13 +450,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="/wol/pages/administracion/reportes/reportes.php" class="menu-link">
+                                <a href="/wol/pages/administracion/reportes.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
                                     <div data-i18n="Subir Reporte Diario">Reporte</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="/wol/pages/administracion/reportes/reporteVentas.php" class="menu-link">
+                                <a href="/wol/pages/administracion/reporteVentas.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
                                     <div data-i18n="Reporte ventas">Reporte Ventas</div>
                                 </a>
