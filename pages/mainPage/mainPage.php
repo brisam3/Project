@@ -83,7 +83,7 @@ if (!isset($_SESSION['idUsuario'])) {
               <div class="d-flex align-items-end row">
                 <div class="col-sm-7">
                   <div class="card-body">
-                    <h5 class="card-title text-primary">Bienvenido  🎉</h5>
+                    <h5 class="card-title text-primary">Bienvenidoa brisa 🎉</h5>
                     <p class="mb-4">
                       Frase del día: Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos amet animi officia
                     </p>
