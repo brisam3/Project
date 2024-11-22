@@ -8,7 +8,7 @@ include '../../backend/controller/access/AccessController.php';
 $accessController = new AccessController();
 
 // Verificar si el acceso está permitido
-if (!$accessController->checkAccess('/pages/cierreCaja/cierreLocales.php')) {
+if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
     $accessController->denyAccess();
     exit;
 }
@@ -235,7 +235,7 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreLocales.php')) {
       };
 
       $.ajax({
-        url: '../../backend/controller/cierreCaja/CierreCajaLocales.php',
+        url: '../../backend/controller/locales/CierreCajaController.php',
         type: 'POST',
         data: data,
         success: function(response) {

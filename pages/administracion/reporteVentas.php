@@ -8,7 +8,7 @@ include '../../backend/controller/access/AccessController.php';
 $accessController = new AccessController();
 
 // Verificar si el acceso está permitido
-if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) {
+if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) {
     $accessController->denyAccess();
     exit;
 }
@@ -31,13 +31,12 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
-    <link href="https://unpkg.com/boxicons/css/boxicons.min.css" rel="stylesheet">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet" />
 
     <!-- Icons -->
@@ -47,8 +46,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
 
     <!-- Core CSS -->
     <link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css"
-        class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="../../assets/css/demo.css" />
 
     <!-- Vendors CSS -->
@@ -56,10 +54,8 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
     <link rel="stylesheet" href="../../assets/vendor/libs/typeahead-js/typeahead.css" />
     <link rel="stylesheet" href="../../assets/vendor/libs/apex-charts/apex-charts.css" />
 
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../css/clima.css" />
 
     <!-- Helpers -->
     <script src="../../assets/vendor/js/helpers.js"></script>
@@ -69,6 +65,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
+
 
 </head>
 
@@ -133,7 +130,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                                 <h4 class="card-title mb-1" id="total-ventas">
                                                                     $
                                                                 </h4>
-                                                            <!--     <small class="text-success"><i
+                                                                <!--     <small class="text-success"><i
                                                                         class="bx bx-up-arrow-alt"></i> +12%</small>  -->
                                                             </div>
                                                         </div>
@@ -155,7 +152,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                                 <span class="fw-semibold d-block">Total Choferes</span>
                                                                 <h4 class="card-title mb-1" id="total-ventas-choferes">
                                                                     $</h4>
-                                                              <!--  <small class="text-success"><i
+                                                                <!--  <small class="text-success"><i
                                                                         class="bx bx-up-arrow-alt"></i> 
                                                                     +%</small>  -->
                                                             </div>
@@ -178,7 +175,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                                 <span class="fw-semibold d-block">Total Locales</span>
                                                                 <h4 class="card-title mb-1" id="total-ventas-locales">$
                                                                 </h4>
-                                                             <!--   <small class="text-danger"><i
+                                                                <!--   <small class="text-danger"><i
                                                                         class="bx bx-down-arrow-alt"></i>
                                                                     -5%</small>  -->
                                                             </div>
@@ -187,7 +184,8 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                 </div>
                                             </div>
                                             <!-- Tablas de Resúmenes -->
-                                            <div class="row" style="--bs-gutter-x: 0.5rem !important; padding-left: 0 !important; padding-right: 0 !important;">
+                                            <div class="row"
+                                                style="--bs-gutter-x: 0.5rem !important; padding-left: 0 !important; padding-right: 0 !important;">
                                                 <!-- Ventas por Movil -->
                                                 <div class="col-md-6 mb-4">
                                                     <div class="card">
@@ -317,37 +315,42 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
         </div>
     </div>
 
-   <!-- Overlay -->
-<div class="layout-overlay layout-menu-toggle"></div>
 
-<!-- Drag Target Area To SlideIn Menu On Small Screens -->
-<div class="drag-target"></div>
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
 
-<!--/ Layout wrapper -->
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
 
-<!-- Core JS -->
-<!-- build:js assets/vendor/js/core.js -->
+    <!--/ Layout wrapper -->
 
-<script src="../../../assets/vendor/libs/jquery/jquery.js"></script>
-<script src="../../../assets/vendor/libs/popper/popper.js"></script>
-<script src="../../../assets/vendor/js/bootstrap.js"></script>
-<script src="../../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
 
-<script src="../../../assets/vendor/libs/hammer/hammer.js"></script>
-<script src="../../../assets/vendor/libs/i18n/i18n.js"></script>
-<script src="../../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../assets/vendor/js/bootstrap.js"></script>
+    <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
-<script src="../../../assets/vendor/js/menu.js"></script>
-<!-- endbuild -->
+    <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
 
-<!-- Vendors JS -->
-<script src="../../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script src="../../assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
 
-<!-- Main JS -->
-<script src="../../../assets/js/main.js"></script>
+    <!-- Vendors JS -->
+    <script src="../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
 
-<!-- Page JS -->
-<script src="../../../assets/js/dashboards-analytics.js"></script>
+    <!-- Main JS -->
+    <script src="../../assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="../../assets/js/dashboards-analytics.js"></script>
+
+
+
+
 
 
     <script>
@@ -365,7 +368,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
         }
 
         // Realizar la solicitud al backend
-        fetch('../../backend/controller/administracion/reporteVentas.php?fecha=' + fecha)
+        fetch('../../backend/controller/administracion/ReporteVentas.php?fecha=' + fecha)
             .then(response => response.json())
             .then(data => {
                 console.log("Datos recibidos del backend:", data); // Imprimir los datos en consola
@@ -384,7 +387,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                 data.ventas.forEach(venta => {
                     var preventistaId = venta.idUsuarioPreventista;
                     var totalVentas = parseFloat(venta.total_menos_gastos) ||
-                    0; // Convertir a número flotante
+                        0; // Convertir a número flotante
 
                     // Buscar la celda correspondiente por id del preventista
                     var celda = document.getElementById(preventistaId);

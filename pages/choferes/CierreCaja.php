@@ -8,7 +8,7 @@ include '../../backend/controller/access/AccessController.php';
 $accessController = new AccessController();
 
 // Verificar si el acceso está permitido
-if (!$accessController->checkAccess('/pages/cierreCaja/cierreChoferes.php')) {
+if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
     $accessController->denyAccess();
     exit;
 }
@@ -337,7 +337,7 @@ if (!$accessController->checkAccess('/pages/cierreCaja/cierreChoferes.php')) {
         const totalMenosGastos = document.getElementById('total_menos_gastos')?.value || 0;
 
         $.ajax({
-            url: '../../backend/controller/cierreCaja/CierreCajaChoferes.php',
+            url: '../../backend/controller/choferes/CierreCajaController.php',
             type: 'POST',
             data: {
                 total_efectivo: parseFloat(totalEfectivo),

@@ -6,21 +6,21 @@ if (session_status() === PHP_SESSION_NONE) {
     class AccessController {
         private $permissions = [
             //locales
-            1 => ['/pages/devoluciones/vistaDevolucionesLocales.php', '/pages/cierreCaja/cierreLocales.php'],
+            1 => ['/pages/locales/Devoluciones.php', '/pages/locales/CierreCaja.php'],
             //preventa
-            2 => ['/pages/devoluciones/preventa/vistaDevolucionesPreventa.php'],
+            2 => ['/'],
             //deposito
-            3 => ['/pages/devoluciones/deposito/verDevoluciones.php'],
+            3 => ['/pages/deposito/Devoluciones.php'],
             //administracion
-            4 => ['/pages/administracion/reportes.php', '/pages/administracion/reporteVentas.php'],
+            4 => ['/pages/administracion/ImportarReporte.php', '/pages/administracion/ReporteVentas.php'],
             //gerencia
-            5 => ['/pages/gerencia/vistaGerencia.php'],
+            5 => ['/'],
             //contaduria
-            6 => ['../contaduria/vistaContaduria.php'],
+            6 => ['/'],
             //sistemas
-            7 => ['/pages/register/register.php'],
+            7 => ['/'],
             //chofer
-            8 => ['/pages/cierreCaja/cierreChoferes.php']
+            8 => ['/pages/choferes/CierreCaja.php']
         ];
     
     public function checkAccess($page) {

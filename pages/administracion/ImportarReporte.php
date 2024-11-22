@@ -8,7 +8,7 @@ include '../../backend/controller/access/AccessController.php';
 $accessController = new AccessController();
 
 // Verificar si el acceso está permitido
-if (!$accessController->checkAccess('/pages/administracion/reportes.php')) {
+if (!$accessController->checkAccess('/pages/administracion/ImportarReporte.php')) {
     $accessController->denyAccess();
     exit;
 }
@@ -140,7 +140,7 @@ if (!$accessController->checkAccess('/pages/administracion/reportes.php')) {
         console.log('Enviando el formulario...');
 
         $.ajax({
-          url: '../../backend/controller/administracion/reporte.php',
+          url: '../../backend/controller/administracion/ImportarReporte.php',
           type: 'POST',
           data: formData,
           processData: false,

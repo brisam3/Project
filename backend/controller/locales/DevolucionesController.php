@@ -5,7 +5,7 @@
 session_start();
 if (!isset($_SESSION['idUsuario'])) {
     // Redirigir al usuario de vuelta a la página de inicio de sesión si no está autenticado
-    header("Location: ../path/to/loginPage.html");
+    header("Location: https://softwareparanegociosformosa.com/wol/pages/login/login.html");
     exit();
 }
 require_once '../../../../database/Database.php';

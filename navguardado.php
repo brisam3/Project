@@ -1,7 +1,7 @@
 <?php
 
 
-include_once $_SERVER['DOCUMENT_ROOT'] . 'wol/backend/controller/session/checkSession.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/checkSession.php';
 
 
 
@@ -397,13 +397,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . 'wol/backend/controller/session/checkSe
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="/wol/pages/locales/Devoluciones.php" class="menu-link">
+                                <a href="/wol/pages/devoluciones/vistaDevolucionesLocales.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
                                     <div data-i18n="Generar Devolución">Generar Devolución</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="/wol/pages/locales/CierreCaja.php" class="menu-link">
+                                <a href="/wol/pages/cierreCaja/cierreLocales.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
                                     <div data-i18n="Cierre de Caja">Cierre de Caja</div>
                                 </a>
@@ -432,9 +432,9 @@ include_once $_SERVER['DOCUMENT_ROOT'] . 'wol/backend/controller/session/checkSe
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="/wol/pages/deposito/Devoluciones.php" class="menu-link">
+                                <a href="/wol/pages/devoluciones/deposito/verDevoluciones.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-package"></i>
-                                    <div data-i18n="Depósito">Ver Devoluciones</div>
+                                    <div data-i18n="Depósito">Depósito</div>
                                 </a>
                             </li>
                         </ul>
@@ -450,13 +450,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . 'wol/backend/controller/session/checkSe
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="/wol/pages/administracion/ImportarReporte.php" class="menu-link">
+                                <a href="/wol/pages/administracion/reportes.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
-                                    <div data-i18n="Subir Reporte Diario">Importar Reporte</div>
+                                    <div data-i18n="Subir Reporte Diario">Reporte</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="/wol/pages/administracion/ReporteVentas.php" class="menu-link">
+                                <a href="/wol/pages/administracion/reporteVentas.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
                                     <div data-i18n="Reporte ventas">Reporte Ventas</div>
                                 </a>
@@ -496,7 +496,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . 'wol/backend/controller/session/checkSe
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="/wol/pages/choferes/CierreCaja.php" class="menu-link">
+                                <a href="/wol/pages/cierreCaja/cierreChoferes.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-bus"></i>
 
                                     <div data-i18n="Cierre de Caja">Cierre de Caja</div>
