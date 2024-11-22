@@ -1,7 +1,7 @@
 <?php
 
 
-include_once $_SERVER['DOCUMENT_ROOT'] . 'wol/backend/controller/session/checkSession.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/checkSession.php';
 
 
 
