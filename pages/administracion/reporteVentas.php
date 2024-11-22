@@ -187,7 +187,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                 </div>
                                             </div>
                                             <!-- Tablas de Resúmenes -->
-                                            <div class="row">
+                                            <div class="row" style="--bs-gutter-x: 0 !important; padding-left: 0 !important; padding-right: 0 !important;">
                                                 <!-- Ventas por Movil -->
                                                 <div class="col-md-6 mb-4">
                                                     <div class="card">
@@ -247,7 +247,7 @@ if (!$accessController->checkAccess('/pages/administracion/reporteVentas.php')) 
                                                 </div>
 
                                                 <!-- Totales por Medios de Pago -->
-                                                <div class="col-md-6 mb-4" >
+                                                <div class="col-md-6 mb-4">
                                                     <div class="card">
                                                         <div
                                                             class="card-header d-flex justify-content-between align-items-center">
