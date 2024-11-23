@@ -44,65 +44,107 @@ try {
     }, 0);
 
     // Consulta para "Totales por Medios de Pago"
-    $mediosPagoQuery = "
+    $mediosPagoLocalesQuery = "
         SELECT 
-            total_efectivo,
-            total_transferencia,
-            total_mercadopago,
-            total_cheques,
-            total_fiados
-        FROM rendicion_choferes
-        WHERE fecha = :fecha
-    ";
-    $stmtMediosPago = $pdo->prepare($mediosPagoQuery);
-    $stmtMediosPago->execute(['fecha' => $fecha]);
-    $mediosPago = $stmtMediosPago->fetchAll(PDO::FETCH_ASSOC);
-
-    // Registro de depuración
-    error_log("Medios de pago: " . print_r($mediosPago, true));
-
-    // Sumar los totales de los medios de pago
-    $totalesMediosPago = [
-        "total_efectivo" => 0,
-        "total_mercadopago" => 0,
-        "total_transferencia" => 0,
-        "total_cheques" => 0,
-        "total_fiados" => 0
-    ];
-
-    foreach ($mediosPago as $medio) {
-        $totalesMediosPago['total_efectivo'] += (float) $medio['total_efectivo'];
-        $totalesMediosPago['total_mercadopago'] += (float) $medio['total_mercadopago'];
-        $totalesMediosPago['total_transferencia'] += (float) $medio['total_transferencia'];
-        $totalesMediosPago['total_cheques'] += (float) $medio['total_cheques'];
-        $totalesMediosPago['total_fiados'] += (float) $medio['total_fiados'];
-    }
-
-    // Consulta para "Cierre de Caja"
-    $cierreCajaQuery = "
-        SELECT total_menos_gastos
-        FROM cierreCaja
+	        efectivo,		
+            mercado_pago,		
+            payway,	
+            cambios,	
+            cuenta_corriente
+        FROM cierrecaja
         WHERE fecha_cierre = :fecha
     ";
-    $stmtCierreCaja = $pdo->prepare($cierreCajaQuery);
-    $stmtCierreCaja->execute(['fecha' => $fecha]);
-    $cierreCaja = $stmtCierreCaja->fetchAll(PDO::FETCH_ASSOC);
-
-    // Sumar todos los "total_menos_gastos" del cierre de caja
-    $totalCierreCaja = array_reduce($cierreCaja, function($sum, $cierre) {
-        return $sum + (float) $cierre['total_menos_gastos'];
-    }, 0);
+    $stmtMediosPagoLocales = $pdo->prepare($mediosPagoLocalesQuery);
+    $stmtMediosPagoLocales->execute(['fecha' => $fecha]);
+    $mediosPagoLocales = $stmtMediosPagoLocales->fetchAll(PDO::FETCH_ASSOC);
 
     // Registro de depuración
-    error_log("Cierre de caja: " . print_r($cierreCaja, true));
+    error_log("Medios de pago locales: " . print_r($mediosPagoLocales, true));
+
+    // Sumar los totales de los medios de pago
+    $totalesMediosPagoLocales = [
+        "efectivo" => 0,
+        "mercado_pago" => 0,
+        "payway" => 0,
+        "cambios" => 0,
+        "cuenta_corriente" => 0
+    ];
+
+    foreach ($mediosPagoLocales as $medio) {
+        $totalesMediosPagoLocales['efectivo'] += (float) $medio['efectivo'];
+        $totalesMediosPagoLocales['mercado_pago'] += (float) $medio['mercado_pago'];
+        $totalesMediosPagoLocales['payway'] += (float) $medio['payway'];
+        $totalesMediosPagoLocales['cambios'] += (float) $medio['cambios'];
+        $totalesMediosPagoLocales['cuenta_corriente'] += (float) $medio['cuenta_corriente'];
+    }
+
+       // Consulta para "Totales por Medios de Pago"
+       $mediosPagoQuery = "
+       SELECT 
+           total_efectivo,
+           total_transferencia,
+           total_mercadopago,
+           total_cheques,
+           total_fiados
+       FROM rendicion_choferes
+       WHERE fecha = :fecha
+   ";
+   $stmtMediosPago = $pdo->prepare($mediosPagoQuery);
+   $stmtMediosPago->execute(['fecha' => $fecha]);
+   $mediosPago = $stmtMediosPago->fetchAll(PDO::FETCH_ASSOC);
+
+   // Registro de depuración
+   error_log("Medios de pago: " . print_r($mediosPago, true));
+ 
+// Sumar los totales de los medios de pago
+$totalesMediosPago = [
+    "total_efectivo" => 0,
+    "total_mercadopago" => 0,
+    "total_transferencia" => 0,
+    "total_cheques" => 0,
+    "total_fiados" => 0
+];
+
+foreach ($mediosPago as $medio) {
+    $totalesMediosPago['total_efectivo'] += (float) $medio['total_efectivo'];
+    $totalesMediosPago['total_mercadopago'] += (float) $medio['total_mercadopago'];
+    $totalesMediosPago['total_transferencia'] += (float) $medio['total_transferencia'];
+    $totalesMediosPago['total_cheques'] += (float) $medio['total_cheques'];
+    $totalesMediosPago['total_fiados'] += (float) $medio['total_fiados'];
+}
+
+
+
+   $ventasLocalesQuery = "
+   SELECT idUsuario, total_menos_gastos 
+   FROM cierreCaja 
+   WHERE fecha_cierre = :fecha
+";
+$stmtVentasLocales = $pdo->prepare($ventasLocalesQuery);
+$stmtVentasLocales->execute(['fecha' => $fecha]);
+$ventasLocales = $stmtVentasLocales->fetchAll(PDO::FETCH_ASSOC);
+
+// Registro de depuración
+error_log("Ventas por móvil: " . print_r($ventasLocales, true));
+
+// Sumar todos los valores de "total_menos_gastos"
+$totalVentasLocales = array_reduce($ventasLocales, function($sum, $ventaLocales) {
+   return $sum + (float) $ventaLocales['total_menos_gastos'];
+}, 0);
+
+error_log("Ventas locales: " . print_r($ventasLocales, true));
+
 
     // Respuesta en JSON
     echo json_encode([
         "ventas" => $ventas,
+        "ventasLocales" => $ventasLocales,
         "mediosPago" => $mediosPago,
+        "mediosPagoLocales"=> $mediosPagoLocales,
         "totalVentas" => $totalVentas,
-        "totalCierreCaja" => $totalCierreCaja,
-        "totalesMediosPago" => $totalesMediosPago
+        "totalVentasLocales"=> $totalVentasLocales,
+        "totalesMediosPago" => $totalesMediosPago,
+        "totalesMediosPagoLocales"=>$totalesMediosPagoLocales
     ]);
 } catch (Exception $e) {
     http_response_code(500);
