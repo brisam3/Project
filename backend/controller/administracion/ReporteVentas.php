@@ -51,7 +51,7 @@ try {
             payway,	
             cambios,	
             cuenta_corriente
-        FROM cierrecaja
+        FROM cierreCaja
         WHERE fecha_cierre = :fecha
     ";
     $stmtMediosPagoLocales = $pdo->prepare($mediosPagoLocalesQuery);
