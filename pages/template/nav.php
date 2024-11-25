@@ -552,7 +552,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             },
                             buttonsStyling: false // Usa estilos personalizados
                         }).then(() => {
-                            window.location.href = '../pages/login/login.html';
+                            window.location.href = '../login/login.html';
                         });
                     } else {
                         Swal.fire({
