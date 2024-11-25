@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 if (!isset($_SESSION['idUsuario'])) {
     // Si no hay sesión iniciada, redirigir al login
-    header("Location: ../../pages/login/login.html");
+    header("Location: ../../../pages/login/login.html");
     exit();
 } else {
     // Verificar si los datos de la sesión están disponibles
