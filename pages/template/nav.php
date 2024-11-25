@@ -415,10 +415,19 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
 
                     <!-- Preventa -->
                     <li class="menu-item">
-                        <a href="javascript:void(0)" class="menu-link">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-cart"></i>
                             <div data-i18n="Preventa">Preventa</div>
                         </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="../preventa/preventa.php" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-chart"></i>
+
+                                    <div data-i18n="Reporte Diario">Reporte Diario</div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <!-- Depósito -->
