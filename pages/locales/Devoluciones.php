@@ -83,89 +83,122 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
       ?>
             <!-- Nav -->
             <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
-                <div class="layout-container">
-                    <div class="layout-page">
-                        <div class="content-wrapper">
-                            <div class="container-xxl flex-grow-1 container-p-y">
-                                <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Formulario /</span>
-                                    Carga de Stock</h4>
-                                <div class="row">
-                                    <div class="col-xl-8">
-                                        <div class="card mb-4">
-                                            <div class="card-header">
-                                                <h5 class="mb-0">Artículos Cargados</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <table class="invoice-list-table table border-top">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Cod Bejerman</th> <!-- Mostrará codBejerman -->
-                                                                <th>Descripción</th> <!-- Mostrará descripcion -->
-                                                                <th>Lote</th> <!-- Mostrará batch -->
-                                                                <th>Cantidad</th> <!-- Mostrará quantity -->
-                                                                <th>Acciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="product-list">
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!-- Contenedor centrado para el botón Enviar -->
-                                        <div class="text-center mt-3">
-                                            <button type="button" class="btn btn-primary"
-                                                onclick="sendProducts()">Enviar</button>
-                                        </div>
+    <div class="layout-container">
+        <div class="layout-page">
+            <div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Formulario /</span> Carga de Stock</h4>
+                    <div class="row">
+                        <!-- Tabla de productos cargados -->
+                        <div class="col-xl-8 col-md-12">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Artículos Cargados</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="invoice-list-table table border-top">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cod Bejerman</th>
+                                                    <th>Descripción</th>
+                                                    <th>Lote</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="product-list">
+                                                <!-- Los productos se agregan aquí dinámicamente -->
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="col-xl-4">
-                                        <div class="card mb-4">
-                                            <div class="card-header d-flex justify-content-between align-items-center">
-                                                <h5 class="mb-0">Cargar Artículo</h5>
-                                                <small class="text-muted float-end">Formulario de carga de stock</small>
-                                            </div>
-                                            <div class="card-body">
-                                                <form id="stock-form">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" for="barcode">Código de Barras</label>
-                                                        <input type="text" class="form-control" id="barcode"
-                                                            placeholder="Escanea el código de barras" />
-                                                    </div>
-                                                    <div id="product-details" style="display: none;">
-                                                        <div class="mb-3">
-                                                            <label class="form-label"
-                                                                for="description">Descripción</label>
-                                                            <input type="text" class="form-control" id="description"
-                                                                readonly />
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="batch">Lote</label>
-                                                            <input type="text" class="form-control" id="batch"
-                                                                placeholder="Ingrese el lote" />
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="quantity">Cantidad</label>
-                                                            <input type="number" class="form-control" id="quantity"
-                                                                placeholder="Ingrese la cantidad" />
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <button type="button" class="btn btn-primary" onclick="sendProducts()">Enviar</button>
+                            </div>
+                        </div>
 
-
-                                                        </div>
-                                                        <input type="hidden" id="codBejerman" />
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="addProduct()">Agregar Producto</button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                        <!-- Formularios de carga -->
+                        <div class="col-xl-4 col-md-12">
+                            <!-- Formulario de código de barras -->
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Buscar Artículo por Código de Barras</h5>
+                                    <small class="text-muted float-end">Escanea el código</small>
+                                </div>
+                                <div class="card-body">
+                                    <form id="stock-form">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="barcode">Código de Barras</label>
+                                            <input type="text" class="form-control" id="barcode" placeholder="Escanea el código de barras" />
                                         </div>
-                                    </div>
+                                        <div id="product-details" style="display: none;">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="description">Descripción</label>
+                                                <input type="text" class="form-control" id="description" readonly />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="batch">Lote</label>
+                                                <input type="text" class="form-control" id="batch" placeholder="Ingrese el lote" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="quantity">Cantidad</label>
+                                                <input type="number" class="form-control" id="quantity" placeholder="Ingrese la cantidad" />
+                                            </div>
+                                            <input type="hidden" id="codBejerman" />
+                                            <button type="button" class="btn btn-primary" onclick="addProduct()">Agregar Producto</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Formulario de descripción -->
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Buscar Artículo por Descripción</h5>
+                                    <small class="text-muted float-end">Seleccione un artículo</small>
+                                </div>
+                                <div class="card-body">
+                                    <form id="description-form">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="search-description">Descripción</label>
+                                            <input type="text" class="form-control" id="search-description" placeholder="Ingrese una descripción" />
+                                        </div>
+                                        <div id="search-results" style="display: none;">
+                                            <label class="form-label" for="description-results">Resultados</label>
+                                            <select class="form-select" id="description-results">
+                                                <!-- Los resultados de búsqueda se llenan aquí -->
+                                            </select>
+                                        </div>
+                                        <div id="description-product-details" style="display: none;">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="desc-description">Descripción</label>
+                                                <input type="text" class="form-control" id="desc-description" readonly />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="desc-batch">Lote</label>
+                                                <input type="text" class="form-control" id="desc-batch" placeholder="Ingrese el lote" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" for="desc-quantity">Cantidad</label>
+                                                <input type="number" class="form-control" id="desc-quantity" placeholder="Ingrese la cantidad" />
+                                            </div>
+                                            <input type="hidden" id="desc-codBejerman" />
+                                            <input type="hidden" id="desc-codBarras" />
+                                            <button type="button" class="btn btn-primary" onclick="addProductByDescription()">Agregar Producto</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
 
             <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
             <script src="../../assets/vendor/libs/popper/popper.js"></script>
@@ -192,6 +225,7 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
             const productData = [];
 
             $(document).ready(function() {
+                // Buscar por código de barras
                 $('#barcode').on('input', function() {
                     const barcode = $(this).val();
                     if (barcode) {
@@ -204,7 +238,6 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                             },
                             dataType: 'json',
                             success: function(data) {
-                                console.log(data);
                                 if (data && data.codBarras) {
                                     $('#description').val(data.descripcion);
                                     $('#product-details').show();
@@ -221,8 +254,70 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                         });
                     }
                 });
+
+                // Buscar artículos por descripción
+                $('#search-description').on('input', function() {
+                    searchByDescription();
+                });
+
+                // Mostrar detalles al seleccionar un artículo del select
+                $('#description-results').on('change', function() {
+                    const selectedOption = $(this).find(':selected');
+                    const codBarras = selectedOption.val();
+                    const description = selectedOption.data('desc');
+                    const codBejerman = selectedOption.data('codbejerman');
+
+                    if (codBarras) {
+                        $('#desc-description').val(description);
+                        $('#desc-codBejerman').val(codBejerman);
+                        $('#desc-codBarras').val(
+                        codBarras); // Almacena el código de barras en un campo oculto
+                        $('#description-product-details').show();
+                    } else {
+                        $('#description-product-details').hide();
+                    }
+                });
             });
 
+            // Función para buscar artículos por descripción
+            function searchByDescription() {
+                const description = $('#search-description').val();
+                if (description.length >= 3) { // Inicia la búsqueda después de 3 caracteres
+                    $.ajax({
+                        url: '../../backend/controller/locales/DevolucionesController.php',
+                        type: 'POST',
+                        data: {
+                            action: 'buscarPorDescripcion',
+                            descripcion: description
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.length > 0) {
+                                const options = data.map(item =>
+                                    `<option value="${item.codBarras}" data-desc="${item.descripcion}" data-codbejerman="${item.codBejerman}">
+                            ${item.descripcion} - ${item.codBejerman}
+                        </option>`
+                                );
+                                $('#description-results').html(options.join(''));
+                                $('#search-results').show();
+                            } else {
+                                $('#description-results').html(
+                                    '<option value="">No se encontraron resultados</option>');
+                                $('#search-results').show();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            console.error('Detalles:', xhr.responseText);
+                            alert('Error al buscar los productos.');
+                        }
+                    });
+                } else {
+                    $('#search-results').hide();
+                }
+            }
+
+            // Función para agregar producto desde el formulario de código de barras
             function addProduct() {
                 const barcode = $('#barcode').val();
                 const batch = $('#batch').val();
@@ -231,6 +326,13 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                 const codBejerman = $('#codBejerman').val();
 
                 if (barcode && batch && quantity && description && codBejerman) {
+                    // Validar duplicados
+                    const exists = productData.some(product => product.codBarras === barcode);
+                    if (exists) {
+                        alert('El producto ya está en la lista.');
+                        return;
+                    }
+
                     productData.push({
                         codBejerman: codBejerman,
                         codBarras: barcode,
@@ -240,21 +342,24 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                     });
 
                     const row = `
-      <tr>
-        <td>${codBejerman}</td> <!-- Columna para codBejerman -->
-        <td>${description}</td> <!-- Columna para descripcion -->
-        <td>${batch}</td> <!-- Columna para batch -->
-        <td>${quantity}</td> <!-- Columna para quantity -->
-        <td>
-          <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
-            <span class="tf-icons bx bx-trash"></span>
-          </button>
-        </td>
-      </tr>
-    `;
+        <tr>
+            <td>${codBejerman}</td>
+            <td>${description}</td>
+            <td>${batch}</td>
+            <td>${quantity}</td>
+            <td>
+                <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
+                    <span class="tf-icons bx bx-trash"></span>
+                </button>
+            </td>
+        </tr>
+        `;
                     $('#product-list').append(row);
 
-                    // Limpiar campos después de agregar el producto
+                    // Actualizar resumen
+                    updateSummary();
+
+                    // Limpiar campos
                     $('#barcode').val('');
                     $('#batch').val('');
                     $('#quantity').val('');
@@ -266,19 +371,90 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                 }
             }
 
+            // Función para agregar producto desde el formulario de descripción
+            function addProductByDescription() {
+                const description = $('#desc-description').val();
+                const batch = $('#desc-batch').val();
+                const quantity = $('#desc-quantity').val();
+                const codBejerman = $('#desc-codBejerman').val();
+                const codBarras = $('#desc-codBarras').val();
 
-            function removeProduct(button) {
-                const row = $(button).closest('tr');
-                row.remove();
+                if (description && batch && quantity && codBejerman && codBarras) {
+                    // Validar duplicados
+                    const exists = productData.some(product => product.codBarras === codBarras);
+                    if (exists) {
+                        alert('El producto ya está en la lista.');
+                        return;
+                    }
+
+                    productData.push({
+                        codBejerman: codBejerman,
+                        codBarras: codBarras,
+                        partida: batch,
+                        cantidad: quantity,
+                        descripcion: description
+                    });
+
+                    const row = `
+        <tr>
+            <td>${codBejerman}</td>
+            <td>${description}</td>
+            <td>${batch}</td>
+            <td>${quantity}</td>
+            <td>
+                <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
+                    <span class="tf-icons bx bx-trash"></span>
+                </button>
+            </td>
+        </tr>
+        `;
+                    $('#product-list').append(row);
+
+                    // Actualizar resumen
+                    updateSummary();
+
+                    // Limpiar campos
+                    $('#search-description').val('');
+                    $('#desc-batch').val('');
+                    $('#desc-quantity').val('');
+                    $('#desc-description').val('');
+                    $('#desc-codBejerman').val('');
+                    $('#desc-codBarras').val('');
+                    $('#description-product-details').hide();
+                } else {
+                    alert('Por favor complete todos los campos.');
+                }
             }
 
+            // Función para eliminar producto de la lista
+            function removeProduct(button) {
+                const row = $(button).closest('tr');
+                const codBarras = row.find('td').eq(0).text();
+                productData.splice(productData.findIndex(product => product.codBarras === codBarras), 1);
+                row.remove();
+                updateSummary();
+            }
+
+            // Función para actualizar el resumen de la lista
+            function updateSummary() {
+                const totalProducts = productData.length;
+                const totalQuantity = productData.reduce((sum, product) => sum + parseInt(product.cantidad), 0);
+                $('#total-products').text(totalProducts);
+                $('#total-quantity').text(totalQuantity);
+            }
+
+            // Función para enviar los productos al servidor
             function sendProducts() {
                 if (productData.length > 0) {
-                    $.post('../../backend/controller/locales/DevolucionesController.php', {
+                    $.ajax({
+                        url: '../../backend/controller/locales/DevolucionesController.php',
+                        type: 'POST',
+                        data: {
                             action: 'registrarDevoluciones',
                             articulos: productData
                         },
-                        function(response) {
+                        dataType: 'json',
+                        success: function(response) {
                             if (response.success) {
                                 Swal.fire({
                                     title: '¡Éxito!',
@@ -288,6 +464,7 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                                 }).then(() => {
                                     $('#product-list').empty();
                                     productData.length = 0;
+                                    updateSummary();
                                 });
                             } else {
                                 Swal.fire({
@@ -298,8 +475,17 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                                 });
                             }
                         },
-                        'json'
-                    );
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            console.error('Detalles:', xhr.responseText);
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'No se pudo procesar la solicitud.',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    });
                 } else {
                     Swal.fire({
                         title: 'Advertencia',

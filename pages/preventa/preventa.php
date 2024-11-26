@@ -206,24 +206,25 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Reporte de Preventa</h4>
 
     <!-- Preventa Report Table -->
     <div class="card">
         <h5 class="card-header">Reporte de Preventa</h5>
-        <div class="card-datatable table-responsive">
+        <div class="card-datatable text-nowrap">
             <table class="datatables-ajax table table-bordered">
                 <thead>
                     <tr>
                         <th>Preventista</th>
-                        <th>Boletas</th>
-                        <th>Clientes</th>
-                        <th>Total Venta</th>
+                        <th>Cantidad de Boletas</th>
+                        <th>Cantidad de Clientes</th>
+                        <th>Total de Venta Diario</th>
                         <th>Ticket Promedio</th>
                         <th>Comisión</th>
-                        <th>Variedad Artículos</th>
-                        <th>Variedad Proveedores</th>
+                        <th>Variedad de Artículos</th>
+                        <th>Variedad de Proveedores</th>
                         <th>Promedio Artículos/Cliente</th>
                         <th>Promedio Proveedores/Cliente</th>
                     </tr>
@@ -300,7 +301,7 @@
 
     <!-- Page JS -->
     <script src="../../assets/js/dashboards-analytics.js"></script>
-
+    
     <script>
     // Al cargar la página, obtener la fecha actual y almacenarla en la variable 'fecha'
     document.addEventListener('DOMContentLoaded', function() {
