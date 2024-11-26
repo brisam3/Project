@@ -25,8 +25,9 @@ if (isset($_FILES['excelFile'])) {
 
         echo "Archivo cargado correctamente. Total filas: $highestRow.<br>";
 
-        // Validar si ya existe un reporte para hoy
+        date_default_timezone_set('America/Argentina/Buenos_Aires'); // Ajusta según tu zona horaria
         $today = date('Y-m-d');
+        
         $stmtCheck = $pdo->prepare("SELECT id FROM detallereporte WHERE fecha = :fecha");
         $stmtCheck->execute([':fecha' => $today]);
         if ($stmtCheck->fetch()) {

@@ -208,60 +208,61 @@
                             </div>
 
                             <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Reporte de Preventa</h4>
+                                <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">DataTables /</span>
+                                    Reporte de Preventa</h4>
 
-    <!-- Preventa Report Table -->
-    <div class="card">
-        <h5 class="card-header">Reporte de Preventa</h5>
-        <div class="card-datatable text-nowrap">
-            <table class="datatables-ajax table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Preventista</th>
-                        <th>Cantidad de Boletas</th>
-                        <th>Cantidad de Clientes</th>
-                        <th>Total de Venta Diario</th>
-                        <th>Ticket Promedio</th>
-                        <th>Comisión</th>
-                        <th>Variedad de Artículos</th>
-                        <th>Variedad de Proveedores</th>
-                        <th>Promedio Artículos/Cliente</th>
-                        <th>Promedio Proveedores/Cliente</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Aquí van los datos de la tabla -->
-                    <tr>
-                        <td>Juan Pérez</td>
-                        <td>150</td>
-                        <td>120</td>
-                        <td>$3000</td>
-                        <td>$25</td>
-                        <td>$500</td>
-                        <td>10</td>
-                        <td>5</td>
-                        <td>1.25</td>
-                        <td>1.5</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Gómez</td>
-                        <td>200</td>
-                        <td>180</td>
-                        <td>$4000</td>
-                        <td>$22</td>
-                        <td>$600</td>
-                        <td>12</td>
-                        <td>6</td>
-                        <td>1.25</td>
-                        <td>1.2</td>
-                    </tr>
-                    <!-- Puedes agregar más filas según los datos que tengas -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <!--/ Preventa Report Table -->
-</div>
+                                <!-- Preventa Report Table -->
+                                <div >
+                                    <h5 class="card-header">Reporte de Preventa</h5>
+                                    <div class="card-datatable text-nowrap">
+                                        <table class="datatables-ajax table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Preventista</th>
+                                                    <th>Cantidad de Boletas</th>
+                                                    <th>Cantidad de Clientes</th>
+                                                    <th>Total de Venta Diario</th>
+                                                    <th>Ticket Promedio</th>
+                                                    <th>Comisión</th>
+                                                    <th>Variedad de Artículos</th>
+                                                    <th>Variedad de Proveedores</th>
+                                                    <th>Promedio Artículos/Cliente</th>
+                                                    <th>Promedio Proveedores/Cliente</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Aquí van los datos de la tabla -->
+                                                <tr>
+                                                    <td>Juan Pérez</td>
+                                                    <td>150</td>
+                                                    <td>120</td>
+                                                    <td>$3000</td>
+                                                    <td>$25</td>
+                                                    <td>$500</td>
+                                                    <td>10</td>
+                                                    <td>5</td>
+                                                    <td>1.25</td>
+                                                    <td>1.5</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Maria Gómez</td>
+                                                    <td>200</td>
+                                                    <td>180</td>
+                                                    <td>$4000</td>
+                                                    <td>$22</td>
+                                                    <td>$600</td>
+                                                    <td>12</td>
+                                                    <td>6</td>
+                                                    <td>1.25</td>
+                                                    <td>1.2</td>
+                                                </tr>
+                                                <!-- Puedes agregar más filas según los datos que tengas -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!--/ Preventa Report Table -->
+                            </div>
 
                         </div>
                     </div>
@@ -301,7 +302,7 @@
 
     <!-- Page JS -->
     <script src="../../assets/js/dashboards-analytics.js"></script>
-    
+
     <script>
     // Al cargar la página, obtener la fecha actual y almacenarla en la variable 'fecha'
     document.addEventListener('DOMContentLoaded', function() {
