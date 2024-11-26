@@ -383,7 +383,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                 <ul class="menu-inner">
                     <!-- Inicio -->
                     <li class="menu-item active">
-                        <a href="/wol/pages/mainPage/mainPage.php" class="menu-link">
+                        <a href="../mainPage/mainPage.php" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
                             <div data-i18n="Inicio">Inicio</div>
                         </a>

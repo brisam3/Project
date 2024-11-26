@@ -15,13 +15,13 @@ if (!$accessController->checkAccess('/pages/deposito/Devoluciones.php')) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
-    data-assets-path="../../assets/" data-template="horizontal-menu-template-no-customizer">
+<html lang="es" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
+    data-assets-path="../../assets/" data-template="horizontal-menu-template">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>Detalle de Devoluciones</title>
 
 
@@ -64,11 +64,6 @@ if (!$accessController->checkAccess('/pages/deposito/Devoluciones.php')) {
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
-
-
-
-
-
 </head>
 
 <body>
@@ -122,7 +117,6 @@ if (!$accessController->checkAccess('/pages/deposito/Devoluciones.php')) {
                 </div>
             </div>
 
-
             <!-- Overlay -->
             <div class="layout-overlay layout-menu-toggle"></div>
 
@@ -154,6 +148,8 @@ if (!$accessController->checkAccess('/pages/deposito/Devoluciones.php')) {
 
             <!-- Page JS -->
             <script src="../../assets/js/dashboards-analytics.js"></script>
+
+
 
 
 
