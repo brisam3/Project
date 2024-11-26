@@ -65,16 +65,17 @@ class DevolucionesController {
 
         $idUsuario = $_SESSION['idUsuario'];
         $idTipoUsuario = $_SESSION['idTipoUsuario'];
+        $idTipoDevolucion = $idTipoUsuario;
 
         // Insertar un nuevo registro en la tabla `detalleDevoluciones` con la fecha y hora actual
-        $detalleQuery = "INSERT INTO detalleDevoluciones (fechaHora) VALUES (NOW())";
+        $detalleQuery = "INSERT INTO detalleDevoluciones (fechaHora, idTipoDevolucion, idUsuario) VALUES (NOW(), ?, ?)";
         $detalleStmt = $this->db->prepare($detalleQuery);
-        $detalleStmt->execute();
+        $detalleStmt->execute([$idTipoDevolucion, $idUsuario]);
         $idDetalleDevolucion = $this->db->lastInsertId();
 
         // Consulta para insertar en la tabla `devoluciones` usando `codBejerman`
-        $query = "INSERT INTO devoluciones (codBejerman, partida, cantidad, idTipoDevolucion, idUsuario, descripcion, idDetalleDevolucion, codBarras) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO devoluciones (codBejerman, partida, cantidad, descripcion, idDetalleDevolucion, codBarras) 
+                  VALUES (?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->db->prepare($query);
 
@@ -91,8 +92,6 @@ class DevolucionesController {
                     $codBejerman,
                     $articulo['partida'],
                     $articulo['cantidad'],
-                    $idTipoUsuario,
-                    $idUsuario,
                     $articulo['descripcion'],
                     $idDetalleDevolucion,
                     $codigoBarras
