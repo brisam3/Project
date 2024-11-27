@@ -99,6 +99,35 @@ try {
         $ventasPreventista = [];
     }
 
+    function addCrown(&$ventasPreventista)
+{
+    if (empty($ventasPreventista)) {
+        return;
+    }
+
+    // Campos a analizar
+    $fields = ['CantidadBoletas', 'CantidadClientes'];
+
+    // Encontrar los valores máximos para cada campo
+    $maxValues = [];
+    foreach ($fields as $field) {
+        $maxValues[$field] = max(array_column($ventasPreventista, $field));
+    }
+
+    // Agregar coronita a los valores máximos
+    foreach ($ventasPreventista as &$venta) {
+        foreach ($fields as $field) {
+            if ($venta[$field] == $maxValues[$field]) {
+                $venta[$field] .= ' 👑'; // Agrega coronita
+            }
+        }
+    }
+}
+
+// Ejemplo de uso:
+addCrown($ventasPreventista);
+
+
     // Sumar las comisiones diarias
     $totalComisiones = array_sum(array_column($ventasPreventista, 'Comision'));
 

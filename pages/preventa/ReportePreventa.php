@@ -236,7 +236,8 @@
                                     <h2 class="fw-bold py-3 mb-4">Ventas por preventista</h2>
                                     <div class="table-responsive-xl mb-6 mb-lg-0">
                                         <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                            <table class="datatables-ajax table table-bordered m-3 table-hover" style="border: 1px solid #dee2e6 !important;">
+                                            <table class="datatables-ajax table table-bordered m-3 table-hover"
+                                                style="border: 1px solid #dee2e6 !important;">
                                                 <thead class="bg-light text-dark border-top-class m-1">
                                                     <tr>
                                                         <th>Preventista</th>
@@ -336,7 +337,7 @@
                                                     class="datatables-ajax-art-preventista table table-bordered m-3 table-hover">
                                                     <thead class="bg-light text-dark border-top-class m-1">
                                                         <tr>
-                                                           <th>Preventista</th>
+                                                            <th>Preventista</th>
                                                             <th>Codigo Articulo</th>
                                                             <th>Descripcion</th>
                                                             <th>Proveedor</th>
@@ -445,6 +446,13 @@
                         );
 
                         console.log(data);
+
+
+                        const formatter = new Intl.NumberFormat('es-ES', {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1
+                        });
+
                         // Llenar la tabla con datos
                         const tbodyPreventistas = $("#tabla-reporte");
                         data.ventasPreventista.forEach(preventista => {
@@ -453,13 +461,13 @@
                             <td>${preventista.Preventista}</td>
                             <td>${preventista.CantidadBoletas}</td>
                             <td>${preventista.CantidadClientes}</td>
-                            <td>${preventista.TotalVenta}</td>
-                            <td>${preventista.TicketPromedio}</td>
-                            <td>${preventista.Comision}</td>
+                            <td>${formatter.format(preventista.TotalVenta)}</td>
+                            <td>${formatter.format(preventista.TicketPromedio)}</td>
+                            <td>${formatter.format(preventista.Comision)}</td>
                             <td>${preventista.VariedadArticulos}</td>
                             <td>${preventista.VariedadProveedores}</td>
-                            <td>${preventista.PromedioArticulosPorCliente}</td>
-                            <td>${preventista.PromedioProveedoresPorCliente}</td>
+                            <td>${formatter.format(preventista.PromedioArticulosPorCliente)}</td>
+                            <td>${formatter.format(preventista.PromedioProveedoresPorCliente)}</td>
                         </tr>
                     `);
                         });
@@ -469,7 +477,10 @@
                             "paging": true, // Paginación activada
                             "searching": true, // Búsqueda activada
                             "ordering": true, // Ordenación activada
-                            "info": true, // Mostrar información de la tabla
+                            "info": true,
+                            "order": [
+                                [3, "desc"]
+                            ], // Mostrar información de la tabla
                             "language": {
                                 "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
                             }
@@ -481,8 +492,8 @@
                             tbodyProveedores.append(`
                         <tr>
                             <td>${proveedor.Proveedor}</td>
-                            <td>${proveedor.CantidadArticulos}</td>
-                            <td>${proveedor.TotalVenta}</td>
+                            <td>${formatter.format(proveedor.CantidadArticulos)}</td>
+                            <td>${formatter.format(proveedor.TotalVenta)}</td>
                         </tr>
                     `);
                         });
