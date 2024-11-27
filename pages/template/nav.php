@@ -421,7 +421,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="../preventa/preventa.php" class="menu-link">
+                                <a href="../preventa/ReportePreventa.php" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-chart"></i>
 
                                     <div data-i18n="Reporte Diario">Reporte Diario</div>
