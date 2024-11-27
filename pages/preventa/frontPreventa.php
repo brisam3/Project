@@ -236,7 +236,7 @@
                                     <h2 class="fw-bold py-3 mb-4">Ventas por preventista</h2>
                                     <div class="table-responsive-xl mb-6 mb-lg-0">
                                         <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                            <table class="datatables-ajax table table-bordered m-3 table-hover">
+                                            <table class="datatables-ajax table table-bordered m-3 table-hover" style="border: 1px solid #dee2e6 !important;">
                                                 <thead class="bg-light text-dark border-top-class m-1">
                                                     <tr>
                                                         <th>Preventista</th>
@@ -312,10 +312,11 @@
                                                     class="datatables-ajax-articulos table table-bordered m-3 table-hover">
                                                     <thead class="bg-light text-dark border-top-class m-1">
                                                         <tr>
-                                                            <th>Preventista</th>
+                                                            <th>CodigoArticulo</th>
+                                                            <th>Descripcion</th>
                                                             <th>Proveedor</th>
-                                                            <th>Cantidad Articulos</th>
-                                                            <th>Total de Ventas</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Total Ventas</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="tabla-articulos">
@@ -326,6 +327,32 @@
                                         </div>
                                         <!--/ Preventa Report Table -->
                                     </div>
+
+                                    <div class="container-xxl flex-grow-1 container-p-y">
+                                        <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos por Preventista</h2>
+                                        <div class="table-responsive-xl mb-6 mb-lg-0">
+                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                <table
+                                                    class="datatables-ajax-art-preventista table table-bordered m-3 table-hover">
+                                                    <thead class="bg-light text-dark border-top-class m-1">
+                                                        <tr>
+                                                           <th>Preventista</th>
+                                                            <th>Codigo Articulo</th>
+                                                            <th>Descripcion</th>
+                                                            <th>Proveedor</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Monto Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tabla-art-preventista">
+                                                        <!-- Los datos se llenarán dinámicamente -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!--/ Preventa Report Table -->
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -510,6 +537,31 @@
 
                         // Convertir la tabla de preventistas en una DataTable
                         $('.datatables-ajax-articulos').DataTable({
+                            "paging": true, // Paginación activada
+                            "searching": true, // Búsqueda activada
+                            "ordering": true, // Ordenación activada
+                            "info": true, // Mostrar información de la tabla
+                            "language": {
+                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                            }
+                        });
+
+                        const tbodyArticuloPreventistas = $("#tabla-art-preventista");
+                        data.articulosMasVendidosPreventista.forEach(artpreventista => {
+                            tbodyArticuloPreventistas.append(`
+                        <tr>
+                            <td>${artpreventista.Preventista}</td>
+                            <td>${artpreventista.CodigoArticulo}</td>
+                            <td>${artpreventista.Descripcion}</td>
+                            <td>${artpreventista.Proveedor}</td>
+                            <td>${artpreventista.Cantidad}</td>
+                            <td>${artpreventista.MontoTotal}</td>
+                        </tr>
+                    `);
+                        });
+
+                        // Convertir la tabla de preventistas en una DataTable
+                        $('.datatables-ajax-art-preventista').DataTable({
                             "paging": true, // Paginación activada
                             "searching": true, // Búsqueda activada
                             "ordering": true, // Ordenación activada
