@@ -61,9 +61,9 @@
 
             <div class="layout-page">
                 <div class="content-wrapper">
-                <div class="container-xxl flex-grow-1 container-p-y">
-                            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RESUMEN DEL DÍA /</span>
-                                        VENTAS</h4>
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RESUMEN DEL DÍA /</span>
+                            VENTAS</h4>
                         <div id="mensaje-carga" style="display: none;">
                             <p>Los datos de hoy serán actualizados antes de las 16:30 hs.</p>
                         </div>
@@ -233,11 +233,11 @@
                             </div>
                             <div class="row">
                                 <div class="container-xxl flex-grow-1 container-p-y">
-                                    <h2 class="fw-bold py-3 mb-4">Ventas por preventista</h2> 
+                                    <h2 class="fw-bold py-3 mb-4">Ventas por preventista</h2>
                                     <div class="table-responsive-xl mb-6 mb-lg-0">
-                                        <div class="dataTables_wrapper no-footer" style="width: 100% !important;"> 
+                                        <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
                                             <table class="datatables-ajax table table-bordered m-3 table-hover">
-                                            <thead class="bg-light text-dark border-top-class m-1">
+                                                <thead class="bg-light text-dark border-top-class m-1">
                                                     <tr>
                                                         <th>Preventista</th>
                                                         <th>Boletas</th>
@@ -261,15 +261,16 @@
                                 </div>
 
                                 <div class="container-xxl flex-grow-1 container-p-y">
-                                    <h2 class="fw-bold py-3 mb-4">Ventas por Proveedor</h2> 
+                                    <h2 class="fw-bold py-3 mb-4">Ventas por Proveedor</h2>
                                     <div class="table-responsive-xl mb-6 mb-lg-0">
-                                        <div class="dataTables_wrapper no-footer" style="width: 100% !important;"> 
-                                            <table class="datatables-ajax table table-bordered m-3 table-hover">
-                                            <thead class="bg-light text-dark border-top-class m-1">
+                                        <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                            <table
+                                                class="datatables-ajax-proveedores table table-bordered m-3 table-hover">
+                                                <thead class="bg-light text-dark border-top-class m-1">
                                                     <tr>
                                                         <th>Proveedor</th>
                                                         <th>Cantidad Articulos</th>
-                                                        <th>Ventas Totales</th>
+                                                        <th>Total de Ventas</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tabla-proveedores">
@@ -278,7 +279,53 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <!--/ Preventa Report Table -->
+
+
+                                    <div class="container-xxl flex-grow-1 container-p-y">
+                                        <h2 class="fw-bold py-3 mb-4">Ventas por Preventista y Proveedor</h2>
+                                        <div class="table-responsive-xl mb-6 mb-lg-0">
+                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                <table
+                                                    class="datatables-ajax-pre-proveedores table table-bordered m-3 table-hover">
+                                                    <thead class="bg-light text-dark border-top-class m-1">
+                                                        <tr>
+                                                            <th>Preventista</th>
+                                                            <th>Proveedor</th>
+                                                            <th>Cantidad Articulos</th>
+                                                            <th>Total de Ventas</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tabla-pre-proveedores">
+                                                        <!-- Los datos se llenarán dinámicamente -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!--/ Preventa Report Table -->
+                                    </div>
+
+                                    <div class="container-xxl flex-grow-1 container-p-y">
+                                        <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos</h2>
+                                        <div class="table-responsive-xl mb-6 mb-lg-0">
+                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                <table
+                                                    class="datatables-ajax-articulos table table-bordered m-3 table-hover">
+                                                    <thead class="bg-light text-dark border-top-class m-1">
+                                                        <tr>
+                                                            <th>Preventista</th>
+                                                            <th>Proveedor</th>
+                                                            <th>Cantidad Articulos</th>
+                                                            <th>Total de Ventas</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tabla-articulos">
+                                                        <!-- Los datos se llenarán dinámicamente -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!--/ Preventa Report Table -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -286,96 +333,95 @@
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
 
-    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-    <div class="drag-target"></div>
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
 
-    <!--/ Layout wrapper -->
+        <!--/ Layout wrapper -->
 
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
+        <!-- Core JS -->
+        <!-- build:js assets/vendor/js/core.js -->
 
-    <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="../../assets/vendor/libs/popper/popper.js"></script>
-    <script src="../../assets/vendor/js/bootstrap.js"></script>
-    <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+        <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+        <script src="../../assets/vendor/libs/popper/popper.js"></script>
+        <script src="../../assets/vendor/js/bootstrap.js"></script>
+        <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
-    <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
-    <script src="../../assets/vendor/libs/i18n/i18n.js"></script>
-    <script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
+        <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
+        <script src="../../assets/vendor/libs/i18n/i18n.js"></script>
+        <script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
 
-    <script src="../../assets/vendor/js/menu.js"></script>
-    <!-- endbuild -->
+        <script src="../../assets/vendor/js/menu.js"></script>
+        <!-- endbuild -->
 
-    <!-- Vendors JS -->
-    <script src="../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+        <!-- Vendors JS -->
+        <script src="../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
 
-    <!-- Main JS -->
-    <script src="../../assets/js/main.js"></script>
+        <!-- Main JS -->
+        <script src="../../assets/js/main.js"></script>
 
-    <!-- Page JS -->
-    <script src="../../assets/js/dashboards-analytics.js"></script>
+        <!-- Page JS -->
+        <script src="../../assets/js/dashboards-analytics.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-   
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-    <!-- AJAX Script -->
-    <script>
-   $(document).ready(function() {
-    // Hacer la solicitud AJAX al backend
-    $.ajax({
-        url: "../../backend/controller/preventa/preventaController.php", // Cambia por tu ruta PHP
-        method: "GET",
-        dataType: "json",
-        success: function(data) {
-            if (data.mostrarMensaje) {
-                // Mostrar el mensaje de actualización
-                $("#mensaje-carga").show();
-                $("#contenido-reportes").hide();
-            } else {
-                // Mostrar el contenido de los reportes
-                $("#mensaje-carga").hide();
-                $("#contenido-reportes").show();
 
-                const resumen = data.resumen;
-                const totalPromedioClientes = resumen.CantidadClientes / 10;
+        <!-- AJAX Script -->
+        <script>
+        $(document).ready(function() {
+            // Hacer la solicitud AJAX al backend
+            $.ajax({
+                url: "../../backend/controller/preventa/preventaController.php", // Cambia por tu ruta PHP
+                method: "GET",
+                dataType: "json",
+                success: function(data) {
+                    if (data.mostrarMensaje) {
+                        // Mostrar el mensaje de actualización
+                        $("#mensaje-carga").show();
+                        $("#contenido-reportes").hide();
+                    } else {
+                        // Mostrar el contenido de los reportes
+                        $("#mensaje-carga").hide();
+                        $("#contenido-reportes").show();
 
-                // Llenar los valores en las tarjetas
-                $("#total-vendido").text(
-                    `$${parseFloat(resumen.TotalVenta).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                );
-                $("#clientes").text(resumen.CantidadClientes.toLocaleString());
-                $("#boletas").text(resumen.CantidadBoletas.toLocaleString());
-                $("#ticket-promedio").text(
-                    `$${parseFloat(resumen.TicketPromedio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                );
-                $("#promedio-clientes").text(
-                    `${parseFloat(totalPromedioClientes).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                );
-                $("#total-sin-iva").text(
-                    `$${parseFloat(data.totalVentaMenosIVA).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                );
-                $("#total-sin-ponderado").text(
-                    `$${parseFloat(data.totalVentaMenosPonderado).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                );
-                $("#total-comisiones").text(
-                    `$${parseFloat(data.totalComisiones).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                );
-                $("#total-menos-ponderado-e-iva").text(
-                    `$${parseFloat(data.totalMenosPonderadoIVA).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                );
+                        const resumen = data.resumen;
+                        const totalPromedioClientes = resumen.CantidadClientes / 10;
 
-                console.log(data);
-                // Llenar la tabla con datos
-                const tbody = $("#tabla-reporte");
-                data.ventasPreventista.forEach(preventista => {
-                    tbody.append(`
+                        // Llenar los valores en las tarjetas
+                        $("#total-vendido").text(
+                            `$${parseFloat(resumen.TotalVenta).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                        );
+                        $("#clientes").text(resumen.CantidadClientes.toLocaleString());
+                        $("#boletas").text(resumen.CantidadBoletas.toLocaleString());
+                        $("#ticket-promedio").text(
+                            `$${parseFloat(resumen.TicketPromedio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                        );
+                        $("#promedio-clientes").text(
+                            `${parseFloat(totalPromedioClientes).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                        );
+                        $("#total-sin-iva").text(
+                            `$${parseFloat(data.totalVentaMenosIVA).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                        );
+                        $("#total-sin-ponderado").text(
+                            `$${parseFloat(data.totalVentaMenosPonderado).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                        );
+                        $("#total-comisiones").text(
+                            `$${parseFloat(data.totalComisiones).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                        );
+                        $("#total-menos-ponderado-e-iva").text(
+                            `$${parseFloat(data.totalMenosPonderadoIVA).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                        );
+
+                        console.log(data);
+                        // Llenar la tabla con datos
+                        const tbodyPreventistas = $("#tabla-reporte");
+                        data.ventasPreventista.forEach(preventista => {
+                            tbodyPreventistas.append(`
                         <tr>
                             <td>${preventista.Preventista}</td>
                             <td>${preventista.CantidadBoletas}</td>
@@ -389,51 +435,99 @@
                             <td>${preventista.PromedioProveedoresPorCliente}</td>
                         </tr>
                     `);
-                });
+                        });
 
-                // Convertir la tabla en una DataTable
-                $('.datatables-ajax').DataTable({
-                    "paging": true, // Paginación activada
-                    "searching": true, // Búsqueda activada
-                    "ordering": true, // Ordenación activada
-                    "info": true, // Mostrar información de la tabla
-                    "language": {
-                        "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
-                    }
-                });
+                        // Convertir la tabla de preventistas en una DataTable
+                        $('.datatables-ajax').DataTable({
+                            "paging": true, // Paginación activada
+                            "searching": true, // Búsqueda activada
+                            "ordering": true, // Ordenación activada
+                            "info": true, // Mostrar información de la tabla
+                            "language": {
+                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                            }
+                        });
 
-
-
-                const tbodyproveedores = $("#tabla-proveedores");
-                data.ventasProveedor.forEach(proveedor => {
-                    tbody.append(`
+                        // Llenar la tabla con datos de proveedores
+                        const tbodyProveedores = $("#tabla-proveedores");
+                        data.ventasProveedor.forEach(proveedor => {
+                            tbodyProveedores.append(`
                         <tr>
                             <td>${proveedor.Proveedor}</td>
                             <td>${proveedor.CantidadArticulos}</td>
                             <td>${proveedor.TotalVenta}</td>
                         </tr>
                     `);
-                });
+                        });
 
-                // Convertir la tabla en una DataTable
-                $('.datatables-ajax-proveedores').DataTable({
-                    "paging": true, // Paginación activada
-                    "searching": true, // Búsqueda activada
-                    "ordering": true, // Ordenación activada
-                    "info": true, // Mostrar información de la tabla
-                    "language": {
-                        "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                        // Convertir la tabla de proveedores en una DataTable
+                        $('.datatables-ajax-proveedores').DataTable({
+                            "paging": true,
+                            "searching": true,
+                            "ordering": true,
+                            "info": true,
+                            "language": {
+                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                            }
+                        });
+
+
+                        const tbodyPreProveedor = $("#tabla-pre-proveedores");
+                        data.ventasPreventistaProveedor.forEach(preProveedor => {
+                            tbodyPreProveedor.append(`
+                        <tr>
+                            <td>${preProveedor.Preventista}</td>
+                            <td>${preProveedor.Proveedor}</td>
+                            <td>${preProveedor.CantidadArticulos}</td>
+                            <td>${preProveedor.TotalVenta}</td>
+                        </tr>
+                    `);
+                        });
+
+                        // Convertir la tabla de preventistas en una DataTable
+                        $('.datatables-ajax-pre-proveedores').DataTable({
+                            "paging": true, // Paginación activada
+                            "searching": true, // Búsqueda activada
+                            "ordering": true, // Ordenación activada
+                            "info": true, // Mostrar información de la tabla
+                            "language": {
+                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                            }
+                        });
+
+                        const tbodyArticulos = $("#tabla-articulos");
+                        data.articulosMasVendidos.forEach(articulos => {
+                            tbodyArticulos.append(`
+                        <tr>
+                            <td>${articulos.CodigoArticulo}</td>
+                            <td>${articulos.Descripcion}</td>
+                            <td>${articulos.Proveedor}</td>
+                            <td>${articulos.Cantidad}</td>
+                            <td>${articulos.MontoTotal}</td>
+                        </tr>
+                    `);
+                        });
+
+                        // Convertir la tabla de preventistas en una DataTable
+                        $('.datatables-ajax-articulos').DataTable({
+                            "paging": true, // Paginación activada
+                            "searching": true, // Búsqueda activada
+                            "ordering": true, // Ordenación activada
+                            "info": true, // Mostrar información de la tabla
+                            "language": {
+                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                            }
+                        });
+
+
                     }
-                });
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("Error al cargar los datos:", error);
-        }
-    });
-});
-
-    </script>
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al cargar los datos:", error);
+                }
+            });
+        });
+        </script>
 </body>
 
 </html>
