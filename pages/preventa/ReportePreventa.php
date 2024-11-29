@@ -474,16 +474,12 @@
 
                         // Convertir la tabla de preventistas en una DataTable
                         $('.datatables-ajax').DataTable({
-                            "paging": true, // Paginación activada
-                            "searching": true, // Búsqueda activada
-                            "ordering": true, // Ordenación activada
-                            "info": true,
+                            "language": {
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json" // Idioma en español
+                            },
                             "order": [
                                 [3, "desc"]
-                            ], // Mostrar información de la tabla
-                            "language": {
-                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
-                            }
+                            ]
                         });
 
                         // Llenar la tabla con datos de proveedores
@@ -505,7 +501,7 @@
                             "ordering": true,
                             "info": true,
                             "language": {
-                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json" // Idioma en español
                             }
                         });
 
@@ -516,8 +512,8 @@
                         <tr>
                             <td>${preProveedor.Preventista}</td>
                             <td>${preProveedor.Proveedor}</td>
-                            <td>${preProveedor.CantidadArticulos}</td>
-                            <td>${preProveedor.TotalVenta}</td>
+                            <td>${formatter.format(preProveedor.CantidadArticulos)}</td>
+                            <td>${formatter.format(preProveedor.TotalVenta)}</td>
                         </tr>
                     `);
                         });
@@ -529,7 +525,7 @@
                             "ordering": true, // Ordenación activada
                             "info": true, // Mostrar información de la tabla
                             "language": {
-                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json" // Idioma en español
                             }
                         });
 
@@ -540,8 +536,8 @@
                             <td>${articulos.CodigoArticulo}</td>
                             <td>${articulos.Descripcion}</td>
                             <td>${articulos.Proveedor}</td>
-                            <td>${articulos.Cantidad}</td>
-                            <td>${articulos.MontoTotal}</td>
+                            <td>${formatter.format(articulos.Cantidad)}</td>
+                            <td>${formatter.format(articulos.MontoTotal)}</td>
                         </tr>
                     `);
                         });
@@ -553,7 +549,7 @@
                             "ordering": true, // Ordenación activada
                             "info": true, // Mostrar información de la tabla
                             "language": {
-                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json" // Idioma en español
                             }
                         });
 
@@ -565,8 +561,8 @@
                             <td>${artpreventista.CodigoArticulo}</td>
                             <td>${artpreventista.Descripcion}</td>
                             <td>${artpreventista.Proveedor}</td>
-                            <td>${artpreventista.Cantidad}</td>
-                            <td>${artpreventista.MontoTotal}</td>
+                            <td>${formatter.format(artpreventista.Cantidad)}</td>
+                            <td>${formatter.format(artpreventista.MontoTotal)}</td>
                         </tr>
                     `);
                         });
@@ -578,7 +574,7 @@
                             "ordering": true, // Ordenación activada
                             "info": true, // Mostrar información de la tabla
                             "language": {
-                                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json" // Idioma en español
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"// Idioma en español
                             }
                         });
 

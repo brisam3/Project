@@ -235,9 +235,9 @@ addCrown($ventasPreventista);
     SUM(c.Item_Impte_Total_mon_Emision) AS MontoTotal
     FROM comprobantes c
     JOIN detallereporte d ON c.detalleReporte_id = d.id
-    JOIN proveedores p ON c.Articulo_Prov_Habitual_Cod = p.cod_proveedor
-    JOIN articulos a ON c.Item_Articulo_Cod_Gen = a.codBejerman
-    JOIN usuarios u ON c.Comp_Vendedor_Cod = u.usuario  -- Hacemos JOIN con la tabla usuarios
+    JOIN proveedores p ON  TRIM(c.Articulo_Prov_Habitual_Cod) =  TRIM(p.cod_proveedor)
+    JOIN articulos a ON  TRIM(c.Item_Articulo_Cod_Gen) =  TRIM(a.codBejerman)
+    JOIN usuarios u ON  TRIM(c.Comp_Vendedor_Cod) = u.usuario  -- Hacemos JOIN con la tabla usuarios
     WHERE d.fecha = :today
     GROUP BY Preventista, c.Item_Articulo_Cod_Gen, a.descripcion, p.descripcion
     ORDER BY Preventista, Cantidad DESC
