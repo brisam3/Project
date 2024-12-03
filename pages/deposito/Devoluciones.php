@@ -179,13 +179,13 @@ if (!$accessController->checkAccess('/pages/deposito/Devoluciones.php')) {
                                             fecha
                                         } = JSON.parse(detalle);
                                         html += `
-      <div class="card mb-2" >
-        <div class="card-body d-flex justify-content-between align-items-center">
-          <span><strong>${usuario} <br></strong> ${fecha}</span>
-          <button type="button" class="btn btn-sm btn-primary" onclick="verDetalles(${id})">Ver Detalles</button>
-        </div>
-      </div>
-    `;
+                                                <div class="card mb-2" >
+                                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                                    <span><strong>${usuario} <br></strong> ${fecha}</span>
+                                                    <button type="button" class="btn btn-sm btn-primary" onclick="verDetalles(${id})">Ver Detalles</button>
+                                                    </div>
+                                                </div>
+                                                `;
                                     });
                                 } else {
                                     html =

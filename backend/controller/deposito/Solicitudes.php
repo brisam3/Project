@@ -28,7 +28,7 @@ class DetalleTransferenciasController {
     // Obtener los detalles de transferencias por fecha
     public function buscarDetalleTransferencia($fecha) {
         $query = "
-        SELECT 
+            SELECT 
                 dd.idDetalleSolicitud,
                 remitente.nombre AS nombreRemitente,
                 destinatario.nombre AS nombreDestinatario,
@@ -43,14 +43,15 @@ class DetalleTransferenciasController {
             JOIN 
                 usuarios destinatario ON dd.idUsuarioDestinatario = destinatario.idUsuario
             WHERE 
-                DATE(dd.fecha) = ? AND dd.idUsuarioDestinatario = ?
-
-
+                DATE(dd.fecha) = ? 
+                AND dd.idUsuarioDestinatario = ? 
+                AND dd.estado = 'Pendiente'
         ";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$fecha, $_SESSION['idUsuario']]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
 
     // Obtener los artículos de un detalle de transferencia específico
@@ -78,20 +79,15 @@ class DetalleTransferenciasController {
     }
     
     public function eliminarDetalleTransferencia($idDetalleTransferencia) {
-        $query = "DELETE FROM solicitudes_transferencia WHERE idDetalleSolicitud = ?";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$idDetalleTransferencia]);
+        // Responder sin realizar cambios en la base de datos
+        return true;
     }
+                          
 
     
     public function actualizarDetalleTransferencia($idDetalleTransferencia, $cantidad, $partida) {
-        $query = "
-            UPDATE solicitudes_transferencia 
-            SET cantidad = ?, partida = ? 
-            WHERE idDetalleSolicitud = ?
-        ";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$cantidad, $partida, $idDetalleTransferencia]);
+       
+        return true;
     }
     
     
@@ -122,24 +118,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 break;
 
-            case 'verDetalleSolicitud':
-                $idDetalleSolicitud = $_POST['idDetalleSolicitud'];
-                $articulos = $controller->verDetalleSolicitud($idDetalleSolicitud);
-
-                $articulosResponse = [];
-                foreach ($articulos as $articulo) {
-                    $articulosResponse[] = [
-                        'codBejerman' => $articulo['codBejerman'],
-                        'partida' => $articulo['partida'],
-                        'cantidad' => $articulo['cantidad'],
-                        'descripcion' => $articulo['descripcion'],
-                        'idUsuarioRemitente'=>$articulo['idUsuarioRemitente'],
-                        'idUsuarioDestinatario'=>$articulo['idUsuarioDestinatario']
-                    ];
-                }
-
-                echo json_encode($articulosResponse);
-                break;
+                case 'verDetalleSolicitud':
+                    $idDetalleSolicitud = $_POST['idDetalleSolicitud'];
+                    $articulos = $controller->verDetalleSolicitud($idDetalleSolicitud);
+                
+                    // Crear un array para incluir todos los datos juntos
+                    $articulosResponse = [];
+                
+                    foreach ($articulos as $articulo) {
+                        $articulosResponse[] = [
+                            'idDetalleSolicitud' => $idDetalleSolicitud,
+                            'codBejerman' => $articulo['codBejerman'],
+                            'partida' => $articulo['partida'],
+                            'cantidad' => $articulo['cantidad'],
+                            'descripcion' => $articulo['descripcion'],
+                            'idUsuarioRemitente' => $articulo['idUsuarioRemitente'],
+                            'idUsuarioDestinatario' => $articulo['idUsuarioDestinatario']
+                        ];
+                    }
+                
+                    echo json_encode($articulosResponse);
+                    break;
+                
+                
+                
             case 'modificarDetalleTransferencia':
                     $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
                     $cantidad = $_POST['cantidad'];
@@ -167,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $transferencias = json_decode($_POST['transferencias'], true);
                         $idUsuarioDestinatario = $_POST['idUsuarioDestinatario'] ?? null;
                         $idUsuarioRemitente = $_POST['idUsuarioRemitente'] ?? null;
+                        $idDetalleSolicitud = $_POST['idDetalleSolicitud'] ?? null;
                     
                         if (!$idUsuarioDestinatario || !$idUsuarioRemitente) {
                             echo json_encode(['success' => false, 'message' => 'IDs de usuario remitente o destinatario no proporcionados.']);
@@ -177,6 +180,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             // Inicia la transacción
                             $db = $controller->getDb(); // Obtiene la conexión usando el método público
                             $db->beginTransaction();
+                    
+                            // Verifica si el idDetalleSolicitud existe y actualiza su estado a 'Aprobada'
+                            if ($idDetalleSolicitud) {
+                                $checkSolicitudQuery = "SELECT * FROM detalle_solicitud_transferencia WHERE idDetalleSolicitud = ?";
+                                $checkSolicitudStmt = $db->prepare($checkSolicitudQuery);
+                                $checkSolicitudStmt->execute([$idDetalleSolicitud]);
+                                $solicitud = $checkSolicitudStmt->fetch(PDO::FETCH_ASSOC);
+                    
+                                if ($solicitud) {
+                                    $updateSolicitudQuery = "UPDATE detalle_solicitud_transferencia SET estado = 'Aprobada' WHERE idDetalleSolicitud = ?";
+                                    $updateSolicitudStmt = $db->prepare($updateSolicitudQuery);
+                                    $updateSolicitudStmt->execute([$idDetalleSolicitud]);
+                                } else {
+                                    echo json_encode(['success' => false, 'message' => 'Solicitud no encontrada.']);
+                                    $db->rollBack();
+                                    exit;
+                                }
+                            }
                     
                             // Inserta el detalle de la transferencia
                             $detalleQuery = "
@@ -208,13 +229,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                             // Confirma la transacción
                             $db->commit();
-                            echo json_encode(['success' => true]);
+                            echo json_encode([
+                                'success' => true,
+                                'idDetalleSolicitud' => $idDetalleSolicitud // Incluir el valor en la respuesta
+                            ]);
+                    
                         } catch (Exception $e) {
                             // Revierte la transacción en caso de error
                             $db->rollBack();
                             echo json_encode(['success' => false, 'message' => 'Error al guardar transferencias.', 'error' => $e->getMessage()]);
                         }
                         break;
+                        case 'rechazarSolicitud':
+                            $idDetalleSolicitud = $_POST['idDetalleSolicitud'] ?? null;
+                        
+                            if (!$idDetalleSolicitud) {
+                                echo json_encode(['success' => false, 'message' => 'ID de detalle de solicitud no proporcionado.']);
+                                exit;
+                            }
+                        
+                            try {
+                                // Obtén la conexión a la base de datos
+                                $db = $controller->getDb(); // Asegúrate de que este método devuelve correctamente la conexión PDO
+                                
+                                // Inicia la transacción
+                                $db->beginTransaction();
+                        
+                                // Prepara la consulta
+                                $query = "UPDATE detalle_solicitud_transferencia SET estado = 'Rechazada' WHERE idDetalleSolicitud = ?";
+                                $stmt = $db->prepare($query); // Asegúrate de preparar correctamente la declaración
+                        
+                                // Ejecuta la consulta con el parámetro
+                                $stmt->execute([$idDetalleSolicitud]);
+                        
+                                // Verifica si se realizó la actualización
+                                if ($stmt->rowCount() > 0) {
+                                    $db->commit(); // Confirma la transacción
+                                    echo json_encode(['success' => true, 'message' => 'Solicitud rechazada correctamente.']);
+                                } else {
+                                    $db->rollBack(); // Revierte la transacción si no hay filas afectadas
+                                    echo json_encode(['success' => false, 'message' => 'No se encontró la solicitud o ya estaba rechazada.']);
+                                }
+                            } catch (Exception $e) {
+                                // Revierte la transacción en caso de error
+                                $db->rollBack();
+                                echo json_encode(['success' => false, 'message' => 'Error al rechazar la solicitud.', 'error' => $e->getMessage()]);
+                            }
+                            break;
+                        
+                        
+                    
                     
                     
                         

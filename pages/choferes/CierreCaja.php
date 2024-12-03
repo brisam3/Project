@@ -213,6 +213,8 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                     <button type="button" class="btn-close" onclick="cerrarModalBilletes()" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                <div class="mb-3"><label>Billetes de 20000</label><input type="number" id="billetes_20000"
+                            class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
                     <div class="mb-3"><label>Billetes de 10000</label><input type="number" id="billetes_10000"
                             class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
                     <div class="mb-3"><label>Billetes de 2000</label><input type="number" id="billetes_2000"
@@ -283,6 +285,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
     }
 
     function calcularTotalEfectivo() {
+        const billetes_20000 = parseInt(document.getElementById('billetes_20000').value) || 0;
         const billetes_10000 = parseInt(document.getElementById('billetes_10000').value) || 0;
         const billetes_2000 = parseInt(document.getElementById('billetes_2000').value) || 0;
         const billetes_1000 = parseInt(document.getElementById('billetes_1000').value) || 0;
@@ -293,7 +296,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
         const billetes_20 = parseInt(document.getElementById('billetes_20').value) || 0;
         const billetes_10 = parseInt(document.getElementById('billetes_10').value) || 0;
 
-        const total = (billetes_10000 * 10000) + (billetes_2000 * 2000) + (billetes_1000 * 1000) +
+        const total = (billetes_20000 * 20000) + (billetes_10000 * 10000) + (billetes_2000 * 2000) + (billetes_1000 * 1000) +
             (billetes_500 * 500) + (billetes_200 * 200) + (billetes_100 * 100) +
             (billetes_50 * 50) + (billetes_20 * 20) + (billetes_10 * 10);
 

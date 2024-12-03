@@ -122,6 +122,7 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
           <button type="button" class="btn-close" onclick="cerrarModalBilletes()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+        <div class="mb-3"><label>Billetes de 20000</label><input type="number" id="billetes_20000" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
           <div class="mb-3"><label>Billetes de 10000</label><input type="number" id="billetes_10000" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
           <div class="mb-3"><label>Billetes de 2000</label><input type="number" id="billetes_2000" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
           <div class="mb-3"><label>Billetes de 1000</label><input type="number" id="billetes_1000" class="form-control" placeholder="0" oninput="calcularTotalEfectivo()" /></div>
@@ -173,7 +174,7 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
     }
 
     function calcularTotalEfectivo() {
-      const denominaciones = [10000, 2000, 1000, 500, 200, 100, 50, 20, 10];
+      const denominaciones = [20000, 10000, 2000, 1000, 500, 200, 100, 50, 20, 10];
       let efectivo = denominaciones.reduce((acc, denom) => {
         const value = parseInt(document.getElementById(`billetes_${denom}`).value) || 0;
         return acc + value * denom;
@@ -215,6 +216,7 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
 
     function guardarCierreCaja(totalAcumulado, totalMenosGastos) {
       const data = {
+        billetes_20000: parseInt(document.getElementById('billetes_20000').value) || 0,
         billetes_10000: parseInt(document.getElementById('billetes_10000').value) || 0,
         billetes_2000: parseInt(document.getElementById('billetes_2000').value) || 0,
         billetes_1000: parseInt(document.getElementById('billetes_1000').value) || 0,
