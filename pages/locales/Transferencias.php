@@ -131,14 +131,14 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-3">
-                        
+
                                                     <select class="form-select" id="select-local">
-                                                        <option value="local1">Obrero</option>
-                                                        <option value="local2">Liborsi</option>
-                                                        <option value="local3">Vial</option>
-                                                        <option value="local4">Central</option>
-                                                        <option value="local5">Eva Peron</option>
-                                                        <option value="local6">San Pedro</option>
+                                                        <option value="20">Obrero</option>
+                                                        <option value="21">Liborsi</option>
+                                                        <option value="22">Vial</option>
+                                                        <option value="23">Central</option>
+                                                        <option value="24">Eva Peron</option>
+                                                        <option value="25">San Pedro</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -315,12 +315,22 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                 }
             }
 
+            const selectLocal = document.getElementById('select-local');
+
+            // Listener para capturar el valor seleccionado
+            selectLocal.addEventListener('change', (event) => {
+                const selectedValue = event.target.value;
+                console.log(`Valor seleccionado: ${selectedValue}`);
+                // Ahora puedes usar la constante `selectedValue` para tus necesidades
+            });
+
             // Función para agregar producto desde el formulario de código de barras
             function addProduct() {
                 const barcode = $('#barcode').val();
                 const quantity = $('#quantity').val();
                 const description = $('#description').val();
                 const codBejerman = $('#codBejerman').val();
+
 
                 if (barcode && quantity && description && codBejerman) {
                     // Validar duplicados
@@ -338,17 +348,17 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                     });
 
                     const row = `
-        <tr>
-            <td>${codBejerman}</td>
-            <td>${description}</td>
-            <td>${quantity}</td>
-            <td>
-                <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
-                    <span class="tf-icons bx bx-trash"></span>
-                </button>
-            </td>
-        </tr>
-        `;
+                                    <tr>
+                                        <td>${codBejerman}</td>
+                                        <td>${description}</td>
+                                        <td>${quantity}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
+                                                <span class="tf-icons bx bx-trash"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    `;
                     $('#product-list').append(row);
 
                     // Actualizar resumen
@@ -388,17 +398,17 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                     });
 
                     const row = `
-        <tr>
-            <td>${codBejerman}</td>
-            <td>${description}</td>
-            <td>${quantity}</td>
-            <td>
-                <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
-                    <span class="tf-icons bx bx-trash"></span>
-                </button>
-            </td>
-        </tr>
-        `;
+                                    <tr>
+                                        <td>${codBejerman}</td>
+                                        <td>${description}</td>
+                                        <td>${quantity}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
+                                                <span class="tf-icons bx bx-trash"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    `;
                     $('#product-list').append(row);
 
                     // Actualizar resumen
@@ -435,13 +445,26 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
 
             // Función para enviar los productos al servidor
             function sendProducts() {
+                const idUsuarioDestinatario = $('#select-local').val(); // Captura el usuario destinatario
+
+                if (!idUsuarioDestinatario) {
+                    Swal.fire({
+                        title: 'Advertencia',
+                        text: 'Por favor seleccione un destinatario.',
+                        icon: 'warning',
+                        confirmButtonText: 'Aceptar'
+                    });
+                    return;
+                }
+
                 if (productData.length > 0) {
                     $.ajax({
-                        url: '../../backend/controller/locales/TransferenciasController.php.php',
+                        url: '../../backend/controller/locales/TransferenciasController.php',
                         type: 'POST',
                         data: {
-                            action: 'registrarDevoluciones',
-                            articulos: productData
+                            action: 'registrarTransferencias',
+                            articulos: productData,
+                            idUsuarioDestinatario: idUsuarioDestinatario // Incluye el destinatario
                         },
                         dataType: 'json',
                         success: function(response) {

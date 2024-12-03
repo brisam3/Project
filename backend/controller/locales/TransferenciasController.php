@@ -1,18 +1,12 @@
 <?php
-// backend/controllers/devoluciones/locales/devolucionesController.php
+// backend/controllers/locales/TransferenciasController.php
 
-// Depuración: imprimir el contenido de la sesión en los logs del servidor
 session_start();
-if (!isset($_SESSION['idUsuario'])) {
-    header("Location: https://softwareparanegociosformosa.com/wol/pages/login/login.html");
-    exit();
-}
-
 require_once '../../../database/Database.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-class DevolucionesController {
+class TransferenciasController {
     private $db;
 
     public function __construct() {
@@ -27,78 +21,52 @@ class DevolucionesController {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function buscarPorDescripcion($descripcion)
-    {
-        // Divide la búsqueda en palabras clave
+    public function buscarPorDescripcion($descripcion) {
         $keywords = explode(' ', $descripcion);
-    
-        // Crea condiciones dinámicas para cada palabra clave
         $conditions = array_map(function($keyword) {
             return "descripcion LIKE ?";
         }, $keywords);
-    
-        // Une las condiciones con AND
         $query = "SELECT codBarras, descripcion, codBejerman 
                   FROM articulos 
                   WHERE " . implode(' AND ', $conditions);
-    
-        // Crea un array con las palabras clave rodeadas por '%'
         $params = array_map(function($keyword) {
             return "%$keyword%";
         }, $keywords);
-    
+
         $stmt = $this->db->prepare($query);
         $stmt->execute($params);
-    
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
 
-    public function registrarDevoluciones($articulos) {
-        if (!isset($_SESSION['idUsuario']) || !isset($_SESSION['idTipoUsuario'])) {
+    public function registrarTransferencias($articulos, $idUsuarioDestinatario) {
+        if (!isset($_SESSION['idUsuario'])) {
             echo json_encode([
-                'error' => "No se encontró el tipo de usuario o el idUsuario en la sesión.",
+                'error' => "No se encontró el usuario remitente en la sesión.",
                 'session' => $_SESSION
             ]);
             exit;
         }
 
-        $idUsuario = $_SESSION['idUsuario'];
-        $idTipoUsuario = $_SESSION['idTipoUsuario'];
-        $idTipoDevolucion = $idTipoUsuario;
+        $idUsuarioRemitente = $_SESSION['idUsuario'];
 
-        // Insertar un nuevo registro en la tabla `detalleDevoluciones` con la fecha y hora actual
-        $detalleQuery = "INSERT INTO detalleDevoluciones (fecha, idTipoDevolucion, idUsuario) VALUES (NOW(), ?, ?)";
+        $detalleQuery = "INSERT INTO detalle_solicitud_transferencia (fecha, idUsuarioRemitente, idUsuarioDestinatario, estado) 
+                         VALUES (NOW(), ?, ?, 'pendiente')";
         $detalleStmt = $this->db->prepare($detalleQuery);
-        $detalleStmt->execute([$idTipoDevolucion, $idUsuario]);
-        $idDetalleDevolucion = $this->db->lastInsertId();
+        $detalleStmt->execute([$idUsuarioRemitente, $idUsuarioDestinatario]);
+        $idDetalleSolicitud = $this->db->lastInsertId();
 
-        // Consulta para insertar en la tabla `devoluciones` usando `codBejerman`
-        $query = "INSERT INTO devoluciones (codBejerman, cantidad, descripcion, idDetalleDevolucion, codBarras) 
-                  VALUES (?, ?, ?, ?, ?, ?)";
-
+        $query = "INSERT INTO solicitudes_transferencia (codBejerman, cantidad, descripcion, idDetalleSolicitud, codBarras) 
+                  VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
 
         foreach ($articulos as $articulo) {
-            // Obtener el `codBejerman` del artículo basado en `codBarras`
-            $codigoBarras = $articulo['codBarras'];
-            $articuloData = $this->buscarArticulo($codigoBarras);
-
-            if ($articuloData && isset($articuloData['codBejerman'])) {
-                $codBejerman = $articuloData['codBejerman'];
-
-                // Insertar en la tabla `devoluciones`
-                $stmt->execute([
-                    $codBejerman,
-                    $articulo['cantidad'],
-                    $articulo['descripcion'],
-                    $idDetalleDevolucion,
-                    $codigoBarras
-                ]);
-            } else {
-                // Log de error si no se encuentra el `codBejerman`
-                error_log("No se encontró el `codBejerman` para el artículo con código de barras $codigoBarras.");
-            }
+            $stmt->execute([
+                $articulo['codBejerman'],
+                $articulo['cantidad'],
+                $articulo['descripcion'],
+                $idDetalleSolicitud,
+                $articulo['codBarras']
+            ]);
         }
 
         return true;
@@ -108,7 +76,7 @@ class DevolucionesController {
 // Manejo de las peticiones AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
-    $controller = new DevolucionesController();
+    $controller = new TransferenciasController();
 
     if (isset($_POST['action'])) {
         try {
@@ -125,9 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo json_encode($resultados);
                     break;
 
-                case 'registrarDevoluciones':
+                case 'registrarTransferencias':
                     $articulos = $_POST['articulos'];
-                    $success = $controller->registrarDevoluciones($articulos);
+                    $idUsuarioDestinatario = $_POST['idUsuarioDestinatario'];
+                    $success = $controller->registrarTransferencias($articulos, $idUsuarioDestinatario);
                     echo json_encode(['success' => $success]);
                     break;
 
@@ -140,6 +109,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     exit;
-
 }
 ?>
