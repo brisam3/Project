@@ -164,8 +164,8 @@ include '../../backend/controller/access/AccessController.php';
                                                     </div>
                                                     <div class="card-body">
                                                         <input type="date" class="form-control"
-                                                            id="fechaTransferencia" />
-                                                        <div id="detalleTransferenciasList" class="mt-4">
+                                                            id="fechaTransferenciasEnviadas" />
+                                                        <div id="detalleTransferenciasEnviadasList" class="mt-4">
                                                             <!-- Lista de detalles de transferencias -->
                                                         </div>
                                                     </div>
@@ -178,7 +178,7 @@ include '../../backend/controller/access/AccessController.php';
                                                     <div class="card-header">
                                                         <h5 class="mb-0">Detalles de la solicitud de transferencia</h5>
                                                     </div>
-                                                    <div class="card-body" id="detallesTransferencia">
+                                                    <div class="card-body" id="detallesTransferenciasEnviadas">
 
                                                         <!-- Detalles del detalle_solicitud_transferencia -->
                                                     </div>
@@ -368,6 +368,69 @@ include '../../backend/controller/access/AccessController.php';
             });
         });
 
+        $('#fechaTransferenciasEnviadas').on('change', function() {
+            const fecha = $(this).val();
+            if (fecha) {
+                $.ajax({
+                    url: '../../backend/controller/deposito/Solicitudes.php',
+                    type: 'POST',
+                    data: {
+                        action: 'buscarDetalleTransferenciaEnviada',
+                        fecha: fecha
+                    },
+                    dataType: 'text',
+                    success: function(data) {
+                        const detalles = data.trim().split("\n");
+                        let html = '';
+
+                        if (detalles.length > 0 && detalles[0] !== "") {
+                            detalles.forEach(function(detalle) {
+                                const {
+                                    id,
+                                    usuarioRemitente,
+                                    usuarioDestinatario,
+                                    fecha,
+                                    estado,
+                                    idUsuarioDestinatario,
+                                    idUsuarioRemitente
+                                } = JSON.parse(detalle);
+
+
+                                html += `
+                                                          <div class="card mb-2">
+                                            <div class="card-body d-flex justify-content-between align-items-center">
+                                                <span>
+                                                    <strong>Remitente: </strong>${usuarioRemitente}<br>
+                                                    <strong>Destinatario: </strong>${usuarioDestinatario}<br>
+                                                    <strong>Fecha: </strong>${fecha}<br>
+                                                    <strong>Estado: </strong>${estado}
+                                                </span>
+                                                <div class="d-flex flex-column">
+                                                    <button type="button" class="btn btn-sm btn-primary mb-2" onclick="verDetalleTransferencia(${id})">Ver Detalles</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                                        `;
+                            });
+
+                        } else {
+                            html =
+                                '<p>No se encontraron transferencias para esta fecha.</p>';
+
+                        }
+                        $('#detalleTransferenciasEnviadasList').html(html);
+                    },
+
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        console.error('Detalles:', xhr.responseText);
+                        alert('Error al buscar detalles de transferencias.');
+                    },
+                });
+            }
+        });
+
 
 
 
@@ -515,6 +578,75 @@ include '../../backend/controller/access/AccessController.php';
                         // Actualizar visualmente los detalles
                         actualizarDetalle(idDetalleSolicitud, cantidad, partida);
                     });
+
+                } else {
+                    alert('No se encontraron detalles para esta solicitud.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Detalles:', xhr.responseText);
+                alert('Error al obtener detalles de la solicitud de transferencia.');
+            },
+        });
+    }
+
+    function verDetalleTransferencia(idDetalleTransferencia) {
+        $.ajax({
+            url: '../../backend/controller/deposito/Solicitudes.php',
+            type: 'POST',
+            data: {
+                action: 'verDetalleTransferencia',
+                idDetalleTransferencia: idDetalleTransferencia
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.length > 0) {
+                    // Verifica que los datos incluyan idUsuarioRemitente e idUsuarioDestinatario del primer artículo
+                    const idUsuarioRemitente = data[0].idUsuarioRemitente;
+                    const idUsuarioDestinatario = data[0].idUsuarioDestinatario;
+
+                    // Asignar los valores a los inputs ocultos
+                    $('#idUsuarioRemitente').val(idUsuarioRemitente);
+                    $('#idUsuarioDestinatario').val(idUsuarioDestinatario);
+                    $('#idDetalleTransferencia').val(idDetalleTransferencia);
+
+                    // Mostrar el idDetalleSolicitud en la consola
+                    console.log('ID Detalle Solicitud transferencia:', idDetalleTransferencia);
+
+                    // Construir la tabla
+                    let html = `
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Código Bejerman</th>
+                                                <th>Partida</th>
+                                                <th>Cantidad</th>
+                                                <th>Descripción</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+                    data.forEach(function(articulo) {
+                        html += `
+                                    <tr data-id="${idDetalleTransferencia}">
+                                        <td>${articulo.codBejerman}</td>
+                                        <td>${articulo.partida}</td>
+                                        <td>${articulo.cantidad}</td>
+                                        <td>${articulo.descripcion}</td>
+                                    </tr>`;
+                    });
+
+                    html += `
+                                        </tbody>
+                                    </table>
+                                </div>`;
+
+                    $('#detallesTransferenciasEnviadas').html(html);
+
+
 
                 } else {
                     alert('No se encontraron detalles para esta solicitud.');

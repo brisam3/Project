@@ -118,12 +118,12 @@ class DetalleTransferenciasController {
             JOIN 
                 detalletransferencia dst 
             ON 
-                st.idTransferencia  = dst.idDetalleTransferencia 
+                st.idDetalleTransferencia  = dst.idDetalleTransferencia 
             WHERE 
                 dst.idDetalleTransferencia  = ?
         ";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$idDetalleSolicitud]);
+        $stmt->execute([$idDetalleTransferencia]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
@@ -340,7 +340,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         'estado' => $detalle['estado']
                                     ]) . "\n";
                                 }
-                                break;               
+                                break;
+            case 'verDetalleTransferencia':
+                                    $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
+                                    $articulos = $controller->verDetalleTransferencia($idDetalleTransferencia);
+                                
+                                    // Crear un array para incluir todos los datos juntos
+                                    $articulosResponse = [];
+                                
+                                    foreach ($articulos as $articulo) {
+                                        $articulosResponse[] = [
+                                            'idDetalleTransferencia' => $idDetalleTransferencia,
+                                            'codBejerman' => $articulo['codBejerman'],
+                                            'partida' => $articulo['partida'],
+                                            'cantidad' => $articulo['cantidad'],
+                                            'descripcion' => $articulo['descripcion'],
+                                            'idUsuarioRemitente' => $articulo['idUsuarioRemitente'],
+                                            'idUsuarioDestinatario' => $articulo['idUsuarioDestinatario']
+                                        ];
+                                    }
+                                
+                                    echo json_encode($articulosResponse);
+                                    break;
+                                               
         }
     }
     exit;

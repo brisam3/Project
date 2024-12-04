@@ -396,18 +396,18 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
                     });
 
                     const row = `
-        <tr>
-            <td>${codBejerman}</td>
-            <td>${description}</td>
-            <td>${batch}</td>
-            <td>${quantity}</td>
-            <td>
-                <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
-                    <span class="tf-icons bx bx-trash"></span>
-                </button>
-            </td>
-        </tr>
-        `;
+                                <tr>
+                                    <td>${codBejerman}</td>
+                                    <td>${description}</td>
+                                    <td>${batch}</td>
+                                    <td>${quantity}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-icon btn-label-danger" onclick="removeProduct(this)">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                `;
                     $('#product-list').append(row);
 
                     // Actualizar resumen
