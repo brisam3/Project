@@ -82,32 +82,79 @@ include '../../backend/controller/access/AccessController.php';
                 <div class="layout-container">
                     <div class="layout-page">
                         <div class="content-wrapper">
-                            <div class="container-xxl flex-grow-1 container-p-y">
-
-                                <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="resumen-tab" data-bs-toggle="tab"
-                                            data-bs-target="#resumen" type="button" role="tab" aria-controls="resumen"
-                                            aria-selected="true">Solicitudes Pendientes</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="preventa-tab" data-bs-toggle="tab"
-                                            data-bs-target="#preventa" type="button" role="tab" aria-controls="preventa"
-                                            aria-selected="false">Transferencias Enviadas</button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="locales-tab" data-bs-toggle="tab"
-                                            data-bs-target="#locales" type="button" role="tab" aria-controls="locales"
-                                            aria-selected="false">Transferencias Recibidas</button>
-                                    </li>
-                                </ul>
-
-
-
+                            <div class="container-fluid !important;">
+                                <!-- Tabs Section -->
+                                <div>
+                                    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                                        <li class="nav-item col-12 col-md-6 col-lg-4" role="presentation">
+                                            <button class="nav-link active" id="pendiente-tab" data-bs-toggle="tab"
+                                                data-bs-target="#pendiente" type="button" role="tab"
+                                                aria-controls="pendiente" aria-selected="true">Solicitudes
+                                                Pendientes</button>
+                                        </li>
+                                        <li class="nav-item col-12 col-md-6 col-lg-4" role="presentation">
+                                            <button class="nav-link" id="aprobadas-tab" data-bs-toggle="tab"
+                                                data-bs-target="#aprobadas" type="button" role="tab"
+                                                aria-controls="aprobadas" aria-selected="false">Transferencias
+                                                Enviadas</button>
+                                        </li>
+                                        <li class="nav-item col-12 col-md-6 col-lg-4" role="presentation">
+                                            <button class="nav-link" id="recibidas-tab" data-bs-toggle="tab"
+                                                data-bs-target="#recibidas" type="button" role="tab"
+                                                aria-controls="recibidas" aria-selected="false">Transferencias
+                                                Recibidas</button>
+                                        </li>
+                                    </ul>
+                                </div>
 
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="resumen" role="tabpanel"
+                                    <!-- Resumen Tab -->
+                                    <div class="tab-pane fade show active" id="pendiente" role="tabpanel"
                                         aria-labelledby="resumen-tab">
+                                        <div class="row">
+                                            <!-- Left Section -->
+                                            <div class="col-12 col-md-6 col-lg-4">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0">Seleccione una Fecha</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <input type="date" class="form-control"
+                                                            id="fechaTransferencia" />
+                                                        <div id="detalleTransferenciasList" class="mt-4">
+                                                            <!-- Lista de detalles de transferencias -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Right Section -->
+                                            <div class="col-12 col-md-6 col-lg-8  !important;">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0">Detalles de la solicitud de transferencia</h5>
+                                                    </div>
+                                                    <div class="card-body" id="detallesTransferencia">
+                                                        <!-- Detalles del detalle_solicitud_transferencia -->
+                                                    </div>
+                                                    <input type="hidden" id="idUsuarioDestinatario" value="">
+                                                    <input type="hidden" id="idUsuarioRemitente" value="">
+                                                    <input type="hidden" id="idFechaTransferencia"
+                                                        name="idFechaTransferencia">
+                                                    <input type="hidden" id="idDetalleSolicitud"
+                                                        name="idDetalleSolicitud" value="">
+                                                    <button id="guardarTransferencias"
+                                                        class="btn btn-light text-success mt-3">
+                                                        Confirmar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="tab-pane fade" id="aprobadas" role="tabpanel"
+                                        aria-labelledby="preventa-tab">
                                         <div class="row">
                                             <!-- ASIDE IZQUIERDO -->
                                             <div class="col-md-4">
@@ -134,22 +181,20 @@ include '../../backend/controller/access/AccessController.php';
                                                     <div class="card-body" id="detallesTransferencia">
 
                                                         <!-- Detalles del detalle_solicitud_transferencia -->
-
                                                     </div>
-                                                    <input type="hidden" id="idUsuarioDestinatario" value="">
-                                                    <input type="hidden" id="idUsuarioRemitente" value="">
-                                                    <input type="hidden" id="idFechaTransferencia"
-                                                        name="idFechaTransferencia">
-                                                    <input type="hidden" id="idDetalleSolicitud"
-                                                        name="idDetalleSolicitud" value="">
-                                                    <button id="guardarTransferencias"
-                                                        class="btn btn-light text-success mt-3">Confirmar
-                                                    </button>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
+
+
+                                    <div class="tab-pane fade" id="recibidas" role="tabpanel"
+                                        aria-labelledby="locales-tab">
+                                        <div class="row">
+                                            <h1>recibidas</h1>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -157,79 +202,76 @@ include '../../backend/controller/access/AccessController.php';
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <!-- Overlay -->
-        <div class="layout-overlay layout-menu-toggle"></div>
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
 
-        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-        <div class="drag-target"></div>
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
 
-        <!--/ Layout wrapper -->
+    <!--/ Layout wrapper -->
 
-        <!-- Core JS -->
-        <!-- build:js assets/vendor/js/core.js -->
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
 
-        <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
-        <script src="../../assets/vendor/libs/popper/popper.js"></script>
-        <script src="../../assets/vendor/js/bootstrap.js"></script>
-        <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../assets/vendor/js/bootstrap.js"></script>
+    <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
-        <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
-        <script src="../../assets/vendor/libs/i18n/i18n.js"></script>
-        <script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
 
-        <script src="../../assets/vendor/js/menu.js"></script>
-        <!-- endbuild -->
+    <script src="../../assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
 
-        <!-- Vendors JS -->
-        <script src="../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <!-- Vendors JS -->
+    <script src="../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
 
-        <!-- Main JS -->
-        <script src="../../assets/js/main.js"></script>
+    <!-- Main JS -->
+    <script src="../../assets/js/main.js"></script>
 
-        <!-- Page JS -->
-        <script src="../../assets/js/dashboards-analytics.js"></script>
-
-
+    <!-- Page JS -->
+    <script src="../../assets/js/dashboards-analytics.js"></script>
 
 
-
-
-        <script>
-        $(document).ready(function() {
+    <script>
+    $(document).ready(function() {
 
 
 
-            $('#fechaTransferencia').on('change', function() {
-                const fecha = $(this).val();
-                if (fecha) {
-                    $.ajax({
-                        url: '../../backend/controller/deposito/Solicitudes.php',
-                        type: 'POST',
-                        data: {
-                            action: 'buscarDetalleTransferencia',
-                            fecha: fecha
-                        },
-                        dataType: 'text',
-                        success: function(data) {
-                            const detalles = data.trim().split("\n");
-                            let html = '';
+        $('#fechaTransferencia').on('change', function() {
+            const fecha = $(this).val();
+            if (fecha) {
+                $.ajax({
+                    url: '../../backend/controller/deposito/Solicitudes.php',
+                    type: 'POST',
+                    data: {
+                        action: 'buscarDetalleTransferencia',
+                        fecha: fecha
+                    },
+                    dataType: 'text',
+                    success: function(data) {
+                        const detalles = data.trim().split("\n");
+                        let html = '';
 
-                            if (detalles.length > 0 && detalles[0] !== "") {
-                                detalles.forEach(function(detalle) {
-                                    const {
-                                        id,
-                                        usuarioRemitente,
-                                        usuarioDestinatario,
-                                        fecha,
-                                        estado,
-                                        idUsuarioDestinatario,
-                                        idUsuarioRemitente
-                                    } = JSON.parse(detalle);
+                        if (detalles.length > 0 && detalles[0] !== "") {
+                            detalles.forEach(function(detalle) {
+                                const {
+                                    id,
+                                    usuarioRemitente,
+                                    usuarioDestinatario,
+                                    fecha,
+                                    estado,
+                                    idUsuarioDestinatario,
+                                    idUsuarioRemitente
+                                } = JSON.parse(detalle);
 
 
-                                    html += `
+                                html += `
                                                           <div class="card mb-2">
                                             <div class="card-body d-flex justify-content-between align-items-center">
                                                 <span>
@@ -246,284 +288,298 @@ include '../../backend/controller/access/AccessController.php';
                                         </div>
 
                                                         `;
-                                });
+                            });
 
-                            } else {
-                                html =
-                                    '<p>No se encontraron transferencias pendientes para esta fecha.</p>';
-
-                            }
-                            $('#detalleTransferenciasList').html(html);
-                        },
-
-                        error: function(xhr, status, error) {
-                            console.error('Error:', error);
-                            console.error('Detalles:', xhr.responseText);
-                            alert('Error al buscar detalles de transferencias.');
-                        },
-                    });
-                }
-            });
-
-            // Botón para guardar los datos
-            $('#guardarTransferencias').on('click', function() {
-                const transferencias = [];
-                const idUsuarioDestinatario = $('#idUsuarioDestinatario').val();
-                const idUsuarioRemitente = $('#idUsuarioRemitente').val();
-                const idDetalleSolicitud = $('#idDetalleSolicitud').val();
-
-                // Iterar sobre las filas de la tabla para construir el array de transferencias
-                $('#detallesTransferencia table tbody tr').each(function() {
-                    const row = $(this);
-                    const codBejerman = row.find('td').eq(0).text(); // Código Bejerman
-                    const partida = row.find('.partida-input').val(); // Partida
-                    const cantidad = row.find('.cantidad-input').val(); // Cantidad
-                    const descripcion = row.find('td').eq(3).text(); // Descripción
-
-                    // Construir el objeto de transferencia
-                    transferencias.push({
-                        codBejerman,
-                        partida,
-                        cantidad,
-                        descripcion
-                    });
-                });
-
-                // Validar que hay transferencias para guardar
-                if (transferencias.length === 0) {
-                    Swal.fire('Error', 'No hay datos para guardar.', 'error');
-                    return;
-                }
-
-                // Enviar la solicitud AJAX
-                $.ajax({
-                    url: '../../backend/controller/deposito/Solicitudes.php',
-                    type: 'POST',
-                    data: {
-                        action: 'guardarTransferencias',
-                        transferencias: JSON.stringify(transferencias),
-                        idUsuarioDestinatario: idUsuarioDestinatario,
-                        idUsuarioRemitente: idUsuarioRemitente,
-                        idDetalleSolicitud: idDetalleSolicitud
-                    },
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            Swal.fire('Éxito', 'Transferencias guardadas con éxito.',
-                                'success');
                         } else {
-                            Swal.fire('Error', result.message ||
-                                'No se pudieron guardar las transferencias.',
-                                'error');
+                            html =
+                                '<p>No se encontraron transferencias pendientes para esta fecha.</p>';
+
                         }
+                        $('#detalleTransferenciasList').html(html);
                     },
+
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
-                        Swal.fire('Error',
-                            'Ocurrió un problema al guardar las transferencias.',
-                            'error');
-                    }
+                        console.error('Detalles:', xhr.responseText);
+                        alert('Error al buscar detalles de transferencias.');
+                    },
+                });
+            }
+        });
+
+        // Botón para guardar los datos
+        $('#guardarTransferencias').on('click', function() {
+            const transferencias = [];
+            const idUsuarioDestinatario = $('#idUsuarioDestinatario').val();
+            const idUsuarioRemitente = $('#idUsuarioRemitente').val();
+            const idDetalleSolicitud = $('#idDetalleSolicitud').val();
+
+            // Iterar sobre las filas de la tabla para construir el array de transferencias
+            $('#detallesTransferencia table tbody tr').each(function() {
+                const row = $(this);
+                const codBejerman = row.find('td').eq(0).text(); // Código Bejerman
+                const partida = row.find('.partida-input').val(); // Partida
+                const cantidad = row.find('.cantidad-input').val(); // Cantidad
+                const descripcion = row.find('td').eq(3).text(); // Descripción
+
+                // Construir el objeto de transferencia
+                transferencias.push({
+                    codBejerman,
+                    partida,
+                    cantidad,
+                    descripcion
                 });
             });
 
-
-
-
-        });
-
-        function removeTransfer(button) {
-            const row = $(button).closest('tr');
-            const idDetalleSolicitud = row.data('id');
-
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: '¡No podrás revertir esta acción!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '../../backend/controller/deposito/Solicitudes.php',
-                        type: 'POST',
-                        data: {
-                            action: 'eliminarDetalleTransferencia',
-                            idDetalleTransferencia: idDetalleSolicitud
-                        },
-                        success: function(response) {
-                            const result = JSON.parse(response);
-                            if (result.success) {
-                                Swal.fire('Eliminado',
-                                    'El detalle ha sido eliminado con éxito.', 'success');
-                                row.remove();
-                            } else {
-                                Swal.fire('Error', 'No se pudo eliminar el detalle.', 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error', 'Ocurrió un problema al eliminar el detalle.',
-                                'error');
-                        }
-                    });
-                }
-            });
-        }
-
-        function actualizarDetalle(idDetalleSolicitud, cantidad, partida) {
-            if (cantidad <= 0 || !partida.trim()) {
-                Swal.fire('Error', 'Ingrese valores válidos para la cantidad y la partida.', 'error');
+            // Validar que hay transferencias para guardar
+            if (transferencias.length === 0) {
+                Swal.fire('Error', 'No hay datos para guardar.', 'error');
                 return;
             }
 
+            // Enviar la solicitud AJAX
             $.ajax({
                 url: '../../backend/controller/deposito/Solicitudes.php',
                 type: 'POST',
                 data: {
-                    action: 'modificarDetalleTransferencia',
-                    idDetalleTransferencia: idDetalleSolicitud,
-                    cantidad: cantidad,
-                    partida: partida
+                    action: 'guardarTransferencias',
+                    transferencias: JSON.stringify(transferencias),
+                    idUsuarioDestinatario: idUsuarioDestinatario,
+                    idUsuarioRemitente: idUsuarioRemitente,
+                    idDetalleSolicitud: idDetalleSolicitud
                 },
                 success: function(response) {
                     const result = JSON.parse(response);
                     if (result.success) {
-                        // El detalle se actualizó correctamente, pero no se muestra ninguna notificación.
-                        console.log('Detalle actualizado correctamente');
+                        Swal.fire('Éxito', 'Transferencias guardadas con éxito.',
+                            'success');
                     } else {
-                        console.error('No se pudo actualizar el detalle.');
+                        Swal.fire('Error', result.message ||
+                            'No se pudieron guardar las transferencias.',
+                            'error');
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);
-                    Swal.fire('Error', 'Ocurrió un error al actualizar el detalle.', 'error');
+                    Swal.fire('Error',
+                        'Ocurrió un problema al guardar las transferencias.',
+                        'error');
                 }
             });
-        }
+        });
 
-        function verDetalles(idDetalleSolicitud) {
-            $.ajax({
-                url: '../../backend/controller/deposito/Solicitudes.php',
-                type: 'POST',
-                data: {
-                    action: 'verDetalleSolicitud',
-                    idDetalleSolicitud: idDetalleSolicitud
-                },
-                dataType: 'json',
-                success: function(data) {
-                    if (data.length > 0) {
-                        // Verifica que los datos incluyan idUsuarioRemitente e idUsuarioDestinatario del primer artículo
-                        const idUsuarioRemitente = data[0].idUsuarioRemitente;
-                        const idUsuarioDestinatario = data[0].idUsuarioDestinatario;
 
-                        // Asignar los valores a los inputs ocultos
-                        $('#idUsuarioRemitente').val(idUsuarioRemitente);
-                        $('#idUsuarioDestinatario').val(idUsuarioDestinatario);
-                        $('#idDetalleSolicitud').val(idDetalleSolicitud);
 
-                        // Mostrar el idDetalleSolicitud en la consola
-                        console.log('ID Detalle Solicitud:', idDetalleSolicitud);
 
-                        // Construir la tabla
-                        let html = '<table class="table">';
-                        html +=
-                            '<thead><tr><th>Código Bejerman</th><th>Partida</th><th>Cantidad</th><th>Descripción</th><th>Acciones</th></tr></thead>';
-                        html += '<tbody>';
+    });
 
-                        data.forEach(function(articulo) {
-                            html += `
-                        <tr data-id="${idDetalleSolicitud}">
-                            <td>${articulo.codBejerman}</td>
-                            <td><input type="text" class="form-control partida-input" value="${articulo.partida}" /></td>
-                            <td><input type="number" class="form-control cantidad-input" value="${articulo.cantidad}" /></td>
-                            <td>${articulo.descripcion}</td>
-                            <td>
-                                <button type="button" class="btn btn-icon btn-label-danger" onclick="removeTransfer(this)">
-                                    <span class="tf-icons bx bx-trash"></span>
-                                </button>
-                            </td>
-                        </tr>`;
-                        });
+    function removeTransfer(button) {
+        const row = $(button).closest('tr');
+        const idDetalleSolicitud = row.data('id');
 
-                        html += '</tbody></table>';
-                        $('#detallesTransferencia').html(html);
-
-                        // Agregar eventos a los inputs de partida y cantidad
-                        $('.partida-input, .cantidad-input').on('change', function() {
-                            const row = $(this).closest('tr');
-                            const partida = row.find('.partida-input').val();
-                            const cantidad = row.find('.cantidad-input').val();
-
-                            // Actualizar visualmente los detalles
-                            actualizarDetalle(idDetalleSolicitud, cantidad, partida);
-                        });
-
-                    } else {
-                        alert('No se encontraron detalles para esta solicitud.');
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¡No podrás revertir esta acción!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../../backend/controller/deposito/Solicitudes.php',
+                    type: 'POST',
+                    data: {
+                        action: 'eliminarDetalleTransferencia',
+                        idDetalleTransferencia: idDetalleSolicitud
+                    },
+                    success: function(response) {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            Swal.fire('Eliminado',
+                                'El detalle ha sido eliminado con éxito.', 'success');
+                            row.remove();
+                        } else {
+                            Swal.fire('Error', 'No se pudo eliminar el detalle.', 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error', 'Ocurrió un problema al eliminar el detalle.',
+                            'error');
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    console.error('Detalles:', xhr.responseText);
-                    alert('Error al obtener detalles de la solicitud de transferencia.');
-                },
-            });
+                });
+            }
+        });
+    }
+
+    function actualizarDetalle(idDetalleSolicitud, cantidad, partida) {
+        if (cantidad <= 0 || !partida.trim()) {
+            Swal.fire('Error', 'Ingrese valores válidos para la cantidad y la partida.', 'error');
+            return;
         }
 
-        function rechazarSolicitud(idDetalleSolicitud) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: 'No podrás revertir esta acción.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, rechazar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '../../backend/controller/deposito/Solicitudes.php',
-                        type: 'POST',
-                        data: {
-                            action: 'rechazarSolicitud',
-                            idDetalleSolicitud: idDetalleSolicitud
-                        },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire(
-                                    'Rechazada',
-                                    'La solicitud ha sido rechazada exitosamente.',
-                                    'success'
-                                ).then(() => {
-                                    location
-                                        .reload(); // Recarga la página para reflejar los cambios
-                                });
-                            } else {
-                                Swal.fire(
-                                    'Error',
-                                    'No se pudo rechazar la solicitud: ' + response.message,
-                                    'error'
-                                );
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error:', error);
-                            console.error('Detalles:', xhr.responseText);
+        $.ajax({
+            url: '../../backend/controller/deposito/Solicitudes.php',
+            type: 'POST',
+            data: {
+                action: 'modificarDetalleTransferencia',
+                idDetalleTransferencia: idDetalleSolicitud,
+                cantidad: cantidad,
+                partida: partida
+            },
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    // El detalle se actualizó correctamente, pero no se muestra ninguna notificación.
+                    console.log('Detalle actualizado correctamente');
+                } else {
+                    console.error('No se pudo actualizar el detalle.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                Swal.fire('Error', 'Ocurrió un error al actualizar el detalle.', 'error');
+            }
+        });
+    }
+
+    function verDetalles(idDetalleSolicitud) {
+        $.ajax({
+            url: '../../backend/controller/deposito/Solicitudes.php',
+            type: 'POST',
+            data: {
+                action: 'verDetalleSolicitud',
+                idDetalleSolicitud: idDetalleSolicitud
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.length > 0) {
+                    // Verifica que los datos incluyan idUsuarioRemitente e idUsuarioDestinatario del primer artículo
+                    const idUsuarioRemitente = data[0].idUsuarioRemitente;
+                    const idUsuarioDestinatario = data[0].idUsuarioDestinatario;
+
+                    // Asignar los valores a los inputs ocultos
+                    $('#idUsuarioRemitente').val(idUsuarioRemitente);
+                    $('#idUsuarioDestinatario').val(idUsuarioDestinatario);
+                    $('#idDetalleSolicitud').val(idDetalleSolicitud);
+
+                    // Mostrar el idDetalleSolicitud en la consola
+                    console.log('ID Detalle Solicitud:', idDetalleSolicitud);
+
+                    // Construir la tabla
+                    let html = `
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Código Bejerman</th>
+                                                <th>Partida</th>
+                                                <th>Cantidad</th>
+                                                <th>Descripción</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+                    data.forEach(function(articulo) {
+                        html += `
+                                    <tr data-id="${idDetalleSolicitud}">
+                                        <td>${articulo.codBejerman}</td>
+                                        <td><input type="text" class="form-control partida-input" value="${articulo.partida}" /></td>
+                                        <td><input type="number" class="form-control cantidad-input" value="${articulo.cantidad}" /></td>
+                                        <td>${articulo.descripcion}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-icon btn-label-danger" onclick="removeTransfer(this)">
+                                                <span class="tf-icons bx bx-trash"></span>
+                                            </button>
+                                        </td>
+                                    </tr>`;
+                    });
+
+                    html += `
+                                        </tbody>
+                                    </table>
+                                </div>`;
+
+                    $('#detallesTransferencia').html(html);
+
+
+                    // Agregar eventos a los inputs de partida y cantidad
+                    $('.partida-input, .cantidad-input').on('change', function() {
+                        const row = $(this).closest('tr');
+                        const partida = row.find('.partida-input').val();
+                        const cantidad = row.find('.cantidad-input').val();
+
+                        // Actualizar visualmente los detalles
+                        actualizarDetalle(idDetalleSolicitud, cantidad, partida);
+                    });
+
+                } else {
+                    alert('No se encontraron detalles para esta solicitud.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Detalles:', xhr.responseText);
+                alert('Error al obtener detalles de la solicitud de transferencia.');
+            },
+        });
+    }
+
+    function rechazarSolicitud(idDetalleSolicitud) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'No podrás revertir esta acción.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, rechazar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../../backend/controller/deposito/Solicitudes.php',
+                    type: 'POST',
+                    data: {
+                        action: 'rechazarSolicitud',
+                        idDetalleSolicitud: idDetalleSolicitud
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire(
+                                'Rechazada',
+                                'La solicitud ha sido rechazada exitosamente.',
+                                'success'
+                            ).then(() => {
+                                location
+                                    .reload(); // Recarga la página para reflejar los cambios
+                            });
+                        } else {
                             Swal.fire(
                                 'Error',
-                                'Ocurrió un error al intentar rechazar la solicitud.',
+                                'No se pudo rechazar la solicitud: ' + response.message,
                                 'error'
                             );
-                        },
-                    });
-                }
-            });
-        }
-        </script>
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        console.error('Detalles:', xhr.responseText);
+                        Swal.fire(
+                            'Error',
+                            'Ocurrió un error al intentar rechazar la solicitud.',
+                            'error'
+                        );
+                    },
+                });
+            }
+        });
+    }
+    </script>
 
 
 </body>

@@ -52,6 +52,32 @@ class DetalleTransferenciasController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+
+    public function buscarDetalleTransferenciaEnviada($fecha) {
+        $query = "
+            SELECT 
+                dd.idDetalleTransferencia,
+                remitente.nombre AS nombreRemitente,
+                destinatario.nombre AS nombreDestinatario,
+                dd.idUsuarioRemitente,
+                dd.idUsuarioDestinatario,
+                dd.fecha,
+                dd.estado
+            FROM 
+                detalletransferencia dd
+            JOIN 
+                usuarios remitente ON dd.idUsuarioRemitente = remitente.idUsuario
+            JOIN 
+                usuarios destinatario ON dd.idUsuarioDestinatario = destinatario.idUsuario
+            WHERE 
+                DATE(dd.fecha) = ?
+                AND dd.idUsuarioRemitente = ?
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$fecha, $_SESSION['idUsuario']]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     
 
     // Obtener los artículos de un detalle de transferencia específico
@@ -72,6 +98,29 @@ class DetalleTransferenciasController {
                 st.idDetalleSolicitud = dst.idDetalleSolicitud
             WHERE 
                 dst.idDetalleSolicitud = ?
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$idDetalleSolicitud]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function verDetalleTransferencia($idDetalleTransferencia) {
+        $query = "
+            SELECT 
+                st.codBejerman, 
+                st.partida, 
+                st.cantidad, 
+                st.descripcion,
+                dst.idUsuarioRemitente, 
+                dst.idUsuarioDestinatario
+            FROM 
+                transferencias st
+            JOIN 
+                detalletransferencia dst 
+            ON 
+                st.idTransferencia  = dst.idDetalleTransferencia 
+            WHERE 
+                dst.idDetalleTransferencia  = ?
         ";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$idDetalleSolicitud]);
@@ -118,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 break;
 
-                case 'verDetalleSolicitud':
+            case 'verDetalleSolicitud':
                     $idDetalleSolicitud = $_POST['idDetalleSolicitud'];
                     $articulos = $controller->verDetalleSolicitud($idDetalleSolicitud);
                 
@@ -240,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             echo json_encode(['success' => false, 'message' => 'Error al guardar transferencias.', 'error' => $e->getMessage()]);
                         }
                         break;
-                        case 'rechazarSolicitud':
+            case 'rechazarSolicitud':
                             $idDetalleSolicitud = $_POST['idDetalleSolicitud'] ?? null;
                         
                             if (!$idDetalleSolicitud) {
@@ -276,12 +325,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 echo json_encode(['success' => false, 'message' => 'Error al rechazar la solicitud.', 'error' => $e->getMessage()]);
                             }
                             break;
-                        
-                        
-                    
-                    
-                    
-                        
+            case 'buscarDetalleTransferenciaEnviada':
+                                $fecha = $_POST['fecha'];
+                                $detalles = $controller->buscarDetalleTransferenciaEnviada($fecha);
+                            
+                                foreach ($detalles as $detalle) {
+                                    echo json_encode([
+                                        'id' => $detalle['idDetalleTransferencia'], // Cambiado de idDetalleSolicitud a idDetalleTransferencia
+                                        'usuarioRemitente' => $detalle['nombreRemitente'],
+                                        'usuarioDestinatario' => $detalle['nombreDestinatario'],
+                                        'idUsuarioRemitente' => $detalle['idUsuarioRemitente'],
+                                        'idUsuarioDestinatario' => $detalle['idUsuarioDestinatario'],
+                                        'fecha' => $detalle['fecha'],
+                                        'estado' => $detalle['estado']
+                                    ]) . "\n";
+                                }
+                                break;               
         }
     }
     exit;
