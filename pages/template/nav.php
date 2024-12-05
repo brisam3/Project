@@ -450,8 +450,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                         <ul class="menu-sub">
                             <li class="menu-item">
                                 <a href="../deposito/Devoluciones.php" class="menu-link">
-                                    <i class="menu-icon tf-icons bx bx-package"></i>
-                                    <div data-i18n="Depósito">Ver Devoluciones</div>
+                                <i class="menu-icon tf-icons bx bx-cart-download"></i>
+                                    <div data-i18n="Ver Devoluciones">Ver Devoluciones</div>
                                 </a>
                             </li>
                             <li class="menu-item">
