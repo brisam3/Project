@@ -26,7 +26,14 @@ class DetalleTransferenciasController {
 
 
     // Obtener los detalles de transferencias por fecha
-    public function buscarDetalleTransferencia($fecha) {
+    public function buscarDetalleTransferencia() {
+        // Establecer la zona horaria de Buenos Aires
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        
+        // Obtener la fecha actual
+        $fechaHoy = date('Y-m-d');  // La fecha en formato Y-m-d (ejemplo: 2024-12-05)
+    
+        // Query SQL con la fecha actual
         $query = "
             SELECT 
                 dd.idDetalleSolicitud,
@@ -43,14 +50,17 @@ class DetalleTransferenciasController {
             JOIN 
                 usuarios destinatario ON dd.idUsuarioDestinatario = destinatario.idUsuario
             WHERE 
-                DATE(dd.fecha) = ? 
+                DATE(dd.fecha) = ?  -- Compara solo la fecha, sin la hora
                 AND dd.idUsuarioDestinatario = ? 
                 AND dd.estado = 'Pendiente'
         ";
+    
+        // Ejecutar la consulta con la fecha actual y el idUsuarioDestinatario
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$fecha, $_SESSION['idUsuario']]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute([$fechaHoy, $_SESSION['idUsuario']]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Retorna los resultados de la consulta
     }
+    
     
 
     public function buscarDetalleTransferenciaEnviada($fecha) {
@@ -150,9 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'buscarDetalleTransferencia':
-                $fecha = $_POST['fecha'];
-                $detalles = $controller->buscarDetalleTransferencia($fecha);
-
+                $detalles = $controller->buscarDetalleTransferencia();
                 foreach ($detalles as $detalle) {
                     echo json_encode([
                         'id' => $detalle['idDetalleSolicitud'],
