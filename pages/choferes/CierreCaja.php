@@ -91,20 +91,15 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                             <!-- Columna Izquierda - Formulario de Cierre -->
                             <div class="col-xl-6">
                                 <div class="card mb-4">
-                                    <div class="card-header">
-                                        <h5 class="mb-0">Resumen de Cierre de Caja del Chofer</h5>
-                                    </div>
+
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table border-top">
                                                 <thead>
-                                                    <tr>
-                                                        <th>Medio de Pago</th>
-                                                        <th>Total</th>
-                                                    </tr>
+                                                 
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
+                                                    <tr class="table-light">
                                                         <td>
                                                             <i class="bx bx-user"></i> Preventista
                                                         </td>
@@ -124,11 +119,9 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                     </tr>
                                                     <tr>
                                                         <td><i class="bx bx-money"></i> Efectivo</td>
-                                                        <td><input type="number" id="total-efectivo"
-                                                                class="form-control" readonly placeholder="0" /></td>
-                                                        <td><button type="button" class="btn btn-primary"
-                                                                onclick="abrirModalBilletes()">Ingresar
-                                                                Billetes</button></td>
+                                                        <td><input type="number" id="total-efectivo" class="form-control" readonly placeholder="0" /> 
+                                                            <button type="button" class="btn btn-primary" onclick="abrirModalBilletes()"><i class="fas fa-plus-circle"> $</i></button></td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr>
                                                         <td><i class="bx bx-transfer"></i> Transferencias</td>

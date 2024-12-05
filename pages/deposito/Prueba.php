@@ -81,19 +81,19 @@ include '../../backend/controller/access/AccessController.php';
                                 <!-- Tabs Section -->
                                 <div>
                                     <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-                                        <li class="nav-item col-12 col-md-6 col-lg-4" role="presentation">
+                                        <li class="nav-item col-12 col-md-6 col-lg-4 my-3" role="presentation">
                                             <button class="nav-link active" id="pendiente-tab" data-bs-toggle="tab"
                                                 data-bs-target="#pendiente" type="button" role="tab"
                                                 aria-controls="pendiente" aria-selected="true">Solicitudes
                                                 Pendientes</button>
                                         </li>
-                                        <li class="nav-item col-12 col-md-6 col-lg-4" role="presentation">
+                                        <li class="nav-item col-12 col-md-6 col-lg-4 my-3" role="presentation">
                                             <button class="nav-link" id="aprobadas-tab" data-bs-toggle="tab"
                                                 data-bs-target="#aprobadas" type="button" role="tab"
                                                 aria-controls="aprobadas" aria-selected="false">Transferencias
                                                 Enviadas</button>
                                         </li>
-                                        <li class="nav-item col-12 col-md-6 col-lg-4" role="presentation">
+                                        <li class="nav-item col-12 col-md-6 col-lg-4 my-3" role="presentation">
                                             <button class="nav-link" id="recibidas-tab" data-bs-toggle="tab"
                                                 data-bs-target="#recibidas" type="button" role="tab"
                                                 aria-controls="recibidas" aria-selected="false">Transferencias
