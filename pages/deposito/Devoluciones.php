@@ -85,7 +85,7 @@ if (!$accessController->checkAccess('/pages/deposito/Devoluciones.php')) {
                             <div class="container-xxl flex-grow-1 container-p-y">
                                 <div class="row">
                                     <!-- ASIDE IZQUIERDO -->
-                                    <div class="col-md-4">
+                                    <div class="col-12 col-md-6 col-lg-4 my-3">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h5 class="mb-0">Seleccione una Fecha</h5>
@@ -100,7 +100,7 @@ if (!$accessController->checkAccess('/pages/deposito/Devoluciones.php')) {
                                     </div>
 
                                     <!-- SECCION DERECHA PARA DETALLES -->
-                                    <div class="col-md-8">
+                                    <div class="col-12 col-md-6 col-lg-8 my-3 !important;">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h5 class="mb-0">Detalles de la Devolución</h5>
@@ -218,7 +218,7 @@ if (!$accessController->checkAccess('/pages/deposito/Devoluciones.php')) {
                     dataType: 'text', // Cambiado a 'text'
                     success: function(data) {
                         const articulos = data.trim().split("\n");
-                        let html = '<table class="table">';
+                        let html = '<div class="table-responsive"><table class="table">';
                         html +=
                             '<thead><tr><th>Código Bejerman</th><th>Partida</th><th>Cantidad</th><th>Descripción</th></tr></thead>';
                         html += '<tbody>';
