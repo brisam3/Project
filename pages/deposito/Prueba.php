@@ -58,12 +58,7 @@ include '../../backend/controller/access/AccessController.php';
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
-    <style>
-    .swal2-custom-margin {
-        margin-top: 50px !important;
-        /* Ajusta este valor para moverlo más abajo */
-    }
-    </style>
+    
 </head>
 
 <body>

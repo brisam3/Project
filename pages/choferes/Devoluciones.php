@@ -82,10 +82,10 @@ if (!$accessController->checkAccess('/pages/choferes/Devoluciones.php')) {
                 <div class="layout-container">
                     <div class="layout-page">
                         <div class="content-wrapper">
-                            <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="container-fluid !important;">
                                 <div class="row">
                                     <!-- ASIDE IZQUIERDO -->
-                                    <div class="col-md-4">
+                                    <div class="col-12 col-md-6 col-lg-4">
                                         <div class="card">
                                             <div class="card-body">
                                                
@@ -97,7 +97,7 @@ if (!$accessController->checkAccess('/pages/choferes/Devoluciones.php')) {
                                     </div>
 
                                     <!-- SECCION DERECHA PARA DETALLES -->
-                                    <div class="col-md-8">
+                                    <div class="col-12 col-md-6 col-lg-8  !important;">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h5 class="mb-0">Detalles de la Devolución</h5>
@@ -209,7 +209,7 @@ if (!$accessController->checkAccess('/pages/choferes/Devoluciones.php')) {
                         dataType: 'text', // Cambiado a 'text'
                         success: function(data) {
                             const articulos = data.trim().split("\n");
-                            let html = '<table class="table">';
+                            let html = '<div class="table-responsive"><table class="table">';
                             html +=
                                 '<thead><tr><th>Código Bejerman</th><th>Partida</th><th>Cantidad</th><th>Descripción</th></tr></thead>';
                             html += '<tbody>';
