@@ -518,14 +518,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             <div data-i18n="Choferes">Choferes</div>
                         </a>
                         <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="../choferes/CierreCaja.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-wallet"></i>
-
-                                    <div data-i18n="Cierre de Caja">Cierre de Caja</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
+                        <li class="menu-item">
                                 <a href="../choferes/Devoluciones.php" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-cart-download"></i>
 
@@ -533,6 +526,14 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Ver Devoluciones">Ver Devoluciones</div>
                                 </a>
                             </li>
+                            <li class="menu-item">
+                                <a href="../choferes/CierreCaja.php" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-wallet"></i>
+
+                                    <div data-i18n="Cierre de Caja">Cierre de Caja</div>
+                                </a>
+                            </li>
+                          
 
 
                         </ul>
