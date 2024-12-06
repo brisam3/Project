@@ -93,7 +93,7 @@ include '../../backend/controller/access/AccessController.php';
                                         <li class="nav-item col-12 col-md-6 col-lg-4 my-1" role="presentation">
                                             <button class="nav-link" id="aprobadas-tab" data-bs-toggle="tab"
                                                 data-bs-target="#aprobadas" type="button" role="tab"
-                                                aria-controls="aprobadas" aria-selected="false" >Transferencias
+                                                aria-controls="aprobadas" aria-selected="false">Transferencias
                                                 Enviadas</button>
                                         </li>
                                         <li class="nav-item col-12 col-md-6 col-lg-4 my-1" role="presentation">
@@ -107,7 +107,7 @@ include '../../backend/controller/access/AccessController.php';
 
                                 <div class="tab-content" id="myTabContent">
                                     <!-- Resumen Tab -->
-                                    <div class="tab-pane fade show active" id="pendiente" role="tabpanel" >
+                                    <div class="tab-pane fade show active" id="pendiente" role="tabpanel">
                                         <div class="row">
                                             <!-- Left Section -->
                                             <div class="col-12 col-md-6 col-lg-4 my-3">
@@ -127,7 +127,8 @@ include '../../backend/controller/access/AccessController.php';
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <h5 class="mb-0">Detalles de la solicitud de transferencia</h5>
-                                                        <small class="text-muted float-end">Confirmar para Transferir Artículos</small>
+                                                        <small class="text-muted float-end">Confirme para Transferir
+                                                            Artículos</small>
                                                     </div>
                                                     <div class="card-body" id="detallesTransferencia">
                                                         <!-- Detalles del detalle_solicitud_transferencia -->
@@ -140,7 +141,8 @@ include '../../backend/controller/access/AccessController.php';
                                                         name="idDetalleSolicitud" value="">
 
                                                     <div class="text-center my-3">
-                                                        <button id="guardarTransferencias" class="btn btn-outline-dark my-1">
+                                                        <button id="guardarTransferencias"
+                                                            class="btn btn-outline-dark my-1">
                                                             Confirmar
                                                         </button>
                                                     </div>
@@ -155,7 +157,7 @@ include '../../backend/controller/access/AccessController.php';
                                             <!-- ASIDE IZQUIERDO -->
                                             <div class="col-md-4">
                                                 <div class="card">
-                                                
+
                                                     <div class="card-body">
                                                         <div id="detalleTransferenciasEnviadasList" class="mt-4">
                                                             <!-- Lista de detalles de transferencias -->
@@ -170,7 +172,7 @@ include '../../backend/controller/access/AccessController.php';
                                                     <div class="card-header">
                                                         <h5 class="mb-0">Detalles de la transferencia enviada</h5>
                                                         <small class="text-muted float-end"></small>
-                                                        
+
                                                     </div>
                                                     <div class="card-body" id="detallesTransferenciasEnviadas">
 
@@ -183,7 +185,7 @@ include '../../backend/controller/access/AccessController.php';
 
 
                                     <div class="tab-pane fade" id="recibidas" role="tabpanel">
-                                    <div class="row">
+                                        <div class="row">
                                             <!-- Left Section -->
                                             <div class="col-12 col-md-6 col-lg-4 my-3">
                                                 <div class="card">
@@ -202,18 +204,22 @@ include '../../backend/controller/access/AccessController.php';
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <h5 class="mb-0">Detalles de la solicitud de transferencia</h5>
-                                                        <small class="text-muted float-end">Confirmar para Transferir Artículos</small>
+                                                        <small class="text-muted float-end">Confirme la Recepción de
+                                                            Artículos</small>
                                                     </div>
                                                     <div class="card-body" id="detallesTransferenciaRecibida">
                                                         <!-- Detalles del detalle_solicitud_transferencia -->
                                                     </div>
+                                                    <input type="hidden" id="idDetalleTransferencia2"
+                                                        name="idDetalleTransferencia2">
                                                     <div class="text-center my-3">
-                                                        <button id="" class="btn btn-outline-dark my-1">
+                                                        <button id="actualizarestado" class="btn btn-outline-dark my-1">
                                                             Confirmar
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
 
@@ -267,7 +273,7 @@ include '../../backend/controller/access/AccessController.php';
 
         function buscarDetalleTransferencia() {
             $.ajax({
-                url: '../../backend/controller/deposito/Solicitudes.php',
+                url: '../../backend/controller/locales/SeguimientoTransferencias.php',
                 type: 'POST',
                 data: {
                     action: 'buscarDetalleTransferencia', // La acción que estás enviando
@@ -356,7 +362,7 @@ include '../../backend/controller/access/AccessController.php';
 
         // Enviar la solicitud AJAX
         $.ajax({
-            url: '../../backend/controller/deposito/Solicitudes.php',
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
             type: 'POST',
             data: {
                 action: 'guardarTransferencias',
@@ -385,39 +391,72 @@ include '../../backend/controller/access/AccessController.php';
         });
     });
 
+    $('#actualizarestado').on('click', function() {
+
+        const idDetalleTransferencia = $('#idDetalleTransferencia2').val();
+        console.log('id es ', idDetalleTransferencia)
+
+        // Enviar la solicitud AJAX
+        $.ajax({
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
+            type: 'POST',
+            data: {
+                action: 'actualizarEstadoTransferencia',
+                idDetalleTransferencia: idDetalleTransferencia
+            },
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    Swal.fire('Éxito', 'Transferencias guardadas con éxito.',
+                        'success');
+                } else {
+                    Swal.fire('Error', result.message ||
+                        'No se pudieron guardar las transferencias.',
+                        'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                Swal.fire('Error',
+                    'Ocurrió un problema al guardar las transferencias.',
+                    'error');
+            }
+        });
+    });
+
     $('#aprobadas-tab').on('click', function() {
-            $.ajax({
-                url: '../../backend/controller/deposito/Solicitudes.php',
-                type: 'POST',
-                data: {
-                    action: 'buscarDetalleTransferenciaEnviada',
-                },
-                dataType: 'text',
-                success: function(data) {
-                    const detalles = data.trim().split("\n");
-                    let html = '';
+        $.ajax({
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
+            type: 'POST',
+            data: {
+                action: 'buscarDetalleTransferenciaEnviada',
+            },
+            dataType: 'text',
+            success: function(data) {
+                const detalles = data.trim().split("\n");
+                let html = '';
 
-                    if (detalles.length > 0 && detalles[0] !== "") {
-                        detalles.forEach(function(detalle) {
-                            const {
-                                id,
-                                usuarioRemitente,
-                                usuarioDestinatario,
-                                fecha,
-                                estado,
-                                idUsuarioDestinatario,
-                                idUsuarioRemitente
-                            } = JSON.parse(detalle);
+                if (detalles.length > 0 && detalles[0] !== "") {
+                    detalles.forEach(function(detalle) {
+                        const {
+                            id,
+                            usuarioRemitente,
+                            usuarioDestinatario,
+                            fecha,
+                            estado,
+                            idUsuarioDestinatario,
+                            idUsuarioRemitente
+                        } = JSON.parse(detalle);
 
-
-                            html += `
+                        let estadoColor = estado === 'Recibido' ? 'style="color: #006400;"' : 'style="color: #f20202;"'; 
+                        html += `
                                                           <div class="card mb-2">
                                             <div class="card-body d-flex justify-content-between align-items-center">
                                                 <span>
                                                     <strong>Remitente: </strong>${usuarioRemitente}<br>
                                                     <strong>Destinatario: </strong>${usuarioDestinatario}<br>
                                                     <strong>Fecha: </strong>${fecha}<br>
-                                                    <strong>Estado: </strong>${estado}
+                                                     <strong>Estado: </strong><span ${estadoColor}>${estado}</span>
                                                 </span>
                                                 <div class="d-flex flex-column">
                                                     <button type="button" class="btn btn-sm btn-outline-dark my-1" onclick="verDetalleTransferencia(${id})">Ver Detalles</button>
@@ -426,145 +465,27 @@ include '../../backend/controller/access/AccessController.php';
                                         </div>
 
                                                         `;
-                        });
-
-                    } else {
-                        html =
-                            '<p>No se encontraron transferencias para esta fecha.</p>';
-
-                    }
-                    $('#detalleTransferenciasEnviadasList').html(html);
-                },
-
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    console.error('Detalles:', xhr.responseText);
-                    alert('Error al buscar detalles de transferencias.');
-                },
-            });
-        })
-    
-
-
-
-
-
-   
-   
-   
-   
-    function removeTransfer(button) {
-            const row = $(button).closest('tr');
-            const idDetalleSolicitud = row.data('id');
-
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: '¡No podrás revertir esta acción!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '../../backend/controller/deposito/Solicitudes.php',
-                        type: 'POST',
-                        data: {
-                            action: 'eliminarDetalleTransferencia',
-                            idDetalleTransferencia: idDetalleSolicitud
-                        },
-                        success: function(response) {
-                            const result = JSON.parse(response);
-                            if (result.success) {
-                                Swal.fire('Eliminado',
-                                    'El detalle ha sido eliminado con éxito.', 'success');
-                                row.remove();
-                            } else {
-                                Swal.fire('Error', 'No se pudo eliminar el detalle.', 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error', 'Ocurrió un problema al eliminar el detalle.',
-                                'error');
-                        }
                     });
+
+                } else {
+                    html =
+                        '<p>No se encontraron transferencias para esta fecha.</p>';
+
                 }
-            });
-    }
+                $('#detalleTransferenciasEnviadasList').html(html);
+            },
 
-
-
-   
-    
-    
-    $('#recibidas-tab').on('click', function() {
-            $.ajax({
-                url: '../../backend/controller/deposito/Solicitudes.php',
-                type: 'POST',
-                data: {
-                    action: 'buscarDetalleTransferenciaRecibida',
-                },
-                dataType: 'text',
-                success: function(data) {
-                    const detalles = data.trim().split("\n");
-                    let html = '';
-
-                    if (detalles.length > 0 && detalles[0] !== "") {
-                        detalles.forEach(function(detalle) {
-                            const {
-                                id,
-                                usuarioRemitente,
-                                usuarioDestinatario,
-                                fecha,
-                                estado,
-                                idUsuarioDestinatario,
-                                idUsuarioRemitente
-                            } = JSON.parse(detalle);
-
-
-                            html += `
-                                                          <div class="card mb-2">
-                                            <div class="card-body d-flex justify-content-between align-items-center">
-                                                <span>
-                                                    <strong>Remitente: </strong>${usuarioRemitente}<br>
-                                                    <strong>Destinatario: </strong>${usuarioDestinatario}<br>
-                                                    <strong>Fecha: </strong>${fecha}<br>
-                                                    <strong>Estado: </strong>${estado}
-                                                </span>
-                                                <div class="d-flex flex-column">
-                                                    <button type="button" class="btn btn-sm btn-outline-dark my-1" onclick="verDetalleTransferenciaRecibida(${id})">Ver Detalles</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                                        `;
-                        });
-
-                    } else {
-                        html =
-                            '<p>No se encontraron transferencias recibidas para esta fecha.</p>';
-
-                    }
-                    $('#detalleTransferenciasRecibidasList').html(html);
-                },
-
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    console.error('Detalles:', xhr.responseText);
-                    alert('Error al buscar detalles de transferencias.');
-                },
-            });
-        })
-    
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Detalles:', xhr.responseText);
+                alert('Error al buscar detalles de transferencias.');
+            },
+        });
+    })
 
 
 
 
-
-    
-    
     function removeTransfer(button) {
         const row = $(button).closest('tr');
         const idDetalleSolicitud = row.data('id');
@@ -581,7 +502,135 @@ include '../../backend/controller/access/AccessController.php';
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '../../backend/controller/deposito/Solicitudes.php',
+                    url: '../../backend/controller/locales/SeguimientoTransferencias.php',
+                    type: 'POST',
+                    data: {
+                        action: 'eliminarDetalleTransferencia',
+                        idDetalleTransferencia: idDetalleSolicitud
+                    },
+                    success: function(response) {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            Swal.fire('Eliminado',
+                                'El detalle ha sido eliminado con éxito.', 'success');
+                            row.remove();
+                        } else {
+                            Swal.fire('Error', 'No se pudo eliminar el detalle.', 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error', 'Ocurrió un problema al eliminar el detalle.',
+                            'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function actualizarEstado(idDetalleTransferencia) {
+        // Configura los datos a enviar
+        const datos = new FormData();
+        datos.append('action', 'actualizarEstadoTransferencia');
+        datos.append('idDetalleTransferencia', idDetalleTransferencia);
+        // Realiza la solicitud POST
+        fetch('../../backend/controller/locales/SeguimientoTransferencias.php', {
+                method: 'POST',
+                body: datos
+            })
+            .then(response => response.json()) // Parsea la respuesta como JSON
+            .then(data => {
+                if (data.success) {
+                    alert(data.message); // Muestra mensaje de éxito
+                } else {
+                    alert(`Error: ${data.message}`); // Muestra mensaje de error
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+                alert('Hubo un problema al actualizar el estado.');
+            });
+    }
+
+
+
+    $('#recibidas-tab').on('click', function() {
+        $.ajax({
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
+            type: 'POST',
+            data: {
+                action: 'buscarDetalleTransferenciaRecibida',
+            },
+            dataType: 'text',
+            success: function(data) {
+                const detalles = data.trim().split("\n");
+                let html = '';
+
+                if (detalles.length > 0 && detalles[0] !== "") {
+                    detalles.forEach(function(detalle) {
+                        const {
+                            id,
+                            usuarioRemitente,
+                            usuarioDestinatario,
+                            fecha,
+                            estado,
+                            idUsuarioDestinatario,
+                            idUsuarioRemitente
+                        } = JSON.parse(detalle);
+
+
+                        let estadoColor = estado === 'Recibido' ? 'style="color: #006400;"' : 'style="color: #f20202;"'; 
+
+                                html += `
+                                    <div class="card mb-2">
+                                        <div class="card-body d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <strong>Remitente: </strong>${usuarioRemitente}<br>
+                                                <strong>Destinatario: </strong>${usuarioDestinatario}<br>
+                                                <strong>Fecha: </strong>${fecha}<br>
+                                                <strong>Estado: </strong><span ${estadoColor}>${estado}</span>
+                                            </span>
+                                            <div class="d-flex flex-column">
+                                                <button type="button" class="btn btn-sm btn-outline-dark my-1" onclick="verDetalleTransferenciaRecibida(${id})">Ver Detalles</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                    });
+                } else {
+                    html =
+                        '<p>No se encontraron transferencias recibidas para esta fecha.</p>';
+
+                }
+                $('#detalleTransferenciasRecibidasList').html(html);
+            },
+
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Detalles:', xhr.responseText);
+                alert('Error al buscar detalles de transferencias.');
+            },
+        });
+    })
+
+
+
+    function removeTransfer(button) {
+        const row = $(button).closest('tr');
+        const idDetalleSolicitud = row.data('id');
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¡No podrás revertir esta acción!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../../backend/controller/locales/SeguimientoTransferencias.php',
                     type: 'POST',
                     data: {
                         action: 'eliminarDetalleTransferencia',
@@ -615,7 +664,7 @@ include '../../backend/controller/access/AccessController.php';
         }
 
         $.ajax({
-            url: '../../backend/controller/deposito/Solicitudes.php',
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
             type: 'POST',
             data: {
                 action: 'modificarDetalleTransferencia',
@@ -641,7 +690,7 @@ include '../../backend/controller/access/AccessController.php';
 
     function verDetalles(idDetalleSolicitud) {
         $.ajax({
-            url: '../../backend/controller/deposito/Solicitudes.php',
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
             type: 'POST',
             data: {
                 action: 'verDetalleSolicitud',
@@ -724,7 +773,7 @@ include '../../backend/controller/access/AccessController.php';
 
     function verDetalleTransferencia(idDetalleTransferencia) {
         $.ajax({
-            url: '../../backend/controller/deposito/Solicitudes.php',
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
             type: 'POST',
             data: {
                 action: 'verDetalleTransferencia',
@@ -738,7 +787,7 @@ include '../../backend/controller/access/AccessController.php';
                     const idUsuarioDestinatario = data[0].idUsuarioDestinatario;
 
                     // Mostrar el idDetalleSolicitud en la consola
-                    console.log('ID Detalle Solicitud transferencia:', idDetalleTransferencia);
+                    console.log('ID Detalle Solicitud:', idDetalleTransferencia);
 
                     // Construir la tabla
                     let html = `
@@ -788,23 +837,21 @@ include '../../backend/controller/access/AccessController.php';
 
     function verDetalleTransferenciaRecibida(idDetalleTransferencia) {
         $.ajax({
-            url: '../../backend/controller/deposito/Solicitudes.php',
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
             type: 'POST',
             data: {
-                action: 'verDetalleTransferencia',
+                action: 'verDetalleTransferenciaRecibida',
                 idDetalleTransferencia: idDetalleTransferencia
             },
             dataType: 'json',
             success: function(data) {
                 if (data.length > 0) {
-                    // Verifica que los datos incluyan idUsuarioRemitente e idUsuarioDestinatario del primer artículo
-                    const idUsuarioRemitente = data[0].idUsuarioRemitente;
-                    const idUsuarioDestinatario = data[0].idUsuarioDestinatario;
 
-                 
+
+                    $('#idDetalleTransferencia2').val(idDetalleTransferencia);
 
                     // Mostrar el idDetalleSolicitud en la consola
-                    console.log('ID Detalle Solicitud transferencia:', idDetalleTransferencia);
+                    console.log('ID Detalle Solicitud transferenciaaa:', idDetalleTransferencia);
 
                     // Construir la tabla
                     let html = `
@@ -836,7 +883,7 @@ include '../../backend/controller/access/AccessController.php';
                                     </table>
                                 </div>`;
 
-                    $('#detallesTransferenciasEnviadas').html(html);
+                    $('#detallesTransferenciaRecibida').html(html);
 
 
 
@@ -852,79 +899,7 @@ include '../../backend/controller/access/AccessController.php';
         });
     }
 
-    function removeTransferRecibida(button) {
-        const row = $(button).closest('tr');
-        const idDetalleTransferencia = row.data('id');
 
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: '¡No podrás revertir esta acción!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '../../backend/controller/deposito/Solicitudes.php',
-                    type: 'POST',
-                    data: {
-                        action: 'eliminarDetalleTransferenciaRecibida',
-                        idDetalleTransferencia: idDetalleTransferencia
-                    },
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            Swal.fire('Eliminado',
-                                'El detalle ha sido eliminado con éxito.', 'success');
-                            row.remove();
-                        } else {
-                            Swal.fire('Error', 'No se pudo eliminar el detalle.', 'error');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire('Error', 'Ocurrió un problema al eliminar el detalle.',
-                            'error');
-                    }
-                });
-            }
-        });
-    }
-
-    function actualizarDetalle(idDetalleSolicitud, cantidad, partida) {
-        if (cantidad <= 0 || !partida.trim()) {
-            Swal.fire('Error', 'Ingrese valores válidos para la cantidad y la partida.', 'error');
-            return;
-        }
-
-        $.ajax({
-            url: '../../backend/controller/deposito/Solicitudes.php',
-            type: 'POST',
-            data: {
-                action: 'modificarDetalleTransferenciaRecibida',
-                idDetalleTransferencia: idDetalleSolicitud,
-                cantidad: cantidad,
-                partida: partida
-            },
-            success: function(response) {
-                const result = JSON.parse(response);
-                if (result.success) {
-                    // El detalle se actualizó correctamente, pero no se muestra ninguna notificación.
-                    console.log('Detalle actualizado correctamente');
-                } else {
-                    console.error('No se pudo actualizar el detalle.');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                Swal.fire('Error', 'Ocurrió un error al actualizar el detalle.', 'error');
-            }
-        });
-    }
-
-    
     function rechazarSolicitud(idDetalleSolicitud) {
         Swal.fire({
             title: '¿Estás seguro?',
@@ -938,7 +913,7 @@ include '../../backend/controller/access/AccessController.php';
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '../../backend/controller/deposito/Solicitudes.php',
+                    url: '../../backend/controller/locales/SeguimientoTransferencias.php',
                     type: 'POST',
                     data: {
                         action: 'rechazarSolicitud',

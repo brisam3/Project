@@ -87,11 +87,19 @@ class DetalleTransferenciasController {
             WHERE 
                 DATE(dd.fecha) = ?
                 AND dd.idUsuarioRemitente = ?
+            ORDER BY 
+                CASE 
+                    WHEN dd.estado = 'Pendiente' THEN 0
+                    WHEN dd.estado = 'Recibido' THEN 1
+                    ELSE 2
+                END
         ";
+    
         $stmt = $this->db->prepare($query);
         $stmt->execute([$fechaHoy, $_SESSION['idUsuario']]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
 
     public function buscarDetalleTransferenciaRecibida() {
@@ -118,7 +126,14 @@ class DetalleTransferenciasController {
             WHERE 
                 DATE(dd.fecha) = ?
                 AND dd.idUsuarioDestinatario = ?
+            ORDER BY 
+                CASE 
+                    WHEN dd.estado = 'Pendiente' THEN 0
+                    WHEN dd.estado = 'Recibido' THEN 1
+                    ELSE 2
+                END
         ";
+    
         $stmt = $this->db->prepare($query);
         $stmt->execute([$fechaHoy, $_SESSION['idUsuario']]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -173,7 +188,6 @@ class DetalleTransferenciasController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-
     public function verDetalleTransferenciaRecibida($idDetalleTransferencia) {
         $query = "
             SELECT 
@@ -210,18 +224,30 @@ class DetalleTransferenciasController {
         return true;
     }
 
-    public function eliminarDetalleTransferenciaRecibida($idDetalleTransferencia) {
-        // Responder sin realizar cambios en la base de datos
-        return true;
+    public function actualizarEstadoTransferencia($idDetalleTransferencia) {
+        // Asegúrate de que el estado sea válido
+        
+    
+        $query = "
+            UPDATE 
+                detalletransferencia
+            SET 
+                estado = 'Recibido'
+            WHERE 
+                idDetalleTransferencia = ?
+        ";
+        try {
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([$idDetalleTransferencia]);
+            return $stmt->rowCount(); // Devuelve el número de filas afectadas
+        } catch (PDOException $e) {
+            // Manejo de errores
+            error_log("Error al actualizar el estado: " . $e->getMessage());
+            return false;
+        }
     }
-                          
+    
 
-    
-    public function actualizarDetalleTransferenciaRecibida($idDetalleTransferencia, $cantidad, $partida) {
-       
-        return true;
-    }
-    
     
 }
 
@@ -444,61 +470,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     echo json_encode($articulosResponse);
                                     break;
             case 'buscarDetalleTransferenciaRecibida':
+
+
                                         $detalles = $controller->buscarDetalleTransferenciaRecibida();
-                                        foreach ($detalles as $detalle) {
-                                            echo json_encode([
-                                                'id' => $detalle['idDetalleTransferencia'], // Cambiado de idDetalleSolicitud a idDetalleTransferencia
-                                                'usuarioRemitente' => $detalle['nombreRemitente'],
-                                                'usuarioDestinatario' => $detalle['nombreDestinatario'],
-                                                'idUsuarioRemitente' => $detalle['idUsuarioRemitente'],
-                                                'idUsuarioDestinatario' => $detalle['idUsuarioDestinatario'],
-                                                'fecha' => $detalle['fecha'],
-                                                'estado' => $detalle['estado']
-                                            ]) . "\n";
-                                        }
-                                        break;
+                                            foreach ($detalles as $detalle) {
+                                                            echo json_encode([
+                                                                'id' => $detalle['idDetalleTransferencia'], // Cambiado de idDetalleSolicitud a idDetalleTransferencia
+                                                                'usuarioRemitente' => $detalle['nombreRemitente'],
+                                                                'usuarioDestinatario' => $detalle['nombreDestinatario'],
+                                                                'idUsuarioRemitente' => $detalle['idUsuarioRemitente'],
+                                                                'idUsuarioDestinatario' => $detalle['idUsuarioDestinatario'],
+                                                                'fecha' => $detalle['fecha'],
+                                                                'estado' => $detalle['estado']
+                                                            ]) . "\n";
+                                                        }
+                                                        break;
             case 'verDetalleTransferenciaRecibida':
-                                            $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
-                                            $articulos = $controller->verDetalleTransferenciaRecibida($idDetalleTransferencia);
-                                        
-                                            // Crear un array para incluir todos los datos juntos
-                                            $articulosResponse = [];
-                                        
-                                            foreach ($articulos as $articulo) {
-                                                $articulosResponse[] = [
-                                                    'id' => $idDetalleTransferencia,
-                                                    'codBejerman' => $articulo['codBejerman'],
-                                                    'partida' => $articulo['partida'],
-                                                    'cantidad' => $articulo['cantidad'],
-                                                    'descripcion' => $articulo['descripcion'],
-                                                    'idUsuarioRemitente' => $articulo['idUsuarioRemitente'],
-                                                    'idUsuarioDestinatario' => $articulo['idUsuarioDestinatario']
-                                                ];
-                                            }
-                                        
-                                            echo json_encode($articulosResponse);
-                                            break;
-            case 'eliminarDetalleTransferenciaRecibida':
-                                                $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
-                                                $resultado = $controller->eliminarDetalleTransferenciaRecibida($idDetalleTransferencia);
-                                                echo json_encode(['success' => $resultado]);
-                                                break;
-            case 'modificarDetalleTransferenciaRecibida':
-                                                    $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
-                                                    $cantidad = $_POST['cantidad'];
-                                                    $partida = $_POST['partida'];
+                                                            $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
+                                                            $articulos = $controller->verDetalleTransferencia($idDetalleTransferencia);
+                                                        
+                                                            // Crear un array para incluir todos los datos juntos
+                                                            $articulosResponse = [];
+                                                        
+                                                            foreach ($articulos as $articulo) {
+                                                                $articulosResponse[] = [
+                                                                    'idDetalleTransferencia' => $idDetalleTransferencia,
+                                                                    'codBejerman' => $articulo['codBejerman'],
+                                                                    'partida' => $articulo['partida'],
+                                                                    'cantidad' => $articulo['cantidad'],
+                                                                    'descripcion' => $articulo['descripcion'],
+                                                                    'idUsuarioRemitente' => $articulo['idUsuarioRemitente'],
+                                                                    'idUsuarioDestinatario' => $articulo['idUsuarioDestinatario']
+                                                                ];
+                                                            }
+                                                        
+                                                            echo json_encode($articulosResponse);
+                                                            break;
+            case 'actualizarEstadoTransferencia':
+                                                                if (isset($_POST['idDetalleTransferencia'])) {
+                                                                    $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
+                                                                    if (!filter_var($idDetalleTransferencia, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
+                                                                        echo json_encode(['success' => false, 'message' => 'ID inválido.']);
+                                                                        exit;
+                                                                    }
                                                 
-                                                    // Validar entradas
-                                                    if ($cantidad <= 0 || empty($partida)) {
-                                                        echo json_encode(['success' => false, 'message' => 'Datos inválidos']);
-                                                        exit;
-                                                    }
+                                                                    $resultado = $controller->actualizarEstadoTransferencia($idDetalleTransferencia);
                                                 
-                                                    // Actualizar en la base de datos
-                                                    $resultado = $controller->actualizarDetalleTransferenciaRecibida($idDetalleTransferencia, $cantidad, $partida);
-                                                
-                                                    echo json_encode(['success' => $resultado]);
-                                                    break;
+                                                                    if (is_array($resultado) && isset($resultado['error']) && $resultado['error']) {
+                                                                        echo json_encode(['success' => false, 'message' => $resultado['message']]);
+                                                                    } elseif ($resultado) {
+                                                                        echo json_encode(['success' => true, 'message' => 'Estado actualizado correctamente.']);
+                                                                    } else {
+                                                                        echo json_encode(['success' => false, 'message' => 'La transferencia ya fue recibida.']);
+                                                                    }
+                                                                } else {
+                                                                    echo json_encode(['success' => false, 'message' => 'Faltan parámetros.']);
+                                                                }
+                                                                break;
+                                                            
         }
     }
     exit;

@@ -410,10 +410,17 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
 
                                     <div data-i18n="Cierre de Caja">Cierre de Caja</div>
                                 </a>
-                            </li><li class="menu-item">
+                            </li>
+                            <li class="menu-item">
                                 <a href="../locales/Transferencias.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
                                     <div data-i18n="Solicitar Transferencia">Solicitar Transferencia</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="../locales/SeguimientoTransferencia.php" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-store"></i>
+                                    <div data-i18n="Seguimiento Transferencia">Seguimiento Transferencia</div>
                                 </a>
                             </li>
                         </ul>
@@ -460,6 +467,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Solicitudes Transferencias">Ver Solicitudes Transferencias</div>
                                 </a>
                             </li>
+                            
                         </ul>
                     </li>
 
