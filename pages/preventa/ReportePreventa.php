@@ -418,7 +418,7 @@
                         $("#contenido-reportes").show();
 
                         const resumen = data.resumen;
-                        const totalPromedioClientes = resumen.CantidadClientes / 10;
+                        const totalPromedioClientes = resumen.CantidadClientes / 9;
 
                         // Llenar los valores en las tarjetas
                         $("#total-vendido").text(
@@ -473,14 +473,35 @@
                         });
 
                         // Convertir la tabla de preventistas en una DataTable
+                        // Convertir la tabla de preventistas en una DataTable
+                        // Inicializar DataTables con orden en Total Ventas
+                        // Inicializar DataTables
                         $('.datatables-ajax').DataTable({
-                            "language": {
-                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json" // Idioma en español
-                            },
                             "order": [
                                 [3, "desc"]
-                            ]
+                            ], // Ordenar inicialmente por la columna 3 (Total Venta)
+                            "columnDefs": [{
+                                "targets": [3, 4, 5, 8,
+                                    9
+                                ], // Índices de columnas con datos numéricos
+                                "render": function(data, type, row) {
+                                    if (type === 'sort' || type === 'type') {
+                                        // Convertir los valores al formato numérico
+                                        return parseFloat(data.replace(
+                                            /[^\d,-]/g, '').replace(',',
+                                            '.')) || 0;
+                                    }
+                                    return data; // Mostrar el dato original en la tabla
+                                }
+                            }],
+                            "language": {
+                                "decimal": ",",
+                                "thousands": "."
+                            }
                         });
+
+
+
 
                         // Llenar la tabla con datos de proveedores
                         const tbodyProveedores = $("#tabla-proveedores");
@@ -500,10 +521,28 @@
                             "searching": true,
                             "ordering": true,
                             "info": true,
+                            "order": [
+                                [2, "desc"]
+                            ], // Ordenar inicialmente por la columna 2 (Total Ventas)
+                            "columnDefs": [{
+                                "targets": [2], // Índice de la columna Total Ventas
+                                "render": function(data, type, row) {
+                                    if (type === 'sort' || type === 'type') {
+                                        // Limpiar caracteres no numéricos y convertir a número
+                                        return parseFloat(data.replace(
+                                            /[^\d,-]/g, '').replace(',',
+                                            '.')) || 0;
+                                    }
+                                    return data; // Mostrar los datos originales
+                                }
+                            }],
                             "language": {
-                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json" // Idioma en español
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json", // Idioma en español
+                                "decimal": ",",
+                                "thousands": "."
                             }
                         });
+
 
 
                         const tbodyPreProveedor = $("#tabla-pre-proveedores");
@@ -520,12 +559,25 @@
 
                         // Convertir la tabla de preventistas en una DataTable
                         $('.datatables-ajax-pre-proveedores').DataTable({
-                            "paging": true, // Paginación activada
-                            "searching": true, // Búsqueda activada
-                            "ordering": true, // Ordenación activada
-                            "info": true, // Mostrar información de la tabla
+                            "order": [
+                                [3, "desc"]
+                            ], // Ordenar inicialmente por la columna 2 (Total Ventas)
+                            "columnDefs": [{
+                                "targets": [3], // Índice de la columna Total Ventas
+                                "render": function(data, type, row) {
+                                    if (type === 'sort' || type === 'type') {
+                                        // Limpiar caracteres no numéricos y convertir a número
+                                        return parseFloat(data.replace(
+                                            /[^\d,-]/g, '').replace(',',
+                                            '.')) || 0;
+                                    }
+                                    return data; // Mostrar los datos originales
+                                }
+                            }],
                             "language": {
-                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json" // Idioma en español
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json", // Idioma en español
+                                "decimal": ",",
+                                "thousands": "."
                             }
                         });
 
@@ -544,12 +596,25 @@
 
                         // Convertir la tabla de preventistas en una DataTable
                         $('.datatables-ajax-articulos').DataTable({
-                            "paging": true, // Paginación activada
-                            "searching": true, // Búsqueda activada
-                            "ordering": true, // Ordenación activada
-                            "info": true, // Mostrar información de la tabla
+                            "order": [
+                                [3, "desc"]
+                            ], // Ordenar inicialmente por la columna 2 (Total Ventas)
+                            "columnDefs": [{
+                                "targets": [3], // Índice de la columna Total Ventas
+                                "render": function(data, type, row) {
+                                    if (type === 'sort' || type === 'type') {
+                                        // Limpiar caracteres no numéricos y convertir a número
+                                        return parseFloat(data.replace(
+                                            /[^\d,-]/g, '').replace(',',
+                                            '.')) || 0;
+                                    }
+                                    return data; // Mostrar los datos originales
+                                }
+                            }],
                             "language": {
-                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json" // Idioma en español
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json", // Idioma en español
+                                "decimal": ",",
+                                "thousands": "."
                             }
                         });
 
@@ -569,12 +634,25 @@
 
                         // Convertir la tabla de preventistas en una DataTable
                         $('.datatables-ajax-art-preventista').DataTable({
-                            "paging": true, // Paginación activada
-                            "searching": true, // Búsqueda activada
-                            "ordering": true, // Ordenación activada
-                            "info": true, // Mostrar información de la tabla
+                            "order": [
+                                [4, "desc"]
+                            ], // Ordenar inicialmente por la columna 2 (Total Ventas)
+                            "columnDefs": [{
+                                "targets": [4], // Índice de la columna Total Ventas
+                                "render": function(data, type, row) {
+                                    if (type === 'sort' || type === 'type') {
+                                        // Limpiar caracteres no numéricos y convertir a número
+                                        return parseFloat(data.replace(
+                                            /[^\d,-]/g, '').replace(',',
+                                            '.'));
+                                    }
+                                    return data; // Mostrar los datos originales
+                                }
+                            }],
                             "language": {
-                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"// Idioma en español
+                                "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json", // Idioma en español
+                                "decimal": ",",
+                                "thousands": "."
                             }
                         });
 

@@ -47,6 +47,9 @@ include '../../backend/controller/access/AccessController.php';
     <link rel="stylesheet" href="../../assets/vendor/libs/typeahead-js/typeahead.css" />
     <link rel="stylesheet" href="../../assets/vendor/libs/apex-charts/apex-charts.css" />
 
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- Page CSS -->
     <link rel="stylesheet" href="../css/clima.css" />
 
@@ -90,7 +93,7 @@ include '../../backend/controller/access/AccessController.php';
                                         <li class="nav-item col-12 col-md-6 col-lg-4 my-1" role="presentation">
                                             <button class="nav-link" id="aprobadas-tab" data-bs-toggle="tab"
                                                 data-bs-target="#aprobadas" type="button" role="tab"
-                                                aria-controls="aprobadas" aria-selected="false">Transferencias
+                                                aria-controls="aprobadas" aria-selected="false" >Transferencias
                                                 Enviadas</button>
                                         </li>
                                         <li class="nav-item col-12 col-md-6 col-lg-4 my-1" role="presentation">
@@ -104,8 +107,7 @@ include '../../backend/controller/access/AccessController.php';
 
                                 <div class="tab-content" id="myTabContent">
                                     <!-- Resumen Tab -->
-                                    <div class="tab-pane fade show active" id="pendiente" role="tabpanel"
-                                        aria-labelledby="resumen-tab">
+                                    <div class="tab-pane fade show active" id="pendiente" role="tabpanel" >
                                         <div class="row">
                                             <!-- Left Section -->
                                             <div class="col-12 col-md-6 col-lg-4 my-3">
@@ -125,6 +127,7 @@ include '../../backend/controller/access/AccessController.php';
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <h5 class="mb-0">Detalles de la solicitud de transferencia</h5>
+                                                        <small class="text-muted float-end">Confirmar para Transferir Artículos</small>
                                                     </div>
                                                     <div class="card-body" id="detallesTransferencia">
                                                         <!-- Detalles del detalle_solicitud_transferencia -->
@@ -147,18 +150,13 @@ include '../../backend/controller/access/AccessController.php';
                                     </div>
 
 
-                                    <div class="tab-pane fade" id="aprobadas" role="tabpanel"
-                                        aria-labelledby="preventa-tab">
+                                    <div class="tab-pane fade" id="aprobadas" role="tabpanel">
                                         <div class="row">
                                             <!-- ASIDE IZQUIERDO -->
                                             <div class="col-md-4">
                                                 <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="mb-0">Seleccione una Fecha</h5>
-                                                    </div>
+                                                
                                                     <div class="card-body">
-                                                        <input type="date" class="form-control"
-                                                            id="fechaTransferenciasEnviadas" />
                                                         <div id="detalleTransferenciasEnviadasList" class="mt-4">
                                                             <!-- Lista de detalles de transferencias -->
                                                         </div>
@@ -170,7 +168,9 @@ include '../../backend/controller/access/AccessController.php';
                                             <div class="col-md-8">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="mb-0">Detalles de la solicitud de transferencia</h5>
+                                                        <h5 class="mb-0">Detalles de la transferencia enviada</h5>
+                                                        <small class="text-muted float-end"></small>
+                                                        
                                                     </div>
                                                     <div class="card-body" id="detallesTransferenciasEnviadas">
 
@@ -182,10 +182,38 @@ include '../../backend/controller/access/AccessController.php';
                                     </div>
 
 
-                                    <div class="tab-pane fade" id="recibidas" role="tabpanel"
-                                        aria-labelledby="locales-tab">
-                                        <div class="row">
-                                            <h1>recibidas</h1>
+                                    <div class="tab-pane fade" id="recibidas" role="tabpanel">
+                                    <div class="row">
+                                            <!-- Left Section -->
+                                            <div class="col-12 col-md-6 col-lg-4 my-3">
+                                                <div class="card">
+
+                                                    <div class="card-body">
+
+                                                        <div id="detalleTransferenciasRecibidasList" class="mt-4">
+                                                            <!-- Lista de detalles de transferencias -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Right Section -->
+                                            <div class="col-12 col-md-6 col-lg-8 my-3 !important;">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0">Detalles de la solicitud de transferencia</h5>
+                                                        <small class="text-muted float-end">Confirmar para Transferir Artículos</small>
+                                                    </div>
+                                                    <div class="card-body" id="detallesTransferenciaRecibida">
+                                                        <!-- Detalles del detalle_solicitud_transferencia -->
+                                                    </div>
+                                                    <div class="text-center my-3">
+                                                        <button id="" class="btn btn-outline-dark my-1">
+                                                            Confirmar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -333,8 +361,8 @@ include '../../backend/controller/access/AccessController.php';
             data: {
                 action: 'guardarTransferencias',
                 transferencias: JSON.stringify(transferencias),
-                idUsuarioDestinatario: idUsuarioDestinatario,
-                idUsuarioRemitente: idUsuarioRemitente,
+                idUsuarioDestinatario: idUsuarioRemitente,
+                idUsuarioRemitente: idUsuarioDestinatario,
                 idDetalleSolicitud: idDetalleSolicitud
             },
             success: function(response) {
@@ -357,15 +385,12 @@ include '../../backend/controller/access/AccessController.php';
         });
     });
 
-    $('#fechaTransferenciasEnviadas').on('change', function() {
-        const fecha = $(this).val();
-        if (fecha) {
+    $('#aprobadas-tab').on('click', function() {
             $.ajax({
                 url: '../../backend/controller/deposito/Solicitudes.php',
                 type: 'POST',
                 data: {
                     action: 'buscarDetalleTransferenciaEnviada',
-                    fecha: fecha
                 },
                 dataType: 'text',
                 success: function(data) {
@@ -395,7 +420,7 @@ include '../../backend/controller/access/AccessController.php';
                                                     <strong>Estado: </strong>${estado}
                                                 </span>
                                                 <div class="d-flex flex-column">
-                                                    <button type="button" class="btn btn-sm btn-primary mb-2" onclick="verDetalleTransferencia(${id})">Ver Detalles</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-dark my-1" onclick="verDetalleTransferencia(${id})">Ver Detalles</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -417,14 +442,129 @@ include '../../backend/controller/access/AccessController.php';
                     alert('Error al buscar detalles de transferencias.');
                 },
             });
-        }
-    });
+        })
+    
 
 
 
 
 
+   
+   
+   
+   
+    function removeTransfer(button) {
+            const row = $(button).closest('tr');
+            const idDetalleSolicitud = row.data('id');
 
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: '¡No podrás revertir esta acción!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '../../backend/controller/deposito/Solicitudes.php',
+                        type: 'POST',
+                        data: {
+                            action: 'eliminarDetalleTransferencia',
+                            idDetalleTransferencia: idDetalleSolicitud
+                        },
+                        success: function(response) {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                Swal.fire('Eliminado',
+                                    'El detalle ha sido eliminado con éxito.', 'success');
+                                row.remove();
+                            } else {
+                                Swal.fire('Error', 'No se pudo eliminar el detalle.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Ocurrió un problema al eliminar el detalle.',
+                                'error');
+                        }
+                    });
+                }
+            });
+    }
+
+
+
+   
+    
+    
+    $('#recibidas-tab').on('click', function() {
+            $.ajax({
+                url: '../../backend/controller/deposito/Solicitudes.php',
+                type: 'POST',
+                data: {
+                    action: 'buscarDetalleTransferenciaRecibida',
+                },
+                dataType: 'text',
+                success: function(data) {
+                    const detalles = data.trim().split("\n");
+                    let html = '';
+
+                    if (detalles.length > 0 && detalles[0] !== "") {
+                        detalles.forEach(function(detalle) {
+                            const {
+                                id,
+                                usuarioRemitente,
+                                usuarioDestinatario,
+                                fecha,
+                                estado,
+                                idUsuarioDestinatario,
+                                idUsuarioRemitente
+                            } = JSON.parse(detalle);
+
+
+                            html += `
+                                                          <div class="card mb-2">
+                                            <div class="card-body d-flex justify-content-between align-items-center">
+                                                <span>
+                                                    <strong>Remitente: </strong>${usuarioRemitente}<br>
+                                                    <strong>Destinatario: </strong>${usuarioDestinatario}<br>
+                                                    <strong>Fecha: </strong>${fecha}<br>
+                                                    <strong>Estado: </strong>${estado}
+                                                </span>
+                                                <div class="d-flex flex-column">
+                                                    <button type="button" class="btn btn-sm btn-outline-dark my-1" onclick="verDetalleTransferenciaRecibida(${id})">Ver Detalles</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                                        `;
+                        });
+
+                    } else {
+                        html =
+                            '<p>No se encontraron transferencias recibidas para esta fecha.</p>';
+
+                    }
+                    $('#detalleTransferenciasRecibidasList').html(html);
+                },
+
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    console.error('Detalles:', xhr.responseText);
+                    alert('Error al buscar detalles de transferencias.');
+                },
+            });
+        })
+    
+
+
+
+
+
+    
+    
     function removeTransfer(button) {
         const row = $(button).closest('tr');
         const idDetalleSolicitud = row.data('id');
@@ -465,6 +605,8 @@ include '../../backend/controller/access/AccessController.php';
             }
         });
     }
+
+
 
     function actualizarDetalle(idDetalleSolicitud, cantidad, partida) {
         if (cantidad <= 0 || !partida.trim()) {
@@ -595,10 +737,71 @@ include '../../backend/controller/access/AccessController.php';
                     const idUsuarioRemitente = data[0].idUsuarioRemitente;
                     const idUsuarioDestinatario = data[0].idUsuarioDestinatario;
 
-                    // Asignar los valores a los inputs ocultos
-                    $('#idUsuarioRemitente').val(idUsuarioRemitente);
-                    $('#idUsuarioDestinatario').val(idUsuarioDestinatario);
-                    $('#idDetalleTransferencia').val(idDetalleTransferencia);
+                    // Mostrar el idDetalleSolicitud en la consola
+                    console.log('ID Detalle Solicitud transferencia:', idDetalleTransferencia);
+
+                    // Construir la tabla
+                    let html = `
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Código Bejerman</th>
+                                                <th>Partida</th>
+                                                <th>Cantidad</th>
+                                                <th>Descripción</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+                    data.forEach(function(articulo) {
+                        html += `
+                                    <tr data-id="${idDetalleTransferencia}">
+                                        <td>${articulo.codBejerman}</td>
+                                        <td>${articulo.partida}</td>
+                                        <td>${articulo.cantidad}</td>
+                                        <td>${articulo.descripcion}</td>
+                                    </tr>`;
+                    });
+
+                    html += `
+                                        </tbody>
+                                    </table>
+                                </div>`;
+
+                    $('#detallesTransferenciasEnviadas').html(html);
+
+
+
+                } else {
+                    alert('No se encontraron detalles para esta solicitud.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Detalles:', xhr.responseText);
+                alert('Error al obtener detalles de la solicitud de transferencia.');
+            },
+        });
+    }
+
+    function verDetalleTransferenciaRecibida(idDetalleTransferencia) {
+        $.ajax({
+            url: '../../backend/controller/deposito/Solicitudes.php',
+            type: 'POST',
+            data: {
+                action: 'verDetalleTransferencia',
+                idDetalleTransferencia: idDetalleTransferencia
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.length > 0) {
+                    // Verifica que los datos incluyan idUsuarioRemitente e idUsuarioDestinatario del primer artículo
+                    const idUsuarioRemitente = data[0].idUsuarioRemitente;
+                    const idUsuarioDestinatario = data[0].idUsuarioDestinatario;
+
+                 
 
                     // Mostrar el idDetalleSolicitud en la consola
                     console.log('ID Detalle Solicitud transferencia:', idDetalleTransferencia);
@@ -649,6 +852,79 @@ include '../../backend/controller/access/AccessController.php';
         });
     }
 
+    function removeTransferRecibida(button) {
+        const row = $(button).closest('tr');
+        const idDetalleTransferencia = row.data('id');
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¡No podrás revertir esta acción!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../../backend/controller/deposito/Solicitudes.php',
+                    type: 'POST',
+                    data: {
+                        action: 'eliminarDetalleTransferenciaRecibida',
+                        idDetalleTransferencia: idDetalleTransferencia
+                    },
+                    success: function(response) {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            Swal.fire('Eliminado',
+                                'El detalle ha sido eliminado con éxito.', 'success');
+                            row.remove();
+                        } else {
+                            Swal.fire('Error', 'No se pudo eliminar el detalle.', 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error', 'Ocurrió un problema al eliminar el detalle.',
+                            'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function actualizarDetalle(idDetalleSolicitud, cantidad, partida) {
+        if (cantidad <= 0 || !partida.trim()) {
+            Swal.fire('Error', 'Ingrese valores válidos para la cantidad y la partida.', 'error');
+            return;
+        }
+
+        $.ajax({
+            url: '../../backend/controller/deposito/Solicitudes.php',
+            type: 'POST',
+            data: {
+                action: 'modificarDetalleTransferenciaRecibida',
+                idDetalleTransferencia: idDetalleSolicitud,
+                cantidad: cantidad,
+                partida: partida
+            },
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    // El detalle se actualizó correctamente, pero no se muestra ninguna notificación.
+                    console.log('Detalle actualizado correctamente');
+                } else {
+                    console.error('No se pudo actualizar el detalle.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                Swal.fire('Error', 'Ocurrió un error al actualizar el detalle.', 'error');
+            }
+        });
+    }
+
+    
     function rechazarSolicitud(idDetalleSolicitud) {
         Swal.fire({
             title: '¿Estás seguro?',

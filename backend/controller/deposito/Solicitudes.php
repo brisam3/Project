@@ -63,7 +63,12 @@ class DetalleTransferenciasController {
     
     
 
-    public function buscarDetalleTransferenciaEnviada($fecha) {
+    public function buscarDetalleTransferenciaEnviada() {
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        
+        // Obtener la fecha actual
+        $fechaHoy = date('Y-m-d');  // La fecha en formato Y-m-d (ejemplo: 2024-12-05)
+    
         $query = "
             SELECT 
                 dd.idDetalleTransferencia,
@@ -84,7 +89,38 @@ class DetalleTransferenciasController {
                 AND dd.idUsuarioRemitente = ?
         ";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$fecha, $_SESSION['idUsuario']]);
+        $stmt->execute([$fechaHoy, $_SESSION['idUsuario']]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+
+    public function buscarDetalleTransferenciaRecibida() {
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        
+        // Obtener la fecha actual
+        $fechaHoy = date('Y-m-d');  // La fecha en formato Y-m-d (ejemplo: 2024-12-05)
+    
+        $query = "
+            SELECT 
+                dd.idDetalleTransferencia,
+                remitente.nombre AS nombreRemitente,
+                destinatario.nombre AS nombreDestinatario,
+                dd.idUsuarioRemitente,
+                dd.idUsuarioDestinatario,
+                dd.fecha,
+                dd.estado
+            FROM 
+                detalletransferencia dd
+            JOIN 
+                usuarios remitente ON dd.idUsuarioRemitente = remitente.idUsuario
+            JOIN 
+                usuarios destinatario ON dd.idUsuarioDestinatario = destinatario.idUsuario
+            WHERE 
+                DATE(dd.fecha) = ?
+                AND dd.idUsuarioDestinatario = ?
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$fechaHoy, $_SESSION['idUsuario']]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
@@ -137,6 +173,31 @@ class DetalleTransferenciasController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+
+    public function verDetalleTransferenciaRecibida($idDetalleTransferencia) {
+        $query = "
+            SELECT 
+                st.codBejerman, 
+                st.partida, 
+                st.cantidad, 
+                st.descripcion,
+                dst.idUsuarioRemitente, 
+                dst.idUsuarioDestinatario
+            FROM 
+                transferencias st
+            JOIN 
+                detalletransferencia dst 
+            ON 
+                st.idDetalleTransferencia  = dst.idDetalleTransferencia 
+            WHERE 
+                dst.idDetalleTransferencia  = ?
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$idDetalleTransferencia]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    
     public function eliminarDetalleTransferencia($idDetalleTransferencia) {
         // Responder sin realizar cambios en la base de datos
         return true;
@@ -145,6 +206,18 @@ class DetalleTransferenciasController {
 
     
     public function actualizarDetalleTransferencia($idDetalleTransferencia, $cantidad, $partida) {
+       
+        return true;
+    }
+
+    public function eliminarDetalleTransferenciaRecibida($idDetalleTransferencia) {
+        // Responder sin realizar cambios en la base de datos
+        return true;
+    }
+                          
+
+    
+    public function actualizarDetalleTransferenciaRecibida($idDetalleTransferencia, $cantidad, $partida) {
        
         return true;
     }
@@ -334,10 +407,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                             break;
             case 'buscarDetalleTransferenciaEnviada':
-                                $fecha = $_POST['fecha'];
-                                $detalles = $controller->buscarDetalleTransferenciaEnviada($fecha);
-                            
-                                foreach ($detalles as $detalle) {
+
+                $detalles = $controller->buscarDetalleTransferenciaEnviada();
+                    foreach ($detalles as $detalle) {
                                     echo json_encode([
                                         'id' => $detalle['idDetalleTransferencia'], // Cambiado de idDetalleSolicitud a idDetalleTransferencia
                                         'usuarioRemitente' => $detalle['nombreRemitente'],
@@ -350,6 +422,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 }
                                 break;
             case 'verDetalleTransferencia':
+
                                     $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
                                     $articulos = $controller->verDetalleTransferencia($idDetalleTransferencia);
                                 
@@ -370,7 +443,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 
                                     echo json_encode($articulosResponse);
                                     break;
-                                               
+            case 'buscarDetalleTransferenciaRecibida':
+                                        $detalles = $controller->buscarDetalleTransferenciaRecibida();
+                                        foreach ($detalles as $detalle) {
+                                            echo json_encode([
+                                                'id' => $detalle['idDetalleTransferencia'], // Cambiado de idDetalleSolicitud a idDetalleTransferencia
+                                                'usuarioRemitente' => $detalle['nombreRemitente'],
+                                                'usuarioDestinatario' => $detalle['nombreDestinatario'],
+                                                'idUsuarioRemitente' => $detalle['idUsuarioRemitente'],
+                                                'idUsuarioDestinatario' => $detalle['idUsuarioDestinatario'],
+                                                'fecha' => $detalle['fecha'],
+                                                'estado' => $detalle['estado']
+                                            ]) . "\n";
+                                        }
+                                        break;
+            case 'verDetalleTransferenciaRecibida':
+                                            $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
+                                            $articulos = $controller->verDetalleTransferenciaRecibida($idDetalleTransferencia);
+                                        
+                                            // Crear un array para incluir todos los datos juntos
+                                            $articulosResponse = [];
+                                        
+                                            foreach ($articulos as $articulo) {
+                                                $articulosResponse[] = [
+                                                    'id' => $idDetalleTransferencia,
+                                                    'codBejerman' => $articulo['codBejerman'],
+                                                    'partida' => $articulo['partida'],
+                                                    'cantidad' => $articulo['cantidad'],
+                                                    'descripcion' => $articulo['descripcion'],
+                                                    'idUsuarioRemitente' => $articulo['idUsuarioRemitente'],
+                                                    'idUsuarioDestinatario' => $articulo['idUsuarioDestinatario']
+                                                ];
+                                            }
+                                        
+                                            echo json_encode($articulosResponse);
+                                            break;
+            case 'eliminarDetalleTransferenciaRecibida':
+                                                $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
+                                                $resultado = $controller->eliminarDetalleTransferenciaRecibida($idDetalleTransferencia);
+                                                echo json_encode(['success' => $resultado]);
+                                                break;
+            case 'modificarDetalleTransferenciaRecibida':
+                                                    $idDetalleTransferencia = $_POST['idDetalleTransferencia'];
+                                                    $cantidad = $_POST['cantidad'];
+                                                    $partida = $_POST['partida'];
+                                                
+                                                    // Validar entradas
+                                                    if ($cantidad <= 0 || empty($partida)) {
+                                                        echo json_encode(['success' => false, 'message' => 'Datos inválidos']);
+                                                        exit;
+                                                    }
+                                                
+                                                    // Actualizar en la base de datos
+                                                    $resultado = $controller->actualizarDetalleTransferenciaRecibida($idDetalleTransferencia, $cantidad, $partida);
+                                                
+                                                    echo json_encode(['success' => $resultado]);
+                                                    break;
         }
     }
     exit;
