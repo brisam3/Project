@@ -5,8 +5,15 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include '../../backend/controller/access/AccessController.php';
 
+$accessController = new AccessController();
 
+// Verificar si el acceso está permitido
+if (!$accessController->checkAccess('/pages/locales/Transferencias.php')) {
+    $accessController->denyAccess();
+    exit;
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
