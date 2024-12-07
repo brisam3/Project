@@ -526,7 +526,7 @@ include '../../backend/controller/access/AccessController.php';
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
-                    Swal.fire('Éxito', 'Transferencias guardadas con éxito.',
+                    Swal.fire('Éxito', 'Transferencia Recibida.',
                         'success');
                 } else {
                     Swal.fire('Error', result.message ||
@@ -1080,7 +1080,7 @@ include '../../backend/controller/access/AccessController.php';
             const barcode = $(this).val();
             if (barcode) {
                 $.ajax({
-                    url: '../../backend/controller/locales/DevolucionesController.php',
+                    url: '../../backend/controller/locales/TransferenciasController.php',
                     type: 'POST',
                     data: {
                         action: 'buscarArticulo',
