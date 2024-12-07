@@ -60,6 +60,41 @@ class DetalleTransferenciasController {
         $stmt->execute([$fechaHoy, $_SESSION['idUsuario']]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Retorna los resultados de la consulta
     }
+
+    public function buscarDetalleSolicitudTransferenciaEnviada() {
+        // Establecer la zona horaria de Buenos Aires
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        
+        // Obtener la fecha actual
+        $fechaHoy = date('Y-m-d');  // La fecha en formato Y-m-d (ejemplo: 2024-12-05)
+    
+        // Query SQL con la fecha actual
+        $query = "
+            SELECT 
+                dd.idDetalleSolicitud,
+                remitente.nombre AS nombreRemitente,
+                destinatario.nombre AS nombreDestinatario,
+                dd.idUsuarioRemitente,
+                dd.idUsuarioDestinatario,
+                dd.fecha,
+                dd.estado
+            FROM 
+                detalle_solicitud_transferencia dd
+            JOIN 
+                usuarios remitente ON dd.idUsuarioRemitente = remitente.idUsuario
+            JOIN 
+                usuarios destinatario ON dd.idUsuarioDestinatario = destinatario.idUsuario
+            WHERE 
+                DATE(dd.fecha) = ?  -- Compara solo la fecha, sin la hora
+                AND dd.idUsuarioRemitente = ? 
+                AND dd.estado = 'Pendiente'
+        ";
+    
+        // Ejecutar la consulta con la fecha actual y el idUsuarioDestinatario
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$fechaHoy, $_SESSION['idUsuario']]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Retorna los resultados de la consulta
+    }
     
     
 
@@ -527,6 +562,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                     echo json_encode(['success' => false, 'message' => 'Faltan parámetros.']);
                                                                 }
                                                                 break;
+            case 'buscarDetalleSolicitudTransferenciaEnviada':
+                                                                    $detalles = $controller->buscarDetalleSolicitudTransferenciaEnviada();
+                                                                    foreach ($detalles as $detalle) {
+                                                                        echo json_encode([
+                                                                            'id' => $detalle['idDetalleSolicitud'],
+                                                                            'usuarioRemitente' => $detalle['nombreRemitente'],
+                                                                            'usuarioDestinatario' => $detalle['nombreDestinatario'],
+                                                                            'idUsuarioRemitente' => $detalle['idUsuarioRemitente'],
+                                                                            'idUsuarioDestinatario' => $detalle['idUsuarioDestinatario'],
+                                                                            'fecha' => $detalle['fecha'],
+                                                                            'estado' => $detalle['estado']
+                                                                        ]) . "\n";
+                                                                    }
+                                                                    
+                                                                    break;
+                        
                                                             
         }
     }

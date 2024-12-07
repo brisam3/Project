@@ -135,6 +135,7 @@ include '../../backend/controller/access/AccessController.php';
                                                         <button type="button" class="btn btn-primary"
                                                             onclick="sendProducts()">Enviar</button>
                                                     </div>
+                                                   
                                                 </div>
 
                                                 <!-- Formularios de carga -->
@@ -296,7 +297,7 @@ include '../../backend/controller/access/AccessController.php';
                             <!-- Page JS -->
                             <script src="../../assets/js/dashboards-analytics.js"></script>
 
-                <script>
+                            <script>
                             const productData = [];
 
                             $(document).ready(function() {
@@ -576,30 +577,30 @@ include '../../backend/controller/access/AccessController.php';
                                     });
                                 }
                             }
-                </script>
+                            </script>
 
-        <script>
-            $(document).ready(function() {
-                // Evento para seleccionar la fecha
-                $('#enviadas-tab').on('click', function() {
-                        $.ajax({
-                            url: '../../backend/controller/locales/DevolucionesController.php',
-                            type: 'POST',
-                            data: {
-                                action: 'buscarDetalleDevoluciones',
-                            },
-                            dataType: 'text', // Cambiado a 'text'
-                            success: function(data) {
-                                const detalles = data.trim().split("\n");
-                                let html = '';
-                                if (detalles.length > 0 && detalles[0] !== "") {
-                                    detalles.forEach(function(detalle) {
-                                        const {
-                                            id,
-                                            usuario,
-                                            fecha
-                                        } = JSON.parse(detalle);
-                                        html += `
+                            <script>
+                            $(document).ready(function() {
+                                // Evento para seleccionar la fecha
+                                $('#enviadas-tab').on('click', function() {
+                                    $.ajax({
+                                        url: '../../backend/controller/locales/DevolucionesController.php',
+                                        type: 'POST',
+                                        data: {
+                                            action: 'buscarDetalleDevoluciones',
+                                        },
+                                        dataType: 'text', // Cambiado a 'text'
+                                        success: function(data) {
+                                            const detalles = data.trim().split("\n");
+                                            let html = '';
+                                            if (detalles.length > 0 && detalles[0] !== "") {
+                                                detalles.forEach(function(detalle) {
+                                                    const {
+                                                        id,
+                                                        usuario,
+                                                        fecha
+                                                    } = JSON.parse(detalle);
+                                                    html += `
                                                 <div class="card mb-2" >
                                                     <div class="card-body d-flex justify-content-between align-items-center">
                                                     <span><strong>${usuario} <br></strong> ${fecha}</span>
@@ -607,46 +608,48 @@ include '../../backend/controller/access/AccessController.php';
                                                     </div>
                                                 </div>
                                                 `;
+                                                });
+                                            } else {
+                                                html =
+                                                    '<p>No se encontraron devoluciones para esta fecha.</p>';
+                                            }
+                                            $('#detalleDevolucionesList').html(html);
+
+                                        },
+                                        error: function(xhr, status, error) {
+                                            console.error('Error:', error);
+                                            console.error('Detalles:', xhr.responseText);
+                                            alert(
+                                                'Error al buscar detalles de devoluciones.');
+                                        },
                                     });
-                                } else {
-                                    html =
-                                        '<p>No se encontraron devoluciones para esta fecha.</p>';
-                                }
-                                $('#detalleDevolucionesList').html(html);
+                                })
+                            });
 
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error:', error);
-                                console.error('Detalles:', xhr.responseText);
-                                alert('Error al buscar detalles de devoluciones.');
-                            },
-                        });
-                    })
-                });
-            
 
-            // Función para ver detalles de un detalleDevolucion específico
+                            // Función para ver detalles de un detalleDevolucion específico
 
-            // Función para ver detalles de un detalleDevolucion específico
-            function verDetalles(idDetalleDevolucion) {
-                $.ajax({
-                    url: '../../backend/controller/locales/DevolucionesController.php',
-                    type: 'POST',
-                    data: {
-                        action: 'verDetalleDevolucion',
-                        idDetalleDevolucion: idDetalleDevolucion
-                    },
-                    dataType: 'text', // Cambiado a 'text'
-                    success: function(data) {
-                        const articulos = data.trim().split("\n");
-                        let html = '<div class="table-responsive"><table class="table">';
-                        html +=
-                            '<thead><tr><th>Código Bejerman</th><th>Partida</th><th>Cantidad</th><th>Descripción</th></tr></thead>';
-                        html += '<tbody>';
-                        articulos.forEach(function(articulo) {
-                            const [codBejerman, partida, cantidad, descripcion] = articulo.split(
-                                " | ");
-                            html += `
+                            // Función para ver detalles de un detalleDevolucion específico
+                            function verDetalles(idDetalleDevolucion) {
+                                $.ajax({
+                                    url: '../../backend/controller/locales/DevolucionesController.php',
+                                    type: 'POST',
+                                    data: {
+                                        action: 'verDetalleDevolucion',
+                                        idDetalleDevolucion: idDetalleDevolucion
+                                    },
+                                    dataType: 'text', // Cambiado a 'text'
+                                    success: function(data) {
+                                        const articulos = data.trim().split("\n");
+                                        let html = '<div class="table-responsive"><table class="table">';
+                                        html +=
+                                            '<thead><tr><th>Código Bejerman</th><th>Partida</th><th>Cantidad</th><th>Descripción</th></tr></thead>';
+                                        html += '<tbody>';
+                                        articulos.forEach(function(articulo) {
+                                            const [codBejerman, partida, cantidad, descripcion] =
+                                            articulo.split(
+                                                " | ");
+                                            html += `
                                   <tr>
                                     <td>${codBejerman}</td> <!-- Aquí cambiamos de codBarras a codBejerman -->
                                     <td>${partida}</td>
@@ -654,18 +657,18 @@ include '../../backend/controller/access/AccessController.php';
                                     <td>${descripcion}</td>
                                   </tr>
                                 `;
-                        });
-                        html += '</tbody></table>';
-                        $('#detallesDevolucion').html(html);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        console.error('Detalles:', xhr.responseText);
-                        alert('Error al obtener detalles de la devolución.');
-                    },
-                });
-            }
-            </script>              
+                                        });
+                                        html += '</tbody></table>';
+                                        $('#detallesDevolucion').html(html);
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error('Error:', error);
+                                        console.error('Detalles:', xhr.responseText);
+                                        alert('Error al obtener detalles de la devolución.');
+                                    },
+                                });
+                            }
+                            </script>
 
 </body>
 

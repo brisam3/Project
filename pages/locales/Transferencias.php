@@ -152,7 +152,58 @@ if (!$accessController->checkAccess('/pages/locales/Transferencias.php')) {
                                                 <div class="text-center mt-3">
                                                     <button type="button" class="btn btn-primary"
                                                         onclick="sendProducts()">Enviar</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#enviadosModal">Enviados</button>
                                                 </div>
+
+                                                <!-- Modal para "Enviados" -->
+                                                <div class="modal fade" id="enviadosModal" tabindex="-1"
+                                                    aria-labelledby="enviadosModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="enviadosModalLabel">Detalles
+                                                                    de Solicitudes Enviadas</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"
+                                                                    aria-label="Cerrar"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <!-- ASIDE IZQUIERDO -->
+                                                                    <div class="col-md-4">
+                                                                        <div class="card">
+                                                                            <div class="card-body">
+                                                                                <div id="detalleSolTransferenciasEnviadasList"
+                                                                                    class="mt-4">
+                                                                                    <!-- Lista de detalles de transferencias -->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- SECCION DERECHA PARA DETALLES -->
+                                                                    <div class="col-md-8">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                                <h5 class="mb-0">Detalles de la
+                                                                                solicitud enviada</h5>
+                                                                                <small
+                                                                                    class="text-muted float-end"></small>
+                                                                            </div>
+                                                                            <div class="card-body"
+                                                                                id="detallesSOLTransferencia">
+                                                                                <!-- Detalles del detalle_solicitud_transferencia -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
 
                                             <!-- Formularios de carga -->
@@ -1389,6 +1440,135 @@ if (!$accessController->checkAccess('/pages/locales/Transferencias.php')) {
             }
         }
     });
+    </script>
+    <script>
+
+function verDetallesTE(idDetalleSolicitud) {
+        $.ajax({
+            url: '../../backend/controller/locales/SeguimientoTransferencias.php',
+            type: 'POST',
+            data: {
+                action: 'verDetalleSolicitud',
+                idDetalleSolicitud: idDetalleSolicitud
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.length > 0) {
+                    // Verifica que los datos incluyan idUsuarioRemitente e idUsuarioDestinatario del primer artículo
+                   
+
+                    // Construir la tabla
+                    let html = `
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Código Bejerman</th>
+                                                <th>Partida</th>
+                                                <th>Cantidad</th>
+                                                <th>Descripción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+                    data.forEach(function(articulo) {
+                        html += `
+                                    <tr data-id="${idDetalleSolicitud}">
+                                        <td>${articulo.codBejerman}</td>
+                                        <td>${articulo.partida}</td>
+                                        <td>${articulo.cantidad}</td>
+                                        <td>${articulo.descripcion}</td>
+                                    </tr>`;
+                    });
+
+                    html += `
+                                        </tbody>
+                                    </table>
+                                </div>`;
+
+                    $('#detallesSOLTransferencia').html(html);
+
+                } else {
+                    alert('No se encontraron detalles para esta solicitud.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Detalles:', xhr.responseText);
+                alert('Error al obtener detalles de la solicitud de transferencia.');
+            },
+        });
+    }
+    // Función que se ejecuta cuando se abre el modal
+    $('#enviadosModal').on('show.bs.modal', function(event) {
+        // Llamar a una función para obtener los detalles de las transferencias enviadas
+        obtenerDetallesTransferencias();
+
+
+        function obtenerDetallesTransferencias() {
+            $.ajax({
+                url: '../../backend/controller/locales/SeguimientoTransferencias.php',
+                type: 'POST',
+                data: {
+                    action: 'buscarDetalleSolicitudTransferenciaEnviada', // La acción que estás enviando
+                },
+                dataType: 'text',
+                success: function(data) {
+                    const detalles = data.trim().split("\n");
+                    let html = '';
+
+                    if (detalles.length > 0 && detalles[0] !== "") {
+                        detalles.forEach(function(detalle) {
+                            const {
+                                id,
+                                usuarioRemitente,
+                                usuarioDestinatario,
+                                fecha,
+                                estado,
+                                idUsuarioDestinatario,
+                                idUsuarioRemitente
+                            } = JSON.parse(detalle);
+                            let estadoColor = estado === 'Pendiente' ?
+                                'style="color: #f20202;"' : ''
+                            html += `
+                            <div class="card mb-2">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <strong>Remitente: </strong>${usuarioRemitente}<br>
+                                        <strong>Destinatario: </strong>${usuarioDestinatario}<br>
+                                        <strong>Fecha: </strong>${fecha}<br>
+                                         <strong>Estado: </strong><span ${estadoColor}>${estado}</span>
+                                    </span>
+                                    <div class="d-flex flex-column">
+                                        <button type="button" class="btn btn-sm btn-outline-dark my-1" onclick="verDetallesTE(${id})">Ver Detalles</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        });
+                    } else {
+                        html =
+                            '<p>No se encontraron transferencias pendientes hoy.</p>';
+                    }
+
+                    // Mostrar los resultados en el DOM
+                    $('#detalleSolTransferenciasEnviadasList').html(html);
+                },
+
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    console.error('Detalles:', xhr.responseText);
+                    alert('Error al buscar detalles de transferencias.');
+                },
+            });
+        }
+
+       
+
+
+    });
+
+    
     </script>
 </body>
 
