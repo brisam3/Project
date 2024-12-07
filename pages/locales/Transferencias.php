@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include '../../backend/controller/access/AccessController.php';
 
+$idUsuarioActual = $_SESSION['idUsuario'];
+
 $accessController = new AccessController();
 
 // Verificar si el acceso está permitido
@@ -164,8 +166,9 @@ if (!$accessController->checkAccess('/pages/locales/Transferencias.php')) {
                                                     </div>
                                                     <div class="card-body">
                                                         <div class="mb-3">
-
                                                             <select class="form-select" id="select-local">
+                                                                <option value="" disabled selected>Seleccione un local
+                                                                </option>
                                                                 <option value="20">Obrero</option>
                                                                 <option value="21">Liborsi</option>
                                                                 <option value="22">Vial</option>
@@ -175,6 +178,7 @@ if (!$accessController->checkAccess('/pages/locales/Transferencias.php')) {
                                                             </select>
                                                         </div>
                                                     </div>
+
 
                                                 </div>
 
@@ -420,7 +424,8 @@ if (!$accessController->checkAccess('/pages/locales/Transferencias.php')) {
                                 idUsuarioDestinatario,
                                 idUsuarioRemitente
                             } = JSON.parse(detalle);
-                            let estadoColor = estado === 'Pendiente' ? 'style="color: #f20202;"' : '' 
+                            let estadoColor = estado === 'Pendiente' ?
+                                'style="color: #f20202;"' : ''
                             html += `
                             <div class="card mb-2">
                                 <div class="card-body d-flex justify-content-between align-items-center">
@@ -1368,8 +1373,23 @@ if (!$accessController->checkAccess('/pages/locales/Transferencias.php')) {
         }
     }
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // ID del usuario actual desde PHP
+        const idUsuarioActual = <?php echo json_encode($idUsuarioActual); ?>;
 
+        // Referencia al select
+        const selectLocal = document.getElementById("select-local");
 
+        // Ocultar la opción que coincide con idUsuarioActual
+        for (const option of selectLocal.options) {
+            if (option.value === idUsuarioActual.toString()) {
+                option.style.display = "none";
+                break; // Salir del bucle una vez encontrada
+            }
+        }
+    });
+    </script>
 </body>
 
 </html>
