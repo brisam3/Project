@@ -104,6 +104,55 @@ class DevolucionesController {
 
         return true;
     }
+
+    public function buscarDetalleDevoluciones() {
+        // Establecer la zona horaria de Buenos Aires, Argentina
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        
+        // Obtener la fecha actual
+        $fechaHoy = date('Y-m-d');  // La fecha en formato Y-m-d (ejemplo: 2024-12-05)
+    
+        // Obtener el idUsuario de la sesión
+        $idUsuario = $_SESSION['idUsuario'];  // Asumiendo que el idUsuario está guardado en la sesión
+    
+        // Consulta que une detalleDevoluciones con usuarios para obtener el nombre del usuario
+        $query = "
+            SELECT 
+                dd.idDetalleDevolucion,
+                u.nombre AS nombreUsuario,
+                dd.fechaHora
+            FROM 
+                detalleDevoluciones dd
+            JOIN 
+                usuarios u ON dd.idUsuario = u.idUsuario
+            WHERE 
+                dd.idUsuario = ? 
+                AND DATE(dd.fechaHora) = ?
+        ";
+    
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$idUsuario, $fechaHoy]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function verDetalleDevolucion($idDetalleDevolucion) {
+        $query = "
+            SELECT 
+                codBejerman, 
+                partida, 
+                cantidad, 
+                descripcion 
+            FROM 
+                devoluciones 
+            WHERE 
+                idDetalleDevolucion = ?
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$idDetalleDevolucion]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    
 }
 
 // Manejo de las peticiones AJAX
@@ -131,6 +180,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $success = $controller->registrarDevoluciones($articulos);
                     echo json_encode(['success' => $success]);
                     break;
+                    case 'buscarDetalleDevoluciones':
+                        // Llamar a la función que busca las devoluciones del usuario
+                        $resultados = $controller->buscarDetalleDevoluciones();
+                  
+                        // Si quieres devolver los datos de forma estructurada, puedes hacer esto:
+                            foreach ($resultados as $detalle) {
+                                echo json_encode([
+                                    'id' => $detalle['idDetalleDevolucion'],
+                                    'usuario' => $detalle['nombreUsuario'],
+                                    'fecha' => $detalle['fechaHora']
+                                ]) . "\n";
+                            }
+                            
+                        break;
+                    
+                case 'verDetalleDevolucion':
+                            $idDetalleDevolucion = $_POST['idDetalleDevolucion'];
+                            $articulos = $controller->verDetalleDevolucion($idDetalleDevolucion);
+            
+                            foreach ($articulos as $articulo) {
+                                echo $articulo['codBejerman'] . " | " . $articulo['partida'] . " | " . $articulo['cantidad'] . " | " . $articulo['descripcion'] . "\n";
+                            }
+                            break;
 
                 default:
                     echo json_encode(['error' => 'Acción no válida']);
