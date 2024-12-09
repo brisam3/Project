@@ -5,24 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Asistencia</title>
   <style>
+    /* Estilos generales para Dark Mode */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f9;
-      color: #333;
+      background-color: #121212; /* Fondo oscuro */
+      color: #ffffff; /* Texto claro */
     }
 
     .container {
       max-width: 100%;
       margin: 0 auto;
       padding: 10px;
-      background: #fff;
     }
 
     h1 {
       text-align: center;
-      color: #555;
+      color: #ffffff; /* Título claro */
       margin-bottom: 20px;
     }
 
@@ -33,15 +33,19 @@
     }
 
     .preventista-card {
-      background: #f9f9f9;
+      background: #1e1e1e; /* Fondo oscuro para las tarjetas */
       padding: 15px;
-      border: 1px solid #ddd;
+      border: 1px solid #333; /* Borde sutil */
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 10px;
+    }
+
+    .preventista-icon {
+      font-size: 2.5rem;
     }
 
     .preventista-card p {
@@ -53,20 +57,27 @@
       display: flex;
       justify-content: space-around;
       gap: 10px;
+      width: 100%;
     }
 
     .btn {
-      padding: 10px 20px;
+      padding: 10px 15px;
       font-size: 0.9rem;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 30%;
+      text-align: center;
     }
 
     .btn.presente {
       background: #4caf50;
-      color: white;
+      color: #ffffff;
     }
 
     .btn.presente:hover {
@@ -75,7 +86,7 @@
 
     .btn.tardanza {
       background: #ff9800;
-      color: white;
+      color: #ffffff;
     }
 
     .btn.tardanza:hover {
@@ -84,7 +95,7 @@
 
     .btn.ausente {
       background: #f44336;
-      color: white;
+      color: #ffffff;
     }
 
     .btn.ausente:hover {
@@ -131,12 +142,18 @@
             preventistaCard.classList.add('preventista-card');
 
             preventistaCard.innerHTML = `
-              <p><strong>ID:</strong> ${preventista.idUsuario}</p>
+              <div class="preventista-icon">👤</div>
               <p><strong>Nombre:</strong> ${preventista.nombre}</p>
               <div class="button-group">
-                <button class="btn presente">Presente</button>
-                <button class="btn tardanza">Tardanza</button>
-                <button class="btn ausente">Ausente</button>
+                <button class="btn presente">
+                  <span>✅</span> Presente
+                </button>
+                <button class="btn tardanza">
+                  <span>⏰</span> Tardanza
+                </button>
+                <button class="btn ausente">
+                  <span>❌</span> Ausente
+                </button>
               </div>
             `;
 
