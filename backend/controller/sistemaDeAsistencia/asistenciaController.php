@@ -14,8 +14,19 @@ try {
 
         error_log("Conexión a la base de datos exitosa.");
 
-        // Consulta para obtener a los preventistas
-        $query = "SELECT idUsuario, nombre FROM usuarios WHERE idTipoUsuario = 2";
+        // Consulta para obtener a los preventistas junto con el estado de asistencia
+        $query = "
+            SELECT 
+                u.idUsuario, 
+                u.nombre, 
+                a.estado AS asistencia,
+                a.fecha AS fechaAsistencia
+            FROM usuarios u
+            LEFT JOIN asistencias a 
+                ON u.idUsuario = a.idUsuario 
+                AND a.fecha = CURDATE()
+            WHERE u.idTipoUsuario = 2
+        ";
         $stmt = $db->prepare($query);
         $stmt->execute();
         $preventistas = $stmt->fetchAll(PDO::FETCH_ASSOC);
