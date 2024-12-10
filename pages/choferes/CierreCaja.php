@@ -331,6 +331,16 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
         const totalRechazos = document.getElementById('total-rechazos')?.value || 0;
         const totalGeneral = document.getElementById('total_general')?.value || 0;
         const totalMenosGastos = document.getElementById('total_menos_gastos')?.value || 0;
+        const billetes_20000=document.getElementById('billetes_20000')?.value || 0;
+        const billetes_10000= document.getElementById('billetes_10000')?.value || 0;
+        const billetes_2000 = document.getElementById('billetes_2000')?.value || 0;
+        const billetes_1000= document.getElementById('billetes_1000')?.value || 0;
+        const billetes_500= document.getElementById('billetes_500')?.value || 0;
+        const billetes_200= document.getElementById('billetes_200')?.value || 0;
+        const billetes_100= document.getElementById('billetes_100')?.value|| 0;
+        const billetes_50= document.getElementById('billetes_50')?.value || 0;
+        const billetes_20= document.getElementById('billetes_20')?.value || 0;
+        const billetes_10= document.getElementById('billetes_10')?.value || 0;
 
         $.ajax({
             url: '../../backend/controller/choferes/CierreCajaController.php',
@@ -347,7 +357,18 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 total_rechazos: parseFloat(totalRechazos),
                 idUsuarioPreventista: idUsuarioPreventista,
                 total_general: parseFloat(totalGeneral),
-                total_menos_gastos: parseFloat(totalMenosGastos)
+                total_menos_gastos: parseFloat(totalMenosGastos),
+                billetes_20000: parseFloat(billetes_20000),
+                billetes_10000: parseFloat(billetes_10000),
+                billetes_2000: parseFloat(billetes_2000),
+                billetes_1000: parseFloat(billetes_1000),
+                billetes_500: parseFloat(billetes_500),
+                billetes_200: parseFloat(billetes_200),
+                billetes_100: parseFloat(billetes_100),
+                billetes_50: parseFloat(billetes_50),
+                billetes_20: parseFloat(billetes_20),
+                billetes_10: parseFloat(billetes_10),
+
             },
             success: function(response) {
                 Swal.fire('Cierre Guardado', 'El cierre de caja se ha guardado exitosamente', 'success');

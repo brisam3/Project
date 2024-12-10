@@ -131,7 +131,7 @@ include '../../backend/controller/access/AccessController.php';
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="text-center mt-3">
+                                                    <div class="text-center my-3">
                                                         <button type="button" class="btn btn-primary"
                                                             onclick="sendProducts()">Enviar</button>
                                                     </div>

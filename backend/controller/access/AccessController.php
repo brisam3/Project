@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
             //preventa
             2 => ['/'],
             //deposito
-            3 => ['/pages/deposito/Devoluciones.php'],
+            3 => ['/pages/deposito/Devoluciones.php','/pages/deposito/Transferencias.php'],
             //administracion
             4 => ['/pages/administracion/ImportarReporte.php', '/pages/administracion/ReporteVentas.php'],
             //gerencia

@@ -80,8 +80,8 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
                         <tbody>
                           <tr>
                             <td><i class="bx bx-money"></i> Efectivo</td>
-                            <td><input type="number" id="total-efectivo" class="form-control" readonly placeholder="0" /></td>
-                            <td><button type="button" class="btn btn-primary" onclick="abrirModalBilletes()">Ingresar Billetes</button></td>
+                              <td><input type="number" id="total-efectivo" class="form-control" readonly placeholder="0" /> 
+                                <button type="button" class="btn btn-primary" onclick="abrirModalBilletes()"><i class="fas fa-plus-circle"> $</i></button></td>
                           </tr>
                           <tr><td><i class="bx bxl-mercadopago"></i> Mercado Pago</td><td><input type="number" id="total-mercadopago" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
                           <tr><td><i class="bx bx-credit-card"></i>
