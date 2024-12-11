@@ -166,48 +166,73 @@
 
     <script>
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadPreventistas(); // Cargar preventistas al inicio
-});
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPreventistas(); // Cargar preventistas al inicio
+        });
 
-    function loadPreventistas() {
+        function loadPreventistas() {
     fetch('../../backend/controller/sistemaDeAsistencia/asistenciaController.php')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             const container = document.getElementById('preventistas-container');
             container.innerHTML = ''; // Limpiar el contenido previo
 
-            if (data.status === 'success') {
-                data.data.forEach(preventista => {
+            if (data.status === 'success' && Array.isArray(data.data)) {
+                // Agrupar asistencias por el campo 'nombre'
+                const asistenciasAgrupadas = data.data.reduce((acc, asistencia) => {
+                    const nombrePreventista = asistencia.nombre || 'Desconocido'; // Usar el campo 'nombre'
+                    if (!acc[nombrePreventista]) {
+                        acc[nombrePreventista] = [];
+                    }
+                    acc[nombrePreventista].push(asistencia);
+                    return acc;
+                }, {});
+
+                console.log("Asistencias agrupadas:", asistenciasAgrupadas);
+
+                // Crear tarjetas para cada preventista
+                Object.keys(asistenciasAgrupadas).forEach(preventista => {
                     const preventistaCard = document.createElement('div');
                     preventistaCard.classList.add('preventista-card');
 
-                    // Verificar asistencia previa
-                    let asistenciaBadge = '';
-                    if (preventista.asistencia) {
-                        const estado = preventista.asistencia; // Presente, Tardanza, Ausente
-                        if (estado === 'Tardanza') {
-                            asistenciaBadge = '<span class="badge tardanza">⏰</span>';
-                        } else if (estado === 'Ausente') {
-                            asistenciaBadge = '<span class="badge ausente">❌</span>';
-                        } else if (estado === 'Presente') {
-                            asistenciaBadge = '<span class="badge presente">✅</span>';
-                        }
-                    }
+                    // Obtener las asistencias de este preventista
+                    const asistencias = asistenciasAgrupadas[preventista];
+
+                    // Generar íconos para las asistencias
+                    const asistenciaIcons = asistencias
+                        .map(asistencia => {
+                            if (asistencia.asistencia === 'Presente') {
+                                return '✅';
+                            } else if (asistencia.asistencia === 'Tardanza') {
+                                return '⏰';
+                            } else if (asistencia.asistencia === 'Ausente') {
+                                return '❌';
+                            } else {
+                                return '❓'; // Ícono para valores desconocidos
+                            }
+                        })
+                        .join(' '); // Concatenar íconos con espacio
 
                     // Renderizar la tarjeta
                     preventistaCard.innerHTML = `
-                        ${asistenciaBadge} <!-- Badge de asistencia -->
+                        <div class="preventista-header">
+                            <span class="badge">${asistenciaIcons}</span> <!-- Mostrar íconos -->
+                        </div>
                         <div class="preventista-icon">👤</div>
-                        <p><strong>Nombre:</strong> ${preventista.nombre}</p>
+                        <p><strong>Nombre:</strong> ${preventista}</p>
                         <div class="button-group">
-                            <button class="btn presente" data-id="${preventista.idUsuario}" data-estado="Presente">
+                            <button class="btn presente" data-id="${asistencias[0]?.idUsuario || ''}" data-estado="Presente">
                                 <span>✅</span> Presente
                             </button>
-                            <button class="btn tardanza" data-id="${preventista.idUsuario}" data-estado="Tardanza">
+                            <button class="btn tardanza" data-id="${asistencias[0]?.idUsuario || ''}" data-estado="Tardanza">
                                 <span>⏰</span> Tardanza
                             </button>
-                            <button class="btn ausente" data-id="${preventista.idUsuario}" data-estado="Ausente">
+                            <button class="btn ausente" data-id="${asistencias[0]?.idUsuario || ''}" data-estado="Ausente">
                                 <span>❌</span> Ausente
                             </button>
                         </div>
@@ -221,7 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     button.addEventListener('click', handleAttendanceClick);
                 });
             } else {
-                container.innerHTML = `<p class="error">${data.message}</p>`;
+                const errorMsg = data.message || 'No se encontraron datos válidos.';
+                container.innerHTML = `<p class="error">${errorMsg}</p>`;
             }
         })
         .catch(error => {
@@ -230,6 +256,26 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error:", error);
         });
 }
+
+
+
+
+
+
+
+        function groupAsistenciasByUsuario(asistencias) {
+            const grouped = {};
+
+            asistencias.forEach(asistencia => {
+                if (!grouped[asistencia.idUsuario]) {
+                    grouped[asistencia.idUsuario] = { idUsuario: asistencia.idUsuario, asistencias: [] };
+                }
+                grouped[asistencia.idUsuario].asistencias.push(asistencia);
+            });
+
+            return Object.values(grouped);
+        }
+
 
 
         function handleAttendanceClick(event) {

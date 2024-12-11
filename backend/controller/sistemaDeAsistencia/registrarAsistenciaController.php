@@ -29,33 +29,57 @@ try {
         $db = $database->getConnection();
 
         // Verificar si ya existe una asistencia para este usuario en el día
+        // Verificar si ya existe una asistencia para este usuario en el día
         $queryCheck = "SELECT * FROM asistencias 
-                       WHERE idUsuario = :idUsuario AND fecha = CURDATE()";
+WHERE idUsuario = :idUsuario AND fecha = CURDATE()";
         $stmtCheck = $db->prepare($queryCheck);
         $stmtCheck->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
         $stmtCheck->execute();
+        $asistenciasHoy = $stmtCheck->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($stmtCheck->rowCount() > 0) {
-            // Si ya existe asistencia, devolver mensaje de error
+        if (count($asistenciasHoy) >= 2) {
+            // Si ya hay dos asistencias, no se permite más
             echo json_encode([
                 "status" => "error",
-                "message" => "Ya se ha registrado asistencia para este usuario hoy. Comuníquese con el administrador."
+                "message" => "Ya se han registrado dos asistencias para este usuario hoy."
             ]);
             exit;
         }
 
+        // Determinar el turno de la asistencia (mañana/tarde)
+        $turno = 'Mañana';
+        $currentHour = date('H:i:s');
+        if ($currentHour >= '12:00:00') {
+            $turno = 'Tarde';
+        }
+
+        // Verificar si ya se registró el turno actual
+        foreach ($asistenciasHoy as $asistencia) {
+            if (
+                ($turno === 'Mañana' && $asistencia['hora'] < '12:00:00') ||
+                ($turno === 'Tarde' && $asistencia['hora'] >= '12:00:00')
+            ) {
+                echo json_encode([
+                    "status" => "error",
+                    "message" => "Ya se ha registrado la asistencia para el turno de la $turno hoy."
+                ]);
+                exit;
+            }
+        }
+
         // Insertar nueva asistencia
-        $queryInsert = "INSERT INTO asistencias (idUsuario, fecha, hora, estado, observaciones)
-                        VALUES (:idUsuario, CURDATE(), CURTIME(), :estado, :observaciones)";
+        $queryInsert = "INSERT INTO asistencias (idUsuario, fecha, hora, estado, turno, observaciones)
+ VALUES (:idUsuario, CURDATE(), CURTIME(), :estado, :turno, :observaciones)";
         $stmtInsert = $db->prepare($queryInsert);
         $stmtInsert->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
         $stmtInsert->bindParam(':estado', $estado, PDO::PARAM_STR);
+        $stmtInsert->bindParam(':turno', $turno, PDO::PARAM_STR);
         $stmtInsert->bindParam(':observaciones', $observaciones, PDO::PARAM_STR);
 
         if ($stmtInsert->execute()) {
             echo json_encode([
                 "status" => "success",
-                "message" => "Asistencia registrada exitosamente."
+                "message" => "Asistencia registrada exitosamente para el turno de la $turno."
             ]);
         } else {
             echo json_encode([
@@ -63,6 +87,7 @@ try {
                 "message" => "No se pudo registrar la asistencia. Intente nuevamente."
             ]);
         }
+
     } else {
         echo json_encode([
             "status" => "error",
