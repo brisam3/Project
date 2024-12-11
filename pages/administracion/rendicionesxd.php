@@ -50,6 +50,8 @@ include '../../backend/controller/access/AccessController.php';
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
+
+
     <!-- Page CSS -->
     <link rel="stylesheet" href="../css/clima.css" />
 
@@ -81,65 +83,83 @@ include '../../backend/controller/access/AccessController.php';
                     <div class="layout-page">
                         <div class="content-wrapper">
                             <div class="container-fluid">
-                                <!-- Tabla de Detalle de Rendiciones -->
-                                <div class="table-container">
-                                    <table id="tablaRendiciones" class="table table-striped">
-                                        <thead id="theadRendiciones">
-                                            <!-- Encabezados dinámicos -->
-                                        </thead>
-                                        <tbody id="tbodyRendiciones">
-                                            <!-- Detalles dinámicos -->
-                                        </tbody>
-                                    </table>
+                                <div class="row">
+                                    <div class="container-xxl flex-grow-1 container-p-y">
+                                        <div class="table-responsive-xl mb-6 mb-lg-0">
+                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                <div class="col-md-12 my-2">
+                                                         <!-- Tabla de Detalle de Rendiciones -->
+                                                    <div class="card p-3 my-2">
+                                                        <div class="table-container my-2">
+                                                            <!-- Añadí margen inferior para separación -->
+                                                            <table id="tablaRendiciones"
+                                                                class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
+                                                                <!-- Añadí margen inferior a la tabla principal -->
+                                                                <thead id="theadRendiciones">
+                                                                    <!-- Encabezados dinámicos -->
+                                                                </thead>
+                                                                <tbody id="tbodyRendiciones">
+                                                                    <!-- Detalles dinámicos -->
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Tablas secundarias -->
+                                                    <div class="card p-3 my-2">
+                                                        <div id="tablasSecundarias" class='table-container my-2'>
+                                                            <!-- Añadí margen superior para separación de tablas secundarias -->
+                                                            <!-- Tablas por cada detalle dinámico -->
+                                                        </div>
+                                                    </div>
+                                                    <div id="tablaResumenTotalPreventa"></div>
+                                                    <div id="totalPreventa"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <!-- Tablas secundarias -->
-                                <div id="tablasSecundarias">
-                                    <!-- Tablas por cada detalle dinámico -->
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
 
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
+            <!-- Overlay -->
+            <div class="layout-overlay layout-menu-toggle"></div>
 
-    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-    <div class="drag-target"></div>
+            <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+            <div class="drag-target"></div>
 
-    <!--/ Layout wrapper -->
+            <!--/ Layout wrapper -->
 
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
+            <!-- Core JS -->
+            <!-- build:js assets/vendor/js/core.js -->
 
-    <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="../../assets/vendor/libs/popper/popper.js"></script>
-    <script src="../../assets/vendor/js/bootstrap.js"></script>
-    <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+            <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+            <script src="../../assets/vendor/libs/popper/popper.js"></script>
+            <script src="../../assets/vendor/js/bootstrap.js"></script>
+            <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
-    <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
-    <script src="../../assets/vendor/libs/i18n/i18n.js"></script>
-    <script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
+            <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
+            <script src="../../assets/vendor/libs/i18n/i18n.js"></script>
+            <script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
 
-    <script src="../../assets/vendor/js/menu.js"></script>
-    <!-- endbuild -->
+            <script src="../../assets/vendor/js/menu.js"></script>
+            <!-- endbuild -->
 
-    <!-- Vendors JS -->
-    <script src="../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+            <!-- Vendors JS -->
+            <script src="../../assets/vendor/libs/apex-charts/apexcharts.js"></script>
 
-    <!-- Main JS -->
-    <script src="../../assets/js/main.js"></script>
+            <!-- Main JS -->
+            <script src="../../assets/js/main.js"></script>
 
-    <!-- Page JS -->
-    <script src="../../assets/js/dashboards-analytics.js"></script>
+            <!-- Page JS -->
+            <script src="../../assets/js/dashboards-analytics.js"></script>
 
-
-    <script>
+            
+            <script>
 $(document).ready(function() {
     buscarDetalleRendiciones();
 
@@ -151,109 +171,215 @@ $(document).ready(function() {
                 action: 'obtenerRendicionesConUsuarios',
             },
             dataType: 'json',
-            success: function(data) {
-                if (data.length > 0) {
-                    // Crear encabezados de la tabla principal
+            success: function(response) {
+                if (response.error) {
+                    console.error('Error del backend:', response.mensaje);
+                    alert('Ocurrió un error al obtener los detalles de las rendiciones.');
+                    return;
+                }
+
+                const data = response.data;
+
+                if (data && data.length > 0) {
+                    // Crear encabezados de la tabla principal con el móvil
                     let headers = `
-                    <tr>
-                        <th>Campo</th>
-                        ${data.map(detalle => `<th>${detalle.nombre_preventista} - ${detalle.nombre_chofer}</th>`).join('')}
-                    </tr>
-                    `;
+                        <tr>
+                            <th>Movil</th>
+                            ${data.map(detalle => `<th>${detalle.movil}</th>`).join('')}
+                            <th>Totales</th>
+                        </tr>
+                        <tr>
+                            <th>Preventista - Chofer</th>
+                            ${data.map(detalle => `<th>${detalle.nombre_preventista} - ${detalle.nombre_chofer}</th>`).join('')}
+                            <th></th>
+                        </tr>`;
                     $('#theadRendiciones').html(headers);
 
                     // Crear filas para cada atributo
                     const atributos = [
-                        { nombre: 'Total General', campo: 'total_general' },
-                        { nombre: 'MEC Faltante', campo: 'total_mec_faltante' },
-                        { nombre: 'Rechazos', campo: 'total_rechazos' },
-                        { nombre: 'Mercado Pago', campo: 'total_mercadopago' },
-                        { nombre: 'Transferencias', campo: 'total_transferencia' },
-                        { nombre: 'Fiados', campo: 'total_fiados' },
-                        { nombre: 'Gastos', campo: 'total_gastos' },
-                        { nombre: 'Pago Secretario', campo: 'pago_secretario' },
-                        { nombre: 'Cheques', campo: 'total_cheques' },
+                        { nombre: 'Total Ventas', campo: 'total_ventas', esEditable: false },
+                        { nombre: 'MEC Faltante', campo: 'total_mec_faltante', esEditable: true },
+                        { nombre: 'Rechazos', campo: 'total_rechazos', esEditable: true },
+                        { nombre: 'Mercado Pago', campo: 'total_mercadopago', esEditable: true },
+                        { nombre: 'Transferencias', campo: 'total_transferencia', esEditable: true },
+                        { nombre: 'Fiados', campo: 'total_fiados', esEditable: true },
+                        { nombre: 'Gastos', campo: 'total_gastos', esEditable: true },
+                        { nombre: 'Pago Secretario', campo: 'pago_secretario', esEditable: true },
+                        { nombre: 'Cheques', campo: 'total_cheques', esEditable: true },
                     ];
 
                     let html = '';
                     atributos.forEach(atributo => {
-                        html += `
-                        <tr>
+                        let total = 0;
+                        html += `<tr>
                             <td>${atributo.nombre}</td>
-                            ${data.map(detalle => `<td>${detalle[atributo.campo]}</td>`).join('')}
-                        </tr>
-                        `;
+                            ${data.map(detalle => {
+                                const valor = detalle[atributo.campo] || 0;
+                                total += parseFloat(valor);
+                                return atributo.esEditable
+                                    ? `<td><input type="number" class="form-control table-input" value="${valor}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" /></td>`
+                                    : `<td>${valor}</td>`;
+                            }).join('')}
+                            <td class="total-column" >${total.toFixed(2)}</td>
+                        </tr>`;
                     });
 
                     $('#tbodyRendiciones').html(html);
 
+                    // Actualizar dinámicamente la columna de totales en la tabla principal
+                    $(document).on('input', '.table-input', function() {
+                        $('#tbodyRendiciones tr').each(function() {
+                            let sum = 0;
+                            $(this).find('.table-input').each(function() {
+                                sum += parseFloat($(this).val()) || 0;
+                            });
+                            $(this).find('.total-column').text(sum.toFixed(2));
+                        });
+                    });
+
                     // Crear tablas secundarias para el conteo de billetes
                     let subTablesHtml = '';
                     data.forEach(function(detalle) {
-                        let billetesHtml = `
-                        <div class="sub-table">
-                            <h4>Detalle de Efectivo (${detalle.nombre_preventista} - ${detalle.nombre_chofer})</h4>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Denominación</th>
-                                        <th>20,000</th>
-                                        <th>10,000</th>
-                                        <th>2,000</th>
-                                        <th>1,000</th>
-                                        <th>500</th>
-                                        <th>200</th>
-                                        <th>100</th>
-                                        <th>50</th>
-                                        <th>20</th>
-                                        <th>10</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Cantidad</td>
-                                        <td>${detalle.billetes_20000}</td>
-                                        <td>${detalle.billetes_10000}</td>
-                                        <td>${detalle.billetes_2000}</td>
-                                        <td>${detalle.billetes_1000}</td>
-                                        <td>${detalle.billetes_500}</td>
-                                        <td>${detalle.billetes_200}</td>
-                                        <td>${detalle.billetes_100}</td>
-                                        <td>${detalle.billetes_50}</td>
-                                        <td>${detalle.billetes_20}</td>
-                                        <td>${detalle.billetes_10}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td>${detalle.billetes_20000 * 20000}</td>
-                                        <td>${detalle.billetes_10000 * 10000}</td>
-                                        <td>${detalle.billetes_2000 * 2000}</td>
-                                        <td>${detalle.billetes_1000 * 1000}</td>
-                                        <td>${detalle.billetes_500 * 500}</td>
-                                        <td>${detalle.billetes_200 * 200}</td>
-                                        <td>${detalle.billetes_100 * 100}</td>
-                                        <td>${detalle.billetes_50 * 50}</td>
-                                        <td>${detalle.billetes_20 * 20}</td>
-                                        <td>${detalle.billetes_10 * 10}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Diferencia</td>
-                                        <td colspan="10"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        `;
+                        let sumas = {
+                            totalFila: 0,
+                            totalColumnas: [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
+                                return (detalle[`billetes_${denominacion}`] || 0) * denominacion;
+                            })
+                        };
+                        sumas.totalFila = sumas.totalColumnas.reduce((a, b) => a + b, 0);
 
+                        let billetesHtml = `
+                            <div class="card">
+                                <div class="sub-table my-3">
+                                    <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                        <table class="datatables-ajax table table-bordered table-hover table-sm table-striped">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th colspan="12" class="text-center">
+                                                        <h6>${detalle.movil} ${detalle.nombre_preventista} ---- ${detalle.nombre_chofer}</h6>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-center">Denominación</th>
+                                                    <th class="text-center">20,000</th>
+                                                    <th class="text-center">10,000</th>
+                                                    <th class="text-center">5,000</th>
+                                                    <th class="text-center">2,000</th>
+                                                    <th class="text-center">1,000</th>
+                                                    <th class="text-center">500</th>
+                                                    <th class="text-center">200</th>
+                                                    <th class="text-center">100</th>
+                                                    <th class="text-center">50</th>
+                                                    <th class="text-center">20</th>
+                                                    <th class="text-center">10</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="font-weight-bold">Cantidad</td>
+                                                    ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
+                                                        return `<td><input type="number" class="form-control cantidad-input" value="${detalle[`billetes_${denominacion}`] || 0}" data-denominacion="${denominacion}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" /></td>`;
+                                                    }).join('')}
+                                                    <td class="font-weight-bold total-row">${sumas.totalFila.toFixed(2)}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="font-weight-bold">Total</td>
+                                                    ${sumas.totalColumnas.map(total => `<td class="font-weight-bold columna-total">${total.toFixed(2)}</td>`).join('')}
+                                                    <td class="font-weight-bold total-general " style="background-color: #ffe5e5;">${sumas.totalFila.toFixed(2)}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>`;
                         subTablesHtml += billetesHtml;
                     });
 
                     // Insertar tablas secundarias
                     $('#tablasSecundarias').html(subTablesHtml);
+
+                    // Crear tabla TOTAL PREVENTA
+                    let totalPreventaHtml = `
+                        <table class="table table-bordered table-sm mt-3">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Denominación</th>
+                                    <th>20,000</th>
+                                    <th>10,000</th>
+                                    <th>5,000</th>
+                                    <th>2,000</th>
+                                    <th>1,000</th>
+                                    <th>500</th>
+                                    <th>200</th>
+                                    <th>100</th>
+                                    <th>50</th>
+                                    <th>20</th>
+                                    <th>10</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-weight-bold">Cantidad</td>
+                                    ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
+                                        return `<td class="total-cantidad" data-denominacion="${denominacion}">0</td>`;
+                                    }).join('')}
+                                    <td class="font-weight-bold" id="total-global">0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>`;
+                    $('#totalPreventa').html(totalPreventaHtml);
+
+                    // Actualizar dinámicamente las columnas y totales en las tablas secundarias
+                    $(document).on('input', '.cantidad-input', function() {
+                        const table = $(this).closest('table');
+                        let totalFila = 0;
+
+                        // Actualizar totales por columna
+                        table.find('thead tr th:not(:first-child):not(:last-child)').each(function(index) {
+                            let columnSum = 0;
+                            table.find('tbody tr td:nth-child(' + (index + 2) + ') input').each(function() {
+                                const cantidad = parseFloat($(this).val()) || 0;
+                                const denominacion = parseFloat($(this).data('denominacion')) || 0;
+                                columnSum += cantidad * denominacion;
+                            });
+                            table.find('tbody tr:last-child td:nth-child(' + (index + 2) + ')').text(columnSum.toFixed(2));
+                            totalFila += columnSum;
+                        });
+
+                        // Actualizar el total general
+                        table.find('.total-general').text(totalFila.toFixed(2));
+
+                        // Actualizar TOTAL PREVENTA
+                        actualizarTotalPreventa();
+                    });
+
+                    // Función para actualizar la tabla TOTAL PREVENTA
+                    function actualizarTotalPreventa() {
+                        const denominaciones = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10];
+                        let totalGlobal = 0;
+
+                        denominaciones.forEach(denominacion => {
+                            let totalCantidad = 0;
+
+                            $('.cantidad-input[data-denominacion="' + denominacion + '"]').each(function() {
+                                totalCantidad += parseFloat($(this).val()) || 0;
+                            });
+
+                            $(`.total-cantidad[data-denominacion="${denominacion}"]`).text(totalCantidad);
+                            totalGlobal += totalCantidad * denominacion;
+                        });
+
+                        $('#total-global').text(totalGlobal.toFixed(2));
+                    }
+
+                    // Inicializar el TOTAL PREVENTA
+                    actualizarTotalPreventa();
                 } else {
                     $('#theadRendiciones').html('<tr><th>No se encontraron detalles</th></tr>');
                     $('#tbodyRendiciones').html('');
                     $('#tablasSecundarias').html('');
+                    $('#totalPreventa').html('');
                 }
             },
             error: function(xhr, status, error) {
@@ -264,6 +390,9 @@ $(document).ready(function() {
     }
 });
 </script>
+
+
+
 
 
 

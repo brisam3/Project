@@ -1,40 +1,51 @@
 <?php
-// backend/controllers/devoluciones/locales/detalleDevolucionesController.php
-// backend/controllers/devoluciones/locales/detalleDevolucionesController.php
-
+// Configuración inicial
 session_start();
-
-
 require_once('../../../database/Database.php');
-date_default_timezone_set('America/Argentina/Buenos_Aires');
+date_default_timezone_set('America/Argentina/Buenos_Aires'); // Zona horaria
 
 class DetalleRendicionController {
-    private  $db;
+    private $db;
 
-    public function __construct() {
-        $database = new Database();
-        $this->db = $database->getConnection();
+    public function __construct($db) {
+        $this->db = $db;
     }
 
-    public function getDb() {
-        return $this->db; // Retorna la conexión
-    }
+    public function obtenerRendicionesConVentas() {
+        $fechaHoy = date('Y-m-d'); // Fecha actual
+        $yesterday = date('Y-m-d', strtotime('-1 day')); // Fecha de ayer
     
-
-    public function obtenerRendicionesConUsuarios() {
-        // Establecer la zona horaria de Buenos Aires
-        date_default_timezone_set('America/Argentina/Buenos_Aires');
-         // Obtener la fecha actual
-        $fechaHoy = date('Y-m-d');  // La fecha en formato Y-m-d (ejemplo: 2024-12-05)
+        // Mapeo del orden de los preventistas
+        $ordenPreventistas = [
+            'Mica' => 0,
+            'Gustavo' => 1,
+            'Leo(Chillo)' => 2,
+            'Alexander' => 3,
+            'Diego' => 4,
+            'Cristian' => 5,
+            'Marianela' => 6,
+            'Guille' => 7,
+            'Soledad' => 8
+        ];
     
-        // Query SQL
-        $query = "
+        // Crear la cláusula ORDER BY con el orden de los preventistas
+        $ordenString = '';
+        foreach ($ordenPreventistas as $nombre => $indice) {
+            if ($ordenString) {
+                $ordenString .= ', ';
+            }
+            $ordenString .= "CASE WHEN up.nombre = '$nombre' THEN $indice ELSE 9999 END";
+        }
+    
+        // Consulta para las rendiciones
+        $queryRendiciones = "
             SELECT 
                 rc.id,
                 rc.idUsuarioChofer,
                 uc.nombre AS nombre_chofer,
                 rc.idUsuarioPreventista,
                 up.nombre AS nombre_preventista,
+                up.apellido AS movil, -- Agregar el campo movil desde apellido
                 rc.fecha,
                 rc.total_efectivo,
                 rc.total_transferencia,
@@ -45,7 +56,7 @@ class DetalleRendicionController {
                 rc.pago_secretario,
                 rc.total_general,
                 rc.total_menos_gastos,
-                 rc.billetes_20000,
+                rc.billetes_20000,
                 rc.billetes_10000,
                 rc.billetes_2000,
                 rc.billetes_1000,
@@ -64,81 +75,80 @@ class DetalleRendicionController {
             LEFT JOIN 
                 usuarios up ON rc.idUsuarioPreventista = up.idUsuario
             WHERE 
-                rc.fecha = ?  -- Filtra por la fecha si se necesita
+                rc.fecha = ?
+            ORDER BY
+                $ordenString
         ";
     
-       
-        // Preparar y ejecutar la consulta
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([$fechaHoy]);  // Puedes agregar más parámetros si es necesario
+        $stmtRendiciones = $this->db->prepare($queryRendiciones);
+        $stmtRendiciones->execute([$fechaHoy]);
+        $rendiciones = $stmtRendiciones->fetchAll(PDO::FETCH_ASSOC);
     
-        // Retornar los resultados
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Consulta para los totales de ventas
+        $queryVentas = "
+            SELECT
+                u.nombre AS nombre_preventista,
+                SUM(c.Item_Impte_Total_mon_Emision) AS total_ventas
+            FROM 
+                comprobantes c
+            JOIN 
+                detallereporte d ON c.detalleReporte_id = d.id
+            JOIN 
+                usuarios u ON TRIM(c.Comp_Vendedor_Cod) = TRIM(u.usuario)
+            WHERE 
+                d.fecha = :yesterday
+            GROUP BY 
+                u.nombre
+        ";
+        $stmtVentas = $this->db->prepare($queryVentas);
+        $stmtVentas->execute([':yesterday' => $yesterday]);
+        $ventas = $stmtVentas->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Combinar los totales de ventas con las rendiciones
+        foreach ($rendiciones as &$rendicion) {
+            $rendicion['total_ventas'] = 0; // Valor por defecto
+            foreach ($ventas as $venta) {
+                if ($venta['nombre_preventista'] === $rendicion['nombre_preventista']) {
+                    $rendicion['total_ventas'] = $venta['total_ventas'];
+                    break;
+                }
+            }
+        }
+    
+        return $rendiciones;
     }
+    
     
 }
 
 // Manejo de las peticiones AJAX
-// Manejo de las peticiones AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header('Content-Type: application/json'); // Asegurarse de que el tipo de contenido sea JSON
-    $controller = new DetalleRendicionController();
+    header('Content-Type: application/json');
+
+    $database = new Database();
+    $dbConnection = $database->getConnection();
+    $controller = new DetalleRendicionController($dbConnection);
 
     if (isset($_POST['action'])) {
-        try {
-            switch ($_POST['action']) {
-                case 'obtenerRendicionesConUsuarios':
-                    $detalles = $controller->obtenerRendicionesConUsuarios();
-                    $resultados = []; // Arreglo para almacenar los resultados
-                    foreach ($detalles as $detalle) {
-                        $resultados[] = [
-                            'id' => $detalle['id'],
-                            'idUsuarioChofer' => $detalle['idUsuarioChofer'],
-                            'nombre_chofer' => $detalle['nombre_chofer'],
-                            'idUsuarioPreventista' => $detalle['idUsuarioPreventista'],
-                            'nombre_preventista' => $detalle['nombre_preventista'],
-                            'fecha' => $detalle['fecha'],
-                            'total_efectivo' => $detalle['total_efectivo'],
-                            'total_transferencia' => $detalle['total_transferencia'],
-                            'total_mercadopago' => $detalle['total_mercadopago'],
-                            'total_cheques' => $detalle['total_cheques'],
-                            'total_fiados' => $detalle['total_fiados'],
-                            'total_gastos' => $detalle['total_gastos'],
-                            'pago_secretario' => $detalle['pago_secretario'],
-                            'total_general' => $detalle['total_general'],
-                            'total_menos_gastos' => $detalle['total_menos_gastos'],
-                            'billetes_20000' => $detalle['billetes_20000'],
-                            'billetes_10000' => $detalle['billetes_10000'],
-                            'billetes_2000' => $detalle['billetes_2000'],
-                            'billetes_1000' => $detalle['billetes_1000'],
-                            'billetes_500' => $detalle['billetes_500'],
-                            'billetes_200' => $detalle['billetes_200'],
-                            'billetes_100' => $detalle['billetes_100'],
-                            'billetes_50' => $detalle['billetes_50'],
-                            'billetes_20' => $detalle['billetes_20'],
-                            'billetes_10' => $detalle['billetes_10'],
-                            'total_mec_faltante' => $detalle['total_mec_faltante'],
-                            'total_rechazos' => $detalle['total_rechazos']
-                        ];
-                    }
+        $action = filter_var($_POST['action'], FILTER_SANITIZE_STRING);
 
-                    echo json_encode($resultados); // Enviar los resultados como JSON
+        try {
+            switch ($action) {
+                case 'obtenerRendicionesConUsuarios':
+                    $detalles = $controller->obtenerRendicionesConVentas(); // Usa la nueva función
+                    echo json_encode(['error' => false, 'data' => $detalles]);
                     break;
                 
                 default:
                     throw new Exception("Acción no válida.");
             }
         } catch (Exception $e) {
-            // Captura cualquier excepción y responde con el error
-            echo json_encode([
-                'error' => true,
-                'mensaje' => $e->getMessage()
-            ]);
+            echo json_encode(['error' => true, 'mensaje' => $e->getMessage()]);
         }
+    } else {
+        echo json_encode(['error' => true, 'mensaje' => 'Acción no especificada.']);
     }
+
     exit;
 }
-
-
-
 ?>
