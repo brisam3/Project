@@ -94,7 +94,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
 
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <table class="table border-top">
+                                            <table class="table border-top ">
                                                 <thead>
                                                  
                                                 </thead>

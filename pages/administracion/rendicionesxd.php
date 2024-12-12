@@ -115,6 +115,11 @@ include '../../backend/controller/access/AccessController.php';
                                                     <div class="card p-3 my-2">
                                                         <div id="totalPreventa"></div>
                                                     </div>
+
+                                                    <div class="card p-3 my-2">
+                                                        <div id="resumenPreventaContainer"></div>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -461,7 +466,10 @@ include '../../backend/controller/access/AccessController.php';
                                         <td class="font-weight-bold" id="total-global">0.00</td>
                                     </tr>
                                 </tbody>
-                            </table>`;
+                            </table>
+                            </div>
+                                            </div>
+                                        </div>`;
                                 $('#totalPreventa').html(totalPreventaHtml);
 
                                 // Actualizar dinámicamente las columnas y totales en las tablas secundarias
@@ -526,6 +534,80 @@ include '../../backend/controller/access/AccessController.php';
 
                                 // Inicializar el TOTAL PREVENTA
                                 actualizarTotalPreventa();
+
+                                // Crear la nueva tabla dinámica al final
+                                function crearTablaResumen() {
+                                    let resumenHtml = `
+                                     <div class="card">
+                                            <div class="sub-table my-2">
+                                                <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                    <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped" id="tablaResumenPreventa">
+                                                            <thead>
+                                                            <th colspan="13" class="text-center">
+                                                                <h6  style="margin: 10px 0;">Total General</h6>
+                                                            </th>
+                                                                <tr>
+                                                                    <th>Descripción</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="font-weight-bold">TOTAL EFECTIVO</td>
+                                                                    <td id="totalEfectivoResumen">0.00</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-bold">TOTAL MP</td>
+                                                                    <td id="totalMpResumen">0.00</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-bold">TOTAL TRANSFERENCIAS</td>
+                                                                    <td id="totalTransferenciasResumen">0.00</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="font-weight-bold">TOTAL GENERAL PREVENTA</td>
+                                                                    <td id="totalGeneralResumen" class="font-weight-bold text-primary">0.00</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>`;
+
+                                          $('#resumenPreventaContainer').html(resumenHtml);
+
+
+                                    // Inicializar los cálculos
+                                    actualizarTablaResumen();
+                                }
+
+                                // Función para actualizar los valores dinámicos de la nueva tabla
+                                function actualizarTablaResumen() {
+                                    // Obtener Total Efectivo desde la tabla "Total Preventa"
+                                    const totalEfectivo = parseFloat($('#total-global').text()) || 0;
+
+                                    // Obtener Total MP desde la tabla principal
+                                    const totalMpIndex = $('#theadRendiciones th').index($('#theadRendiciones th:contains("Mercado Pago")'));
+                                    const totalMp = parseFloat($(`#tbodyRendiciones tr:nth-child(4) td:last-child`).text()) || 0; // Fila de "Mercado Pago"
+
+                                    // Obtener Total Transferencias desde la tabla principal
+                                    const totalTransferencias = parseFloat($(`#tbodyRendiciones tr:nth-child(5) td:last-child`).text()) || 0; // Fila de "Transferencias"
+
+                                    // Calcular Total General Preventa
+                                    const totalGeneral = totalEfectivo + totalMp + totalTransferencias;
+
+                                    // Actualizar los valores en la nueva tabla
+                                    $('#totalEfectivoResumen').text(totalEfectivo.toFixed(2));
+                                    $('#totalMpResumen').text(totalMp.toFixed(2));
+                                    $('#totalTransferenciasResumen').text(totalTransferencias.toFixed(2));
+                                    $('#totalGeneralResumen').text(totalGeneral.toFixed(2));
+                                }
+
+                                // Inicializar la nueva tabla y los cálculos
+                                crearTablaResumen();
+
+                                // Escuchar cambios en las tablas relacionadas para actualizar dinámicamente la nueva tabla
+                                $(document).on('input', '.cantidad-input, .table-input', function () {
+                                    actualizarTablaResumen();
+                                });
+
                             } else {
                                 $('#theadRendiciones').html(
                                     '<tr><th>No se encontraron detalles</th></tr>');
