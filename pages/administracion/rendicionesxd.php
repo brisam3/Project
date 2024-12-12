@@ -436,41 +436,41 @@ include '../../backend/controller/access/AccessController.php';
 
                                 // Crear tabla TOTAL PREVENTA
                                 let totalPreventaHtml = `
-                            <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
-                                <thead>
-                                <th colspan="13" class="text-center">
-                                    <h6  style="margin: 10px 0;">Total Preventa</h6>
-                                </th>
-                                    <tr>
-                                        <th>Denominación</th>
-                                        <th>20,000</th>
-                                        <th>10,000</th>
-                                        <th>5,000</th>
-                                        <th>2,000</th>
-                                        <th>1,000</th>
-                                        <th>500</th>
-                                        <th>200</th>
-                                        <th>100</th>
-                                        <th>50</th>
-                                        <th>20</th>
-                                        <th>10</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="font-weight-bold">Cantidad</td>
-                                        ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
-                                            return `<td class="total-cantidad" data-denominacion="${denominacion}">0</td>`;
-                                        }).join('')}
-                                        <td class="font-weight-bold" id="total-global">0.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            </div>
-                                            </div>
-                                        </div>`;
+                                                <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
+                                                    <thead>
+                                                    <th colspan="13" class="text-center">
+                                                        <h6  style="margin: 10px 0;">Total Preventa</h6>
+                                                    </th>
+                                                        <tr>
+                                                            <th>Denominación</th>
+                                                            <th>20,000</th>
+                                                            <th>10,000</th>
+                                                            <th>5,000</th>
+                                                            <th>2,000</th>
+                                                            <th>1,000</th>
+                                                            <th>500</th>
+                                                            <th>200</th>
+                                                            <th>100</th>
+                                                            <th>50</th>
+                                                            <th>20</th>
+                                                            <th>10</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="font-weight-bold">Cantidad</td>
+                                                            ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
+                                                                return `<td class="total-cantidad" data-denominacion="${denominacion}">0</td>`;
+                                                            }).join('')}
+                                                            <td class="font-weight-bold" id="total-global">0.00</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                               
+                                      `;
                                 $('#totalPreventa').html(totalPreventaHtml);
+                                
 
                                 // Actualizar dinámicamente las columnas y totales en las tablas secundarias
                                 $(document).on('input', '.cantidad-input', function() {
@@ -607,6 +607,122 @@ include '../../backend/controller/access/AccessController.php';
                                 $(document).on('input', '.cantidad-input, .table-input', function () {
                                     actualizarTablaResumen();
                                 });
+
+                                // Crear la tabla "LIBRE" al inicializar las tablas secundarias
+function agregarTablaLibre() {
+    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10];
+    let libreHtml = `
+        <div class="card">
+            <div class="sub-table my-2">
+                <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                    <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="13" class="text-center">
+                                    <h6 style="margin: 10px 0;">LIBRE</h6>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">Denominación</th>
+                                ${denominaciones.map(denominacion => `<th class="text-center">${denominacion}</th>`).join('')}
+                                <th class="text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-weight-bold">Cantidad</td>
+                                ${denominaciones.map(denominacion => `
+                                    <td>
+                                        <input type="number" class="form-control cantidad-libre" value="0" 
+                                            data-denominacion="${denominacion}" 
+                                            style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;">
+                                    </td>`).join('')}
+                                <td class="font-weight-bold total-libre" style="background-color: #ffe5e5;">0.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="font-weight-bold">Diferencia</td>
+                                <td colspan="12" class="font-weight-bold diferencia-libre text-center">0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Agregar la tabla al contenedor
+    $('#tablasSecundarias').append(libreHtml);
+
+    // Actualizar los cálculos al cambiar valores en la tabla LIBRE
+    $(document).on('input', '.cantidad-libre', function () {
+        let totalFila = 0;
+
+        $('.cantidad-libre').each(function () {
+            const denominacion = parseFloat($(this).data('denominacion'));
+            const cantidad = parseFloat($(this).val()) || 0;
+            totalFila += denominacion * cantidad;
+        });
+
+        // Actualizar el total de la tabla "LIBRE"
+        $('.total-libre').text(totalFila.toFixed(2));
+
+        // Actualizar totales y diferencias dinámicas
+        actualizarTotalNeto();
+        actualizarTotalPreventa();
+        actualizarTablaResumen();
+    });
+}
+
+// Agregar la columna "LIBRE" en la tabla principal
+function agregarColumnaLibre() {
+    $('#theadRendiciones tr:first-child').append('<th>LIBRE</th>');
+    $('#theadRendiciones tr:nth-child(2)').append('<th></th>');
+
+    $('#tbodyRendiciones tr').each(function () {
+        const $row = $(this);
+        const esEditable = $row.find('td input').length > 0; // Verificar si la fila es editable
+
+        $row.append(
+            esEditable
+                ? `<td><input type="number" class="form-control table-input" value="0" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" data-campo="libre" /></td>`
+                : `<td>0.00</td>`
+        );
+    });
+
+    // Agregar columna "LIBRE" en la fila "Total Neto"
+    $('#filaTotalNeto').append('<td class="neto-column">0.00</td>');
+}
+
+function actualizarTotalPreventa() {
+    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10];
+    let totalGlobal = 0;
+
+    denominaciones.forEach(denominacion => {
+        let totalCantidad = 0;
+
+        // Incluir todas las cantidades, incluyendo la tabla LIBRE
+        $(`.cantidad-input[data-denominacion="${denominacion}"], .cantidad-libre[data-denominacion="${denominacion}"]`).each(function () {
+            totalCantidad += parseFloat($(this).val()) || 0;
+        });
+
+        $(`.total-cantidad[data-denominacion="${denominacion}"]`).text(totalCantidad);
+        totalGlobal += totalCantidad * denominacion;
+    });
+
+    $('#total-global').text(totalGlobal.toFixed(2));
+}
+
+// Inicializar la tabla "LIBRE" y la columna en la tabla principal
+$(document).ready(function () {
+    agregarTablaLibre();
+    
+    actualizarTotalPreventa();
+  
+});
+
+                                
 
                             } else {
                                 $('#theadRendiciones').html(

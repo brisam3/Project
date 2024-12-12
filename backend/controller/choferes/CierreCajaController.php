@@ -46,8 +46,6 @@ class CierreCajaChoferController {
         $billetes_20 = (float)$_POST['billetes_20'];
         $billetes_10 = (int)$_POST['billetes_10'];
 
-
-
         
         // Capturar los nuevos valores
         $total_general = (float)$_POST['total_general'];
@@ -100,9 +98,72 @@ class CierreCajaChoferController {
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
-}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $controller = new CierreCajaChoferController();
-    $controller->guardarCierreCajaChofer();
-}
+     
+    public function obtenerContrareembolso() {
+        $idUsuarioPreventista = $_POST['idUsuarioPreventista'] ?? null;
+    
+        if (!$idUsuarioPreventista) {
+            echo json_encode(['error' => 'Falta el idUsuarioPreventista']);
+            return;
+        }
+    
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+    
+        $queryVentas = "
+            SELECT
+                u.idUsuario AS id_preventista,
+                u.nombre AS nombre_preventista,
+                SUM(c.Item_Impte_Total_mon_Emision) AS total_ventas
+            FROM 
+                comprobantes c
+            JOIN 
+                detallereporte d ON c.detalleReporte_id = d.id
+            JOIN 
+                usuarios u ON TRIM(c.Comp_Vendedor_Cod) = TRIM(u.usuario)
+            WHERE 
+                d.fecha = :yesterday
+                AND u.idUsuario = :idUsuarioPreventista
+            GROUP BY 
+                u.idUsuario, u.nombre
+        ";
+    
+        try {
+            $stmtVentas = $this->pdo->prepare($queryVentas);
+            $stmtVentas->execute([
+                ':yesterday' => $yesterday,
+                ':idUsuarioPreventista' => $idUsuarioPreventista
+            ]);
+    
+            $ventas = $stmtVentas->fetch(PDO::FETCH_ASSOC);
+    
+            if ($ventas) {
+                echo json_encode($ventas);
+            } else {
+                echo json_encode(['error' => 'No se encontraron datos para el preventista seleccionado']);
+            }
+        } catch (PDOException $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+    
+    
+
+
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller = new CierreCajaChoferController();
+    
+        // Determinar la acción solicitada
+        $action = $_POST['action'] ?? 'guardar';
+    
+        if ($action === 'guardar') {
+            $controller->guardarCierreCajaChofer();
+        } elseif ($action === 'obtenerContrareembolso') {
+            $controller->obtenerContrareembolso();
+        } else {
+            echo json_encode(['error' => 'Acción no reconocida']);
+        }
+    }
+    
