@@ -63,6 +63,7 @@ include '../../backend/controller/access/AccessController.php';
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
+   
 
 </head>
 
@@ -95,10 +96,10 @@ include '../../backend/controller/access/AccessController.php';
                                                             <table id="tablaRendiciones"
                                                                 class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
                                                                 <!-- Añadí margen inferior a la tabla principal -->
-                                                                <thead id="theadRendiciones">
+                                                                <thead id="theadRendicionesLocales">
                                                                     <!-- Encabezados dinámicos -->
                                                                 </thead>
-                                                                <tbody id="tbodyRendiciones">
+                                                                <tbody id="tbodyRendicionesLocales">
                                                                     <!-- Detalles dinámicos -->
                                                                 </tbody>
                                                             </table>
@@ -106,7 +107,7 @@ include '../../backend/controller/access/AccessController.php';
                                                     </div>
                                                     <!-- Tablas secundarias -->
                                                     <div class="card p-3 my-2">
-                                                        <div id="tablasSecundarias" class='table-container my-2'>
+                                                        <div id="tablasSecundariasLocales" class='table-container my-2'>
                                                             <!-- Añadí margen superior para separación de tablas secundarias -->
                                                             <!-- Tablas por cada detalle dinámico -->
                                                         </div>
@@ -117,7 +118,7 @@ include '../../backend/controller/access/AccessController.php';
                                                     </div>
 
                                                     <div class="card p-3 my-2">
-                                                        <div id="resumenPreventaContainer"></div>
+                                                        <div id="resumenLocalesContainer"></div>
                                                     </div>
 
                                                 </div>
@@ -175,7 +176,7 @@ include '../../backend/controller/access/AccessController.php';
                         url: '../../backend/controller/administracion/Rendiciones.php',
                         type: 'POST',
                         data: {
-                            action: 'obtenerRendicionesConUsuarios',
+                            action: 'obtenerCierreCajaHoy',
                         },
                         dataType: 'json',
                         success: function(response) {
@@ -188,66 +189,44 @@ include '../../backend/controller/access/AccessController.php';
                             }
 
                             const data = response.data;
+                           
 
                             if (data && data.length > 0) {
                                 // Crear encabezados de la tabla principal
                                 let headers = `
+                           
                             <tr>
-                                <th>Movil</th>
-                                ${data.map(detalle => `<th>${detalle.movil}</th>`).join('')}
+                                <th>Local</th>
+                                ${data.map(detalle => `<th>${detalle.nombre_local}</th>`).join('')}
                                 <th>Totales</th>
-                            </tr>
-                            <tr>
-                                <th>Preventista - Chofer</th>
-                                ${data.map(detalle => `<th>${detalle.nombre_preventista} - ${detalle.nombre_chofer}</th>`).join('')}
-                                <th></th>
                             </tr>`;
-                                $('#theadRendiciones').html(headers);
+                                $('#theadRendicionesLocales').html(headers);
 
                                 // Crear filas para cada atributo
-                                const atributos = [{
-                                        nombre: 'Total Ventas',
-                                        campo: 'total_ventas',
-                                        esEditable: false
-                                    },
+                                const atributos = [
                                     {
-                                        nombre: 'MEC Faltante',
-                                        campo: 'total_mec_faltante',
-                                        esEditable: true
-                                    },
-                                    {
-                                        nombre: 'Rechazos',
-                                        campo: 'total_rechazos',
+                                        nombre: 'Payway',
+                                        campo: 'payway',
                                         esEditable: true
                                     },
                                     {
                                         nombre: 'Mercado Pago',
-                                        campo: 'total_mercadopago',
-                                        esEditable: true
-                                    },
-                                    {
-                                        nombre: 'Transferencias',
-                                        campo: 'total_transferencia',
-                                        esEditable: true
-                                    },
-                                    {
-                                        nombre: 'Fiados',
-                                        campo: 'total_fiados',
+                                        campo: 'mercado_pago',
                                         esEditable: true
                                     },
                                     {
                                         nombre: 'Gastos',
-                                        campo: 'total_gastos',
+                                        campo: 'gastos',
                                         esEditable: true
                                     },
                                     {
-                                        nombre: 'Pago Secretario',
-                                        campo: 'pago_secretario',
+                                        nombre: 'Cuenta Corriente',
+                                        campo: 'cuenta_corriente',
                                         esEditable: true
                                     },
                                     {
-                                        nombre: 'Cheques',
-                                        campo: 'total_cheques',
+                                        nombre: 'Cambios',
+                                        campo: 'cambios',
                                         esEditable: true
                                     },
                                 ];
@@ -268,14 +247,7 @@ include '../../backend/controller/access/AccessController.php';
                             </tr>`;
                                 });
 
-                                // Agregar fila Total Neto
-                                let totalNetoRow = `<tr id="filaTotalNeto">
-                            <td class="font-weight-bold">Total Neto</td>
-                            ${data.map(() => `<td class="neto-column">0.00</td>`).join('')}
-                            <td class="total-neto-global font-weight-bold">0.00</td>
-                        </tr>`;
-
-                                $('#tbodyRendiciones').html(html + totalNetoRow);
+                                $('#tbodyRendicionesLocales').html(html);
 
                                 // Actualizar dinámicamente las columnas y el total neto
                                 $(document).on('input', '.table-input', function() {
@@ -291,51 +263,11 @@ include '../../backend/controller/access/AccessController.php';
                                     });
                                     $totalColumn.text(rowSum.toFixed(2));
 
-                                    // Recalcular el total neto
-                                    actualizarTotalNeto();
+                                    
                                 });
 
-                                function actualizarTotalNeto() {
-                                    const camposARestar = [
-                                        'total_mec_faltante',
-                                        'total_rechazos',
-                                        'total_mercadopago',
-                                        'total_transferencia',
-                                        'total_fiados',
-                                        'total_gastos',
-                                        'pago_secretario',
-                                        'total_cheques',
-                                    ];
-
-                                    let totalGlobalNeto = 0;
-
-                                    $('#theadRendiciones th:not(:first-child):not(:last-child)')
-                                        .each(function(index) {
-                                            let totalVentas = parseFloat($(
-                                                `#tbodyRendiciones tr:nth-child(1) td:nth-child(${index + 2})`
-                                            ).text()) || 0;
-                                            let totalARestar = 0;
-
-                                            camposARestar.forEach((campo, i) => {
-                                                totalARestar += parseFloat($(
-                                                    `#tbodyRendiciones tr:nth-child(${i + 2}) td:nth-child(${index + 2}) input`
-                                                ).val()) || 0;
-                                            });
-
-                                            const totalNeto = totalVentas - totalARestar;
-                                            $(`#filaTotalNeto td:nth-child(${index + 2})`).text(
-                                                totalNeto.toFixed(2));
-                                            totalGlobalNeto += totalNeto;
-                                        });
-
-                                    // Actualizar la columna Total Neto Global
-                                    $('.total-neto-global').text(totalGlobalNeto.toFixed(2));
-                                }
-
-                                // Inicializar el Total Neto
-                                actualizarTotalNeto();
-
-
+                             
+                              
                                 // Crear tablas secundarias para el conteo de billetes
                                 let subTablesHtml = '';
                                 // Crear tablas secundarias incluyendo la fila de diferencia desde el inicio
@@ -361,7 +293,7 @@ include '../../backend/controller/access/AccessController.php';
                                                         <thead>
                                                             <tr>
                                                                 <th colspan="13" class="text-center">
-                                                                    <h6  style="margin: 10px 0;">${detalle.movil} ${detalle.nombre_preventista} ---- ${detalle.nombre_chofer}</h6>
+                                                                    <h6  style="margin: 10px 0;">${detalle.nombre_local}</h6>
                                                                 </th>
                                                             </tr>
                                                             <tr>
@@ -407,7 +339,7 @@ include '../../backend/controller/access/AccessController.php';
                                     subTablesHtml += billetesHtml;
                                 });
 
-                                $('#tablasSecundarias').html(subTablesHtml);
+                                $('#tablasSecundariasLocales').html(subTablesHtml);
 
                                 // Actualizar dinámicamente la fila de diferencia en las tablas secundarias
                                 function actualizarDiferenciaDinamica() {
@@ -440,7 +372,7 @@ include '../../backend/controller/access/AccessController.php';
                                                 <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
                                                     <thead>
                                                     <th colspan="13" class="text-center">
-                                                        <h6  style="margin: 10px 0;">Total Preventa</h6>
+                                                        <h6  style="margin: 10px 0;">Total Locales</h6>
                                                     </th>
                                                         <tr>
                                                             <th>Denominación</th>
@@ -572,7 +504,7 @@ include '../../backend/controller/access/AccessController.php';
                                                             </tbody>
                                                         </table>`;
 
-                                    $('#resumenPreventaContainer').html(resumenHtml);
+                                    $('#resumenLocalesContainer').html(resumenHtml);
 
 
                                     // Inicializar los cálculos
@@ -761,27 +693,7 @@ include '../../backend/controller/access/AccessController.php';
             });
             </script>
 
-            <script>            // Realiza una solicitud AJAX con jQuery
-                    $.ajax({
-                        type: 'POST',
-                        url: '../../backend/controller/administracion/Rendiciones.php',  // Asegúrate de que la URL sea correcta
-                        data: { action: 'obtenerCierreCajaHoy' },  // El nombre de la acción que estamos enviando
-                        success: function(response) {
-                            // Aquí manejamos la respuesta del servidor
-                            if (response.error) {
-                                console.log('Error: ' + response.mensaje);
-                            } else {
-                                // Si no hay error, mostramos los datos de la respuesta en la consola
-                                console.log('Datos de Cierre de Caja:', response.data);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            // Si ocurre algún error en la solicitud AJAX, lo mostramos en la consola
-                            console.log('Error en la solicitud AJAX:', error);
-                        }
-                    });
-
-            </script>
+           
 
 
 

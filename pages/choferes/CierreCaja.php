@@ -70,6 +70,11 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
+    <style>
+    .table .td {
+        width: 100px;
+    }
+    </style>
 
 
 
@@ -100,12 +105,16 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                 </thead>
                                                 <tbody>
                                                     <tr class="table-light">
-                                                        <td>
-                                                            <i class="bx bx-user"></i> Preventista
+                                                        <td colspan="2">
+                                                            <label for="idUsuarioPreventista"><i class="bx bx-user"></i>
+                                                                Preventista</label>
                                                         </td>
-                                                        <td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
                                                             <select id="idUsuarioPreventista" class="form-control">
-                                                                <option value="" disabled selected>Seleccione un preventista</option>
+                                                                <option value="" disabled selected>Seleccione un
+                                                                    preventista</option>
                                                                 <option value="8">Movil101-Mica</option>
                                                                 <option value="9">Movil102-Gustavo</option>
                                                                 <option value="10">Movil103-Leo</option>
@@ -119,59 +128,127 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-money"></i> Efectivo</td>
-                                                        <td><input type="number" id="total-efectivo"
-                                                                class="form-control" readonly placeholder="0" />
-                                                            <button type="button" class="btn btn-primary"
-                                                                onclick="abrirModalBilletes()"><i
-                                                                    class="fas fa-plus-circle"> $</i></button>
+                                                        <td colspan="2">
+                                                            <label for="total-efectivo"><i class="bx bx-money"></i>
+                                                                Efectivo</label>
                                                         </td>
-                                                        <td></td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-transfer"></i> Transferencias</td>
-                                                        <td><input type="number" id="total-transferencia"
-                                                                class="form-control" placeholder="0" /></td>
+                                                        <td colspan="2">
+                                                            <input type="number" id="total-efectivo"
+                                                                class="form-control" readonly placeholder="0" />
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bxl-mercadopago"></i> Mercado Pago</td>
-                                                        <td><input type="number" id="total-mercadopago"
-                                                                class="form-control" placeholder="0" /></td>
+                                                        <td colspan="2" class="text-end">
+                                                            <button type="button" class="btn btn-primary"
+                                                                onclick="abrirModalBilletes()">
+                                                                <i class="fas fa-plus-circle"> $</i>
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-credit-card"></i> Cheques</td>
-                                                        <td><input type="number" id="total-cheques" class="form-control"
-                                                                placeholder="0" /></td>
+                                                        <td colspan="2">
+                                                            <label for="total-transferencia"><i
+                                                                    class="bx bx-transfer"></i> Transferencias</label>
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-receipt"></i> Fiados</td>
-                                                        <td><input type="number" id="total-fiados" class="form-control"
-                                                                placeholder="0" /></td>
+                                                        <td colspan="2">
+                                                            <input type="number" id="total-transferencia"
+                                                                class="form-control" placeholder="0" />
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-wallet"></i> Gastos</td>
-                                                        <td><input type="number" id="total-gastos" class="form-control"
-                                                                placeholder="0" /></td>
+                                                        <td colspan="2">
+                                                            <label for="total-mercadopago"><i
+                                                                    class="bx bxl-mercadopago"></i> Mercado Pago</label>
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-money-withdraw"></i> Pago Secretario</td>
-                                                        <td><input type="number" id="pago-secretario"
-                                                                class="form-control" placeholder="0" /></td>
+                                                        <td colspan="2">
+                                                            <input type="number" id="total-mercadopago"
+                                                                class="form-control" placeholder="0" />
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-error"></i> MEC Faltante</td>
-                                                        <td><input type="number" id="total-mec-faltante"
-                                                                class="form-control" placeholder="0" /></td>
+                                                        <td colspan="2">
+                                                            <label for="total-cheques"><i class="bx bx-credit-card"></i>
+                                                                Cheques</label>
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-x-circle"></i> Total Rechazos</td>
-                                                        <td><input type="number" id="total-rechazos"
-                                                                class="form-control" placeholder="0" /></td>
+                                                        <td colspan="2">
+                                                            <input type="number" id="total-cheques" class="form-control"
+                                                                placeholder="0" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <label for="total-fiados"><i class="bx bx-receipt"></i>
+                                                                Fiados</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <input type="number" id="total-fiados" class="form-control"
+                                                                placeholder="0" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <label for="total-gastos"><i class="bx bx-wallet"></i>
+                                                                Gastos</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <input type="number" id="total-gastos" class="form-control"
+                                                                placeholder="0" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <label for="pago-secretario"><i
+                                                                    class="bx bx-money-withdraw"></i> Pago
+                                                                Secretario</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <input type="number" id="pago-secretario"
+                                                                class="form-control" placeholder="0" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <label for="total-mec-faltante"><i class="bx bx-error"></i>
+                                                                MEC Faltante</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <input type="number" id="total-mec-faltante"
+                                                                class="form-control" placeholder="0" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <label for="total-rechazos"><i class="bx bx-x-circle"></i>
+                                                                Total Rechazos</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <input type="number" id="total-rechazos"
+                                                                class="form-control" placeholder="0" />
+                                                        </td>
                                                     </tr>
                                                     <input type="hidden" id="total_general" name="total_general" />
                                                     <input type="hidden" id="total_menos_gastos"
                                                         name="total_menos_gastos" />
                                                 </tbody>
+
                                             </table>
                                         </div>
                                         <div class="text-center mt-3">

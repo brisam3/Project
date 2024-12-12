@@ -117,7 +117,71 @@ class DetalleRendicionController {
     
         return $rendiciones;
     }
+
+    // En el controlador (DetalleRendicionController.php)
+    public function obtenerCierreCajaHoy() {
+        $fechaHoy = date('Y-m-d');  // Fecha de hoy en formato YYYY-MM-DD
+
+      
+         $ordenLocales = [ 
+            'Obrero' => 0, 
+            'Liborsi' => 1,
+            'Vial' => 2, 
+            'Central' => 3,
+            'Eva Peron' => 4,
+            'San Pedro' => 5,
+            
+        ];
+
+        $ordenString = '';
+        foreach ($ordenLocales as $nombre => $indice) {
+            if ($ordenString) {
+                $ordenString .= ', ';
+            }
+            $ordenString .= "CASE WHEN u.nombre = '$nombre' THEN $indice ELSE 9999 END";
+        }
+
+
+        $queryCierreCaja = "
+            SELECT 
+                cc.idcierreCaja,
+                cc.idUsuario,
+                u.nombre AS nombre_local,  -- Traemos el nombre del local
+                cc.fecha_cierre,
+                cc.efectivo,
+                cc.mercado_pago,
+                cc.payway,
+                cc.cambios,
+                cc.cuenta_corriente,
+                cc.gastos,
+                cc.billetes_20000,
+                cc.billetes_10000,
+                cc.billetes_2000,
+                cc.billetes_1000,
+                cc.billetes_500,
+                cc.billetes_200,
+                cc.billetes_100,
+                cc.billetes_50,
+                cc.billetes_20,
+                cc.billetes_10,
+                cc.total_general,
+                cc.total_menos_gastos
+            FROM 
+                cierrecaja cc
+            LEFT JOIN 
+                usuarios u ON cc.idUsuario = u.idUsuario  -- Hacemos el JOIN con la tabla 'usuarios' para obtener el nombre del local
+            WHERE 
+                cc.fecha_cierre = ? 
+            ORDER BY
+                $ordenString
+        ";
     
+        $stmt = $this->db->prepare($queryCierreCaja);
+        $stmt->execute([$fechaHoy]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Retorna los registros como un array asociativo
+    }
+    
+
     
 }
 
@@ -138,7 +202,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $detalles = $controller->obtenerRendicionesConVentas(); // Usa la nueva función
                     echo json_encode(['error' => false, 'data' => $detalles]);
                     break;
-                
+
+                case 'obtenerCierreCajaHoy':
+                    $cierresCaja = $controller->obtenerCierreCajaHoy(); // Llama a la nueva función
+                    echo json_encode(['error' => false, 'data' => $cierresCaja]);
+                    break;
+
                 default:
                     throw new Exception("Acción no válida.");
             }
@@ -151,4 +220,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     exit;
 }
-?>
+

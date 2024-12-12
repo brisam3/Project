@@ -53,7 +53,12 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
   <script src="../../assets/vendor/js/template-customizer.js"></script>
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
   <script src="../../assets/js/config.js"></script>
-</head>
+  <style>
+  .table .td {
+    width: 100px;
+  }
+</style>
+
 <body>
   <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
     <div class="layout-container">
