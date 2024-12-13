@@ -64,6 +64,167 @@ include '../../backend/controller/access/AccessController.php';
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
 
+    <style>
+
+
+            #tablaRendiciones {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #e1e5f6; /* color5 como fondo base */
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Estilos para el encabezado */
+            #tablaRendiciones thead th {
+                background-color: #4e5cac; /* color3 para el encabezado, más claro que antes */
+                color: #f9f9f7 !important; /* Cambiado de #e1e5f6 a blanco puro para mayor contraste */
+                font-weight: 600;
+                text-transform: uppercase;
+                padding: 15px;
+                border-bottom: 2px solid #000000; /* color2 para el borde inferior */
+            }
+
+            /* Estilos para las celdas del cuerpo */
+            #tablaRendiciones tbody td {
+                padding: 12px;
+                border-bottom: 1px solid #8f9afa; /* color4 para los bordes de las celdas */
+                transition: background-color 0.3s ease;
+            }
+
+            /* Efecto hover para las filas */
+            #tablaRendiciones tbody tr:hover {
+                background-color: #8f9afa; /* color4 para el hover */
+            }
+
+            /* Estilos para filas alternas */
+            #tablaRendiciones tbody tr:nth-child(even) {
+                background-color: #edf0fc; /* color5 para filas pares */
+                color: #1d274d; /* Añadido color de texto para filas pares */
+            }
+
+            #tablaRendiciones tbody tr:nth-child(odd) {
+                background-color: #f5f7ff; /* Un tono más claro que color5 para filas impares */
+                color: #1d274d; /* Añadido color de texto para filas impares */
+            }
+
+            /* Estilos modernos para los inputs */
+            #tablaRendiciones input[type="number"] {
+                width: 100%;
+                padding: 8px 0;
+                border: none;
+                border-bottom: 2px solid #4e5cac; /* color3 para el borde inferior */
+                border-radius: 0;
+                text-align: right;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                background-color: transparent;
+                color: #140f07; /* color1 para el texto de los inputs */
+            }
+
+            #tablaRendiciones input[type="number"]:focus {
+                outline: none;
+                border-bottom-color: #1d274d; /* color2 para el borde inferior al enfocar */
+                box-shadow: 0 1px 0 0 #1d274d;
+            }
+
+            #tablaRendiciones input[type="number"]:hover {
+                background-color: #e1e5f6; /* color5 para el fondo al hacer hover */
+            }
+
+            /* Estilos para las celdas de totales */
+            #tablaRendiciones .font-weight-bold {
+                font-weight: 600;
+                color: #1d274d; /* color2 para texto en negrita */
+            }
+
+            #tablaRendiciones .total-general {
+                background-color: #1d274d; /* color2 para el fondo del total general */
+                color: #e1e5f6; /* color5 para el texto del total general */
+                font-weight: 700;
+            }
+
+            /* Estilos para el pie de tabla */
+            #tablaRendiciones tfoot td {
+                background-color: #4e5cac; /* color3 para el fondo del pie */
+                color: #e1e5f6; /* color5 para el texto del pie */
+                font-weight: 600;
+                border-top: 2px solid #1d274d; /* color2 para el borde superior */
+                padding: 15px;
+            }
+
+            /* Estilos para columnas específicas */
+            #tablaRendiciones td:first-child,
+            #tablaRendiciones th:first-child {
+                background-color: #8f9afa; /* color4 para la primera columna, más claro */
+                color: #1d274d; /* Cambiado de #140f07 a #1d274d para mayor contraste con el fondo #8f9afa */
+                font-weight: 600;
+            }
+
+            /* Estilos para el título de la tabla */
+            #tablaRendiciones thead th h6 {
+                margin: 0;
+                font-size: 1.2em;
+                color: #e1e5f6; /* color5 para el texto del título */
+                font-weight: 600;
+            }
+
+            /* Estilos para tipos de datos específicos */
+            #tablaRendiciones .cantidad-input {
+                font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada para números */
+                font-size: 13px;
+            }
+
+            #tablaRendiciones .columna-total,
+            #tablaRendiciones .total-row {
+                font-weight: 700;
+                color: #1d274d; /* color2 para totales */
+            }
+
+            #tablaRendiciones .diferencia-column {
+                font-style: italic;
+                color: #4e5cac; /* color3 para la diferencia */
+            }
+
+            /* Estilo para resaltar la fila de total neto */
+            #tablaRendiciones tr.total-neto {
+                background-color: #1d274d; /* color2 para el fondo */
+                color: #ffffff; /* Cambiado de #e1e5f6 a blanco puro para mayor contraste */
+                font-weight: 700;
+                font-size: 1.1em;
+            }
+
+            #tablaRendiciones tr.total-neto td {
+                padding: 15px 12px;
+                border-top: 2px solid #4e5cac; /* color3 para el borde superior */
+                border-bottom: 2px solid #4e5cac; /* color3 para el borde inferior */
+            }
+
+            /* Responsive design */
+            @media (max-width: 768px) {
+                #tablaRendiciones {
+                    font-size: 14px;
+                }
+
+                #tablaRendiciones thead th,
+                #tablaRendiciones tbody td,
+                #tablaRendiciones tfoot td {
+                    padding: 10px;
+                }
+
+                #tablaRendiciones input[type="number"] {
+                    font-size: 12px;
+                    padding: 6px 0;
+                }
+            }
+
+
+    </style>
+
+
 </head>
 
 <body>
@@ -93,7 +254,7 @@ include '../../backend/controller/access/AccessController.php';
                                                         <div class="table-container my-2">
                                                             <!-- Añadí margen inferior para separación -->
                                                             <table id="tablaRendiciones"
-                                                                class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
+                                                                class="datatables-ajax table table-bordered table-hover table-sm table">
                                                                 <!-- Añadí margen inferior a la tabla principal -->
                                                                 <thead id="theadRendiciones">
                                                                     <!-- Encabezados dinámicos -->
