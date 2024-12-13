@@ -243,7 +243,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                     </div>
                                     <div class="card-body">
                                         <div class="text-center">
-                                            <h3 id="contrareembolso"> </h3>
+                                            <h3 id="contrareembolso"></h3>
                                         </div>
                                     </div>
                                     <div class="card-header">
