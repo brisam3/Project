@@ -93,7 +93,7 @@ include '../../backend/controller/access/AccessController.php';
                                                     <div class="card p-3 my-2">
                                                         <div class="table-container my-2">
                                                             <!-- Añadí margen inferior para separación -->
-                                                            <table id="tablaRendiciones"
+                                                            <table id="tablaRendicionesLocales"
                                                                 class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
                                                                 <!-- Añadí margen inferior a la tabla principal -->
                                                                 <thead id="theadRendicionesLocales">
@@ -114,7 +114,7 @@ include '../../backend/controller/access/AccessController.php';
                                                     </div>
 
                                                     <div class="card p-3 my-2">
-                                                        <div id="totalPreventa"></div>
+                                                        <div id="totalLocales"></div>
                                                     </div>
 
                                                     <div class="card p-3 my-2">
@@ -169,9 +169,9 @@ include '../../backend/controller/access/AccessController.php';
 
             <script>
             $(document).ready(function() {
-                buscarDetalleRendiciones();
+                buscarDetalleRendicionesLocales();
 
-                function buscarDetalleRendiciones() {
+                function buscarDetalleRendicionesLocales() {
                     $.ajax({
                         url: '../../backend/controller/administracion/Rendiciones.php',
                         type: 'POST',
@@ -240,25 +240,25 @@ include '../../backend/controller/access/AccessController.php';
                                     const valor = detalle[atributo.campo] || 0;
                                     total += parseFloat(valor);
                                     return atributo.esEditable
-                                        ? `<td><input type="number" class="form-control table-input" value="${valor}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" data-campo="${atributo.campo}" /></td>`
+                                        ? `<td><input type="number" class="form-control table-input-locales" value="${valor}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" data-campo="${atributo.campo}" /></td>`
                                         : `<td>${valor}</td>`;
                                 }).join('')}
-                                <td class="total-column">${total.toFixed(2)}</td>
+                                <td class="total-column-locales">${total.toFixed(2)}</td>
                             </tr>`;
                                 });
 
                                 $('#tbodyRendicionesLocales').html(html);
 
                                 // Actualizar dinámicamente las columnas y el total neto
-                                $(document).on('input', '.table-input', function() {
+                                $(document).on('input', '.table-input-locales', function() {
                                     const $input = $(this);
                                     const campo = $input.data('campo');
                                     const $row = $input.closest('tr');
-                                    const $totalColumn = $row.find('.total-column');
+                                    const $totalColumn = $row.find('.total-column-locales');
 
                                     // Recalcular el total de la fila
                                     let rowSum = 0;
-                                    $row.find('.table-input').each(function() {
+                                    $row.find('.table-input-locales').each(function() {
                                         rowSum += parseFloat($(this).val()) || 0;
                                     });
                                     $totalColumn.text(rowSum.toFixed(2));
@@ -316,20 +316,20 @@ include '../../backend/controller/access/AccessController.php';
                                                             <tr>
                                                                 <td class="font-weight-bold">Cantidad</td>
                                                                 ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
-                                                                    return `<td><input type="number" class="form-control cantidad-input" value="${detalle[`billetes_${denominacion}`] || 0}" data-denominacion="${denominacion}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" /></td>`;
+                                                                    return `<td><input type="number" class="form-control cantidad-input-locales" value="${detalle[`billetes_${denominacion}`] || 0}" data-denominacion="${denominacion}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" /></td>`;
                                                                 }).join('')}
                                                                 <td class="font-weight-bold total-row">${sumas.totalFila.toFixed(2)}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="font-weight-bold">Total</td>
                                                                 ${sumas.totalColumnas.map(total => `<td class="font-weight-bold columna-total">${total.toFixed(2)}</td>`).join('')}
-                                                                <td class="font-weight-bold total-general" style="background-color: #ffe5e5;">${sumas.totalFila.toFixed(2)}</td>
+                                                                <td class="font-weight-bold total-general-locales" style="background-color: #ffe5e5;">${sumas.totalFila.toFixed(2)}</td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
                                                                 <td class="font-weight-bold">Diferencia</td>
-                                                                <td colspan="12" class="font-weight-bold diferencia-column text-center">0.00</td>
+                                                                <td colspan="12" class="font-weight-bold diferencia-column-locales text-center">0.00</td>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -346,14 +346,12 @@ include '../../backend/controller/access/AccessController.php';
                                     $('.sub-table').each(function(index) {
                                         const table = $(this).find('table');
                                         const totalEfectivo = parseFloat(table.find(
-                                            '.total-general').text()) || 0;
-                                        const totalNeto = parseFloat($(
-                                            `#filaTotalNeto td:nth-child(${index + 2})`
-                                        ).text()) || 0;
-                                        const diferencia = totalEfectivo - totalNeto;
+                                            '.total-general-locales').text()) || 0;
+                                        
+                                        const diferencia = totalEfectivo;
 
                                         // Actualizar la fila de diferencia
-                                        table.find('.diferencia-column').text(diferencia
+                                        table.find('.diferencia-column-locales').text(diferencia
                                             .toFixed(2));
                                     });
                                 }
@@ -362,13 +360,13 @@ include '../../backend/controller/access/AccessController.php';
                                 actualizarDiferenciaDinamica();
 
                                 // Recalcular diferencias dinámicamente al modificar valores
-                                $(document).on('input', '.cantidad-input, .table-input',
+                                $(document).on('input', '.cantidad-input-locales, .table-input-locales',
                                     function() {
                                         actualizarDiferenciaDinamica();
                                     });
 
                                 // Crear tabla TOTAL PREVENTA
-                                let totalPreventaHtml = `
+                                let totalLocalesHtml = `
                                                 <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
                                                     <thead>
                                                     <th colspan="13" class="text-center">
@@ -394,19 +392,19 @@ include '../../backend/controller/access/AccessController.php';
                                                         <tr>
                                                             <td class="font-weight-bold">Cantidad</td>
                                                             ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
-                                                                return `<td class="total-cantidad" data-denominacion="${denominacion}">0</td>`;
+                                                                return `<td class="total-cantidad-locales" data-denominacion="${denominacion}">0</td>`;
                                                             }).join('')}
-                                                            <td class="font-weight-bold" id="total-global">0.00</td>
+                                                            <td class="font-weight-bold" id="total-global-locales">0.00</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                                
                                       `;
-                                $('#totalPreventa').html(totalPreventaHtml);
+                                $('#totalLocales').html(totalLocalesHtml);
 
 
                                 // Actualizar dinámicamente las columnas y totales en las tablas secundarias
-                                $(document).on('input', '.cantidad-input', function() {
+                                $(document).on('input', '.cantidad-input-locales', function() {
                                     const table = $(this).closest('table');
                                     let totalFila = 0;
 
@@ -435,14 +433,14 @@ include '../../backend/controller/access/AccessController.php';
                                     });
 
                                     // Actualizar el total general
-                                    table.find('.total-general').text(totalFila.toFixed(2));
+                                    table.find('.total-general-locales').text(totalFila.toFixed(2));
 
                                     // Actualizar TOTAL PREVENTA
-                                    actualizarTotalPreventa();
+                                    actualizarTotalLocales();
                                 });
 
                                 // Función para actualizar la tabla TOTAL PREVENTA
-                                function actualizarTotalPreventa() {
+                                function actualizarTotalLocales() {
                                     const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
                                     ];
@@ -451,26 +449,26 @@ include '../../backend/controller/access/AccessController.php';
                                     denominaciones.forEach(denominacion => {
                                         let totalCantidad = 0;
 
-                                        $('.cantidad-input[data-denominacion="' +
+                                        $('.cantidad-input-locales[data-denominacion="' +
                                             denominacion + '"]').each(function() {
                                             totalCantidad += parseFloat($(this)
                                                 .val()) || 0;
                                         });
 
-                                        $(`.total-cantidad[data-denominacion="${denominacion}"]`)
+                                        $(`.total-cantidad-locales[data-denominacion="${denominacion}"]`)
                                             .text(totalCantidad);
                                         totalGlobal += totalCantidad * denominacion;
                                     });
 
-                                    $('#total-global').text(totalGlobal.toFixed(2));
+                                    $('#total-global-locales').text(totalGlobal.toFixed(2));
                                 }
 
                                 // Inicializar el TOTAL PREVENTA
-                                actualizarTotalPreventa();
+                                actualizarTotalLocales();
 
                                 // Crear la nueva tabla dinámica al final
-                                function crearTablaResumen() {
-                                    let resumenHtml = `
+                                function crearTablaResumenLocales() {
+                                    let resumenHtmlLocales = `
                                      <div class="card">
                                             <div class="sub-table my-2">
                                                 <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
@@ -487,46 +485,46 @@ include '../../backend/controller/access/AccessController.php';
                                                             <tbody>
                                                                 <tr>
                                                                     <td class="font-weight-bold">TOTAL EFECTIVO</td>
-                                                                    <td id="totalEfectivoResumen">0.00</td>
+                                                                    <td id="totalEfectivoResumenLocales">0.00</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="font-weight-bold">TOTAL MP</td>
-                                                                    <td id="totalMpResumen">0.00</td>
+                                                                    <td id="totalMpResumenLocales">0.00</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="font-weight-bold">TOTAL TRANSFERENCIAS</td>
-                                                                    <td id="totalTransferenciasResumen">0.00</td>
+                                                                    <td id="totalTransferenciasResumenLocales">0.00</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="font-weight-bold">TOTAL GENERAL PREVENTA</td>
-                                                                    <td id="totalGeneralResumen" class="font-weight-bold text-primary">0.00</td>
+                                                                    <td id="totalGeneralResumenLocales" class="font-weight-bold text-primary">0.00</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>`;
 
-                                    $('#resumenLocalesContainer').html(resumenHtml);
+                                    $('#resumenLocalesContainer').html(resumenHtmlLocales);
 
 
                                     // Inicializar los cálculos
-                                    actualizarTablaResumen();
+                                    actualizarTablaResumenLocales();
                                 }
 
                                 // Función para actualizar los valores dinámicos de la nueva tabla
-                                function actualizarTablaResumen() {
+                                function actualizarTablaResumenLocales() {
                                     // Obtener Total Efectivo desde la tabla "Total Preventa"
-                                    const totalEfectivo = parseFloat($('#total-global').text()) ||
+                                    const totalEfectivo = parseFloat($('#total-global-locales').text()) ||
                                     0;
 
                                     // Obtener Total MP desde la tabla principal
-                                    const totalMpIndex = $('#theadRendiciones th').index($(
-                                        '#theadRendiciones th:contains("Mercado Pago")'));
+                                    const totalMpIndex = $('#theadRendicionesLocales th').index($(
+                                        '#theadRendicionesLocales th:contains("Mercado Pago")'));
                                     const totalMp = parseFloat($(
-                                            `#tbodyRendiciones tr:nth-child(4) td:last-child`)
+                                            `#tbodyRendicionesLocales tr:nth-child(4) td:last-child`)
                                         .text()) || 0; // Fila de "Mercado Pago"
 
                                     // Obtener Total Transferencias desde la tabla principal
                                     const totalTransferencias = parseFloat($(
-                                            `#tbodyRendiciones tr:nth-child(5) td:last-child`)
+                                            `#tbodyRendicionesLocales tr:nth-child(5) td:last-child`)
                                         .text()) || 0; // Fila de "Transferencias"
 
                                     // Calcular Total General Preventa
@@ -534,115 +532,27 @@ include '../../backend/controller/access/AccessController.php';
                                         totalTransferencias;
 
                                     // Actualizar los valores en la nueva tabla
-                                    $('#totalEfectivoResumen').text(totalEfectivo.toFixed(2));
-                                    $('#totalMpResumen').text(totalMp.toFixed(2));
-                                    $('#totalTransferenciasResumen').text(totalTransferencias
+                                    $('#totalEfectivoResumenLocales').text(totalEfectivo.toFixed(2));
+                                    $('#totalMpResumenLocales').text(totalMp.toFixed(2));
+                                    $('#totalTransferenciasResumenLocales').text(totalTransferencias
                                         .toFixed(2));
-                                    $('#totalGeneralResumen').text(totalGeneral.toFixed(2));
+                                    $('#totalGeneralResumenLocales').text(totalGeneral.toFixed(2));
                                 }
 
                                 // Inicializar la nueva tabla y los cálculos
-                                crearTablaResumen();
+                                crearTablaResumenLocales();
 
                                 // Escuchar cambios en las tablas relacionadas para actualizar dinámicamente la nueva tabla
-                                $(document).on('input', '.cantidad-input, .table-input',
+                                $(document).on('input', '.cantidad-input-locales, .table-input-locales',
                             function() {
-                                    actualizarTablaResumen();
+                                    actualizarTablaResumenLocales();
                                 });
 
-                                // Crear la tabla "LIBRE" al inicializar las tablas secundarias
-                                function agregarTablaLibre() {
-                                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
-                                        200, 100, 50, 20, 10
-                                    ];
-                                    let libreHtml = `
-                                            <div class="card">
-                                                <div class="sub-table my-2">
-                                                    <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                        <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th colspan="13" class="text-center">
-                                                                        <h6 style="margin: 10px 0;">LIBRE</h6>
-                                                                    </th>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th class="text-center">Denominación</th>
-                                                                    ${denominaciones.map(denominacion => `<th class="text-center">${denominacion}</th>`).join('')}
-                                                                    <th class="text-center">Total</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="font-weight-bold">Cantidad</td>
-                                                                    ${denominaciones.map(denominacion => `
-                                                                        <td>
-                                                                            <input type="number" class="form-control cantidad-libre" value="0" 
-                                                                                data-denominacion="${denominacion}" 
-                                                                                style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;">
-                                                                        </td>`).join('')}
-                                                                    <td class="font-weight-bold total-libre" style="background-color: #ffe5e5;">0.00</td>
-                                                                </tr>
-                                                            </tbody>
-                                                            <tfoot>
-                                                                <tr>
-                                                                    <td class="font-weight-bold">Diferencia</td>
-                                                                    <td colspan="12" class="font-weight-bold diferencia-libre text-center">0.00</td>
-                                                                </tr>
-                                                            </tfoot>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `;
+                             
+                           
+                              
 
-                                    // Agregar la tabla al contenedor
-                                    $('#tablasSecundarias').append(libreHtml);
-
-                                    // Actualizar los cálculos al cambiar valores en la tabla LIBRE
-                                    $(document).on('input', '.cantidad-libre', function() {
-                                        let totalFila = 0;
-
-                                        $('.cantidad-libre').each(function() {
-                                            const denominacion = parseFloat($(this)
-                                                .data('denominacion'));
-                                            const cantidad = parseFloat($(this)
-                                            .val()) || 0;
-                                            totalFila += denominacion * cantidad;
-                                        });
-
-                                        // Actualizar el total de la tabla "LIBRE"
-                                        $('.total-libre').text(totalFila.toFixed(2));
-
-                                        // Actualizar totales y diferencias dinámicas
-                                        actualizarTotalNeto();
-                                        actualizarTotalPreventa();
-                                        actualizarTablaResumen();
-                                    });
-                                }
-
-                                // Agregar la columna "LIBRE" en la tabla principal
-                                function agregarColumnaLibre() {
-                                    $('#theadRendiciones tr:first-child').append('<th>LIBRE</th>');
-                                    $('#theadRendiciones tr:nth-child(2)').append('<th></th>');
-
-                                    $('#tbodyRendiciones tr').each(function() {
-                                        const $row = $(this);
-                                        const esEditable = $row.find('td input').length >
-                                        0; // Verificar si la fila es editable
-
-                                        $row.append(
-                                            esEditable ?
-                                            `<td><input type="number" class="form-control table-input" value="0" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" data-campo="libre" /></td>` :
-                                            `<td>0.00</td>`
-                                        );
-                                    });
-
-                                    // Agregar columna "LIBRE" en la fila "Total Neto"
-                                    $('#filaTotalNeto').append('<td class="neto-column">0.00</td>');
-                                }
-
-                                function actualizarTotalPreventa() {
+                                function actualizarTotalLocales() {
                                     const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
                                     ];
@@ -652,36 +562,36 @@ include '../../backend/controller/access/AccessController.php';
                                         let totalCantidad = 0;
 
                                         // Incluir todas las cantidades, incluyendo la tabla LIBRE
-                                        $(`.cantidad-input[data-denominacion="${denominacion}"], .cantidad-libre[data-denominacion="${denominacion}"]`)
+                                        $(`.cantidad-input-locales[data-denominacion="${denominacion}"], .cantidad-libre[data-denominacion="${denominacion}"]`)
                                             .each(function() {
                                                 totalCantidad += parseFloat($(this)
                                                 .val()) || 0;
                                             });
 
-                                        $(`.total-cantidad[data-denominacion="${denominacion}"]`)
+                                        $(`.total-cantidad-locales[data-denominacion="${denominacion}"]`)
                                             .text(totalCantidad);
                                         totalGlobal += totalCantidad * denominacion;
                                     });
 
-                                    $('#total-global').text(totalGlobal.toFixed(2));
+                                    $('#total-global-locales').text(totalGlobal.toFixed(2));
                                 }
 
                                 // Inicializar la tabla "LIBRE" y la columna en la tabla principal
                                 $(document).ready(function() {
                                     agregarTablaLibre();
 
-                                    actualizarTotalPreventa();
+                                    actualizarTotalLocales();
 
                                 });
 
 
 
                             } else {
-                                $('#theadRendiciones').html(
+                                $('#theadRendicionesLocales').html(
                                     '<tr><th>No se encontraron detalles</th></tr>');
-                                $('#tbodyRendiciones').html('');
-                                $('#tablasSecundarias').html('');
-                                $('#totalPreventa').html('');
+                                $('#tbodyRendicionesLocales').html('');
+                                $('#tablasSecundariasLocales').html('');
+                                $('#totalLocales').html('');
                             }
                         },
                         error: function(xhr, status, error) {
