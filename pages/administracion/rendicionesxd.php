@@ -71,7 +71,7 @@ include '../../backend/controller/access/AccessController.php';
                 width: 100%;
                 border-collapse: separate;
                 border-spacing: 0;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              
                 background-color: #e1e5f6; /* color5 como fondo base */
                 border-radius: 8px;
                 overflow: hidden;
@@ -157,8 +157,7 @@ include '../../backend/controller/access/AccessController.php';
             }
 
             /* Estilos para columnas específicas */
-            #tablaRendiciones td:first-child,
-            #tablaRendiciones th:first-child {
+            #tablaRendiciones td:first-child{
                 background-color: #8f9afa; /* color4 para la primera columna, más claro */
                 color: #1d274d; /* Cambiado de #140f07 a #1d274d para mayor contraste con el fondo #8f9afa */
                 font-weight: 600;

@@ -63,7 +63,7 @@ include '../../backend/controller/access/AccessController.php';
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
-   
+
 
 </head>
 
@@ -117,9 +117,13 @@ include '../../backend/controller/access/AccessController.php';
                                                         <div id="totalLocales"></div>
                                                     </div>
 
+                                                
+
                                                     <div class="card p-3 my-2">
-                                                        <div id="resumenLocalesContainer"></div>
+                                                        <div id="resumenGeneralContainer" class="my-4"></div>
                                                     </div>
+
+
 
                                                 </div>
                                             </div>
@@ -184,12 +188,12 @@ include '../../backend/controller/access/AccessController.php';
                                 console.error('Error del backend:', response.mensaje);
                                 alert(
                                     'Ocurrió un error al obtener los detalles de las rendiciones.'
-                                    );
+                                );
                                 return;
                             }
 
                             const data = response.data;
-                           
+
 
                             if (data && data.length > 0) {
                                 // Crear encabezados de la tabla principal
@@ -203,8 +207,7 @@ include '../../backend/controller/access/AccessController.php';
                                 $('#theadRendicionesLocales').html(headers);
 
                                 // Crear filas para cada atributo
-                                const atributos = [
-                                    {
+                                const atributos = [{
                                         nombre: 'Payway',
                                         campo: 'payway',
                                         esEditable: true
@@ -224,11 +227,7 @@ include '../../backend/controller/access/AccessController.php';
                                         campo: 'cuenta_corriente',
                                         esEditable: true
                                     },
-                                    {
-                                        nombre: 'Cambios',
-                                        campo: 'cambios',
-                                        esEditable: true
-                                    },
+
                                 ];
 
                                 let html = '';
@@ -262,12 +261,10 @@ include '../../backend/controller/access/AccessController.php';
                                         rowSum += parseFloat($(this).val()) || 0;
                                     });
                                     $totalColumn.text(rowSum.toFixed(2));
-
-                                    
                                 });
 
-                             
-                              
+
+
                                 // Crear tablas secundarias para el conteo de billetes
                                 let subTablesHtml = '';
                                 // Crear tablas secundarias incluyendo la fila de diferencia desde el inicio
@@ -347,11 +344,12 @@ include '../../backend/controller/access/AccessController.php';
                                         const table = $(this).find('table');
                                         const totalEfectivo = parseFloat(table.find(
                                             '.total-general-locales').text()) || 0;
-                                        
+
                                         const diferencia = totalEfectivo;
 
                                         // Actualizar la fila de diferencia
-                                        table.find('.diferencia-column-locales').text(diferencia
+                                        table.find('.diferencia-column-locales').text(
+                                            diferencia
                                             .toFixed(2));
                                     });
                                 }
@@ -360,7 +358,8 @@ include '../../backend/controller/access/AccessController.php';
                                 actualizarDiferenciaDinamica();
 
                                 // Recalcular diferencias dinámicamente al modificar valores
-                                $(document).on('input', '.cantidad-input-locales, .table-input-locales',
+                                $(document).on('input',
+                                    '.cantidad-input-locales, .table-input-locales',
                                     function() {
                                         actualizarDiferenciaDinamica();
                                     });
@@ -433,7 +432,8 @@ include '../../backend/controller/access/AccessController.php';
                                     });
 
                                     // Actualizar el total general
-                                    table.find('.total-general-locales').text(totalFila.toFixed(2));
+                                    table.find('.total-general-locales').text(totalFila
+                                        .toFixed(2));
 
                                     // Actualizar TOTAL PREVENTA
                                     actualizarTotalLocales();
@@ -466,92 +466,6 @@ include '../../backend/controller/access/AccessController.php';
                                 // Inicializar el TOTAL PREVENTA
                                 actualizarTotalLocales();
 
-                                // Crear la nueva tabla dinámica al final
-                                function crearTablaResumenLocales() {
-                                    let resumenHtmlLocales = `
-                                     <div class="card">
-                                            <div class="sub-table my-2">
-                                                <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                    <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped" id="tablaResumenPreventa">
-                                                            <thead>
-                                                            <th colspan="13" class="text-center">
-                                                                <h6  style="margin: 10px 0;">Total General</h6>
-                                                            </th>
-                                                                <tr>
-                                                                    <th>Descripción</th>
-                                                                    <th>Total</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td class="font-weight-bold">TOTAL EFECTIVO</td>
-                                                                    <td id="totalEfectivoResumenLocales">0.00</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="font-weight-bold">TOTAL MP</td>
-                                                                    <td id="totalMpResumenLocales">0.00</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="font-weight-bold">TOTAL TRANSFERENCIAS</td>
-                                                                    <td id="totalTransferenciasResumenLocales">0.00</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td class="font-weight-bold">TOTAL GENERAL PREVENTA</td>
-                                                                    <td id="totalGeneralResumenLocales" class="font-weight-bold text-primary">0.00</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>`;
-
-                                    $('#resumenLocalesContainer').html(resumenHtmlLocales);
-
-
-                                    // Inicializar los cálculos
-                                    actualizarTablaResumenLocales();
-                                }
-
-                                // Función para actualizar los valores dinámicos de la nueva tabla
-                                function actualizarTablaResumenLocales() {
-                                    // Obtener Total Efectivo desde la tabla "Total Preventa"
-                                    const totalEfectivo = parseFloat($('#total-global-locales').text()) ||
-                                    0;
-
-                                    // Obtener Total MP desde la tabla principal
-                                    const totalMpIndex = $('#theadRendicionesLocales th').index($(
-                                        '#theadRendicionesLocales th:contains("Mercado Pago")'));
-                                    const totalMp = parseFloat($(
-                                            `#tbodyRendicionesLocales tr:nth-child(4) td:last-child`)
-                                        .text()) || 0; // Fila de "Mercado Pago"
-
-                                    // Obtener Total Transferencias desde la tabla principal
-                                    const totalTransferencias = parseFloat($(
-                                            `#tbodyRendicionesLocales tr:nth-child(5) td:last-child`)
-                                        .text()) || 0; // Fila de "Transferencias"
-
-                                    // Calcular Total General Preventa
-                                    const totalGeneral = totalEfectivo + totalMp +
-                                        totalTransferencias;
-
-                                    // Actualizar los valores en la nueva tabla
-                                    $('#totalEfectivoResumenLocales').text(totalEfectivo.toFixed(2));
-                                    $('#totalMpResumenLocales').text(totalMp.toFixed(2));
-                                    $('#totalTransferenciasResumenLocales').text(totalTransferencias
-                                        .toFixed(2));
-                                    $('#totalGeneralResumenLocales').text(totalGeneral.toFixed(2));
-                                }
-
-                                // Inicializar la nueva tabla y los cálculos
-                                crearTablaResumenLocales();
-
-                                // Escuchar cambios en las tablas relacionadas para actualizar dinámicamente la nueva tabla
-                                $(document).on('input', '.cantidad-input-locales, .table-input-locales',
-                            function() {
-                                    actualizarTablaResumenLocales();
-                                });
-
-                             
-                           
-                              
-
                                 function actualizarTotalLocales() {
                                     const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
@@ -565,7 +479,7 @@ include '../../backend/controller/access/AccessController.php';
                                         $(`.cantidad-input-locales[data-denominacion="${denominacion}"], .cantidad-libre[data-denominacion="${denominacion}"]`)
                                             .each(function() {
                                                 totalCantidad += parseFloat($(this)
-                                                .val()) || 0;
+                                                    .val()) || 0;
                                             });
 
                                         $(`.total-cantidad-locales[data-denominacion="${denominacion}"]`)
@@ -585,13 +499,104 @@ include '../../backend/controller/access/AccessController.php';
                                 });
 
 
+                                function crearTablaResumenGeneral() {
+                                    let resumenHtmlGeneral = `
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Descripción</th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Total Efectivo</td>
+                                                                <td id="totalEfectivoGeneral">0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Total Tarjetas</td>
+                                                                <td id="totalTarjetasGeneral">0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Total Gastos</td>
+                                                                <td id="totalGastosGeneral">0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Diferencia</td>
+                                                                <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>`;
+                                    $('#resumenGeneralContainer').html(resumenHtmlGeneral);
+                                }
+
+                                function actualizarTablaResumenGeneral() {
+                                    // Total Efectivo desde la tabla "Total Locales"
+                                    const totalEfectivo = parseFloat($('#total-global-locales')
+                                        .text()) || 0;
+
+                                    // Total Tarjetas (suma de Payway y Mercado Pago)
+                                    const totalPayway = parseFloat($(
+                                        '#tbodyRendicionesLocales tr:nth-child(1) .total-column-locales'
+                                    ).text()) || 0;
+                                    const totalMercadoPago = parseFloat($(
+                                        '#tbodyRendicionesLocales tr:nth-child(2) .total-column-locales'
+                                    ).text()) || 0;
+                                    const totalTarjetas = totalPayway + totalMercadoPago;
+
+                                    // Total Gastos (suma de Gastos y Cuenta Corriente)
+                                    const totalGastos =
+                                        (parseFloat($(
+                                            '#tbodyRendicionesLocales tr:nth-child(3) .total-column-locales'
+                                        ).text()) || 0) +
+                                        (parseFloat($(
+                                            '#tbodyRendicionesLocales tr:nth-child(4) .total-column-locales'
+                                        ).text()) || 0);
+
+                                    // Diferencia: Efectivo + Tarjetas - Gastos
+                                    const diferencia = totalEfectivo + totalTarjetas - totalGastos;
+
+                                    // Actualizar valores en la nueva tabla de resumen
+                                    $('#totalEfectivoGeneral').text(totalEfectivo.toFixed(2));
+                                    $('#totalTarjetasGeneral').text(totalTarjetas.toFixed(2));
+                                    $('#totalGastosGeneral').text(totalGastos.toFixed(2));
+                                    $('#diferenciaTotalGeneral').text(diferencia.toFixed(2));
+                                }
+                                $(document).ready(function() {
+                                    buscarDetalleRendicionesLocales();
+
+                                    function buscarDetalleRendicionesLocales() {
+                                        // Tu código existente para obtener los datos...
+
+                                        // Dentro del success de tu AJAX, después de construir las tablas:
+                                        crearTablaResumenGeneral
+                                            (); // Crear la nueva tabla de resumen
+
+                                        // Actualizar valores dinámicamente en tiempo real
+                                        $(document).on('input',
+                                            '.table-input-locales, .cantidad-input-locales',
+                                            function() {
+                                                actualizarTablaResumenGeneral();
+                                            });
+
+                                        actualizarTablaResumenGeneral
+                                            (); // Inicializar con valores actuales
+                                    }
+                                });
+
+                                        
+
 
                             } else {
                                 $('#theadRendicionesLocales').html(
-                                    '<tr><th>No se encontraron detalles</th></tr>');
+                                    '<tr><th>No se encontraron detalles</th></tr>'
+                                );
                                 $('#tbodyRendicionesLocales').html('');
-                                $('#tablasSecundariasLocales').html('');
-                                $('#totalLocales').html('');
+
+                                // Ocultar los divs adicionales
+                                $('#tablasSecundariasLocales').closest('.card').hide();
+                                $('#totalLocales').closest('.card').hide();
+                                $('#resumenLocalesContainer').closest('.card').hide();
                             }
                         },
                         error: function(xhr, status, error) {
@@ -603,7 +608,7 @@ include '../../backend/controller/access/AccessController.php';
             });
             </script>
 
-           
+
 
 
 
