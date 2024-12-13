@@ -70,9 +70,52 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
+    <style>
+    table {
+        width: 100%;
+        border-collapse: collapse; /* Elimina espacios entre bordes */
+        table-layout: auto; /* Permite que las columnas se ajusten automáticamente */
+    }
+
+    thead th, tbody td {
+        padding: 8px; /* Reduce el padding */
+        text-align: left;
+        font-size: 14px; /* Tamaño de fuente equilibrado */
+        word-wrap: break-word; /* Evita que el contenido salga de la celda */
+    }
+
+    tbody tr td:first-child {
+        width: 35%; /* Ajusta el ancho de la primera columna */
+    }
+
+    tbody tr td {
+        vertical-align: middle; /* Alineación vertical del contenido */
+    }
+
+    .form-control {
+        width: 100%; /* Ocupa el 100% del espacio disponible */
+        font-size: 14px; /* Tamaño del texto dentro del input */
+        padding: 6px; /* Espaciado interno reducido */
+        box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+    }
+
+    .btn {
+        font-size: 14px; /* Tamaño del texto de los botones */
+        padding: 6px 10px; /* Reduce el tamaño de los botones */
+    }
+
+    tbody tr {
+        height: auto; /* Permite que la altura se ajuste al contenido */
+    }
+
+    tbody tr.table-light {
+        background-color: #f9f9f9; /* Fondo claro para filas destacadas */
+    }
+</style>
 
 
 
+        
 </head>
 
 <body>
@@ -126,7 +169,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                                 onclick="abrirModalBilletes()"><i
                                                                     class="fas fa-plus-circle"> $</i></button>
                                                         </td>
-                                                        <td></td>
+                                                        
                                                     </tr>
                                                     <tr>
                                                         <td><i class="bx bx-transfer"></i> Transferencias</td>
