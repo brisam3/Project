@@ -205,7 +205,7 @@ include '../../backend/controller/access/AccessController.php';
     }
 
     #tablasecundaria thead th {
-        background-color: #4e5cac;
+        background-color:rgb(81, 88, 128);
         color: #f9f9f7 !important;
         font-weight: 600;
         text-transform: uppercase;
