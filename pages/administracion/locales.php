@@ -117,7 +117,7 @@ include '../../backend/controller/access/AccessController.php';
                                                         <div id="totalLocales"></div>
                                                     </div>
 
-                                                
+
 
                                                     <div class="card p-3 my-2">
                                                         <div id="resumenGeneralContainer"></div>
@@ -501,34 +501,57 @@ include '../../backend/controller/access/AccessController.php';
 
                                 function crearTablaResumenGeneral() {
                                     let resumenHtmlGeneral = `
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Descripción</th>
-                                                                <th>Total</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>Total Efectivo</td>
-                                                                <td id="totalEfectivoGeneral">0.00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Total Tarjetas</td>
-                                                                <td id="totalTarjetasGeneral">0.00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Total Gastos</td>
-                                                                <td id="totalGastosGeneral">0.00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Diferencia</td>
-                                                                <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>`;
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Efectivo</td>
+                                    <td id="totalEfectivoGeneral">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Tarjetas</td>
+                                    <td id="totalTarjetasGeneral">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Gastos</td>
+                                    <td id="totalGastosGeneral">0.00</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td><strong>Total</strong></td>
+                                    <td id="totalSumGeneral" class="font-weight-bold text-success">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Sistema</td>
+                                    <td>
+                                        <input type="number" value="0.00" class="form-control table-input-locales" 
+                                        id="totalSistemaInput" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Diferencia Sistema</strong></td>
+                                    <td id="diferenciaSistemaGeneral" class="font-weight-bold text-warning">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Diferencia</td>
+                                    <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Total General Locales</strong></td>
+                                    <td id="totalGeneralLocales" class="font-weight-bold text-info">0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>`;
                                     $('#resumenGeneralContainer').html(resumenHtmlGeneral);
                                 }
+
+
 
                                 function actualizarTablaResumenGeneral() {
                                     // Total Efectivo desde la tabla "Total Locales"
@@ -538,30 +561,49 @@ include '../../backend/controller/access/AccessController.php';
                                     // Total Tarjetas (suma de Payway y Mercado Pago)
                                     const totalPayway = parseFloat($(
                                         '#tbodyRendicionesLocales tr:nth-child(1) .total-column-locales'
-                                    ).text()) || 0;
+                                        ).text()) || 0;
                                     const totalMercadoPago = parseFloat($(
                                         '#tbodyRendicionesLocales tr:nth-child(2) .total-column-locales'
-                                    ).text()) || 0;
+                                        ).text()) || 0;
                                     const totalTarjetas = totalPayway + totalMercadoPago;
 
                                     // Total Gastos (suma de Gastos y Cuenta Corriente)
                                     const totalGastos =
                                         (parseFloat($(
                                             '#tbodyRendicionesLocales tr:nth-child(3) .total-column-locales'
-                                        ).text()) || 0) +
+                                            ).text()) || 0) +
                                         (parseFloat($(
                                             '#tbodyRendicionesLocales tr:nth-child(4) .total-column-locales'
-                                        ).text()) || 0);
+                                            ).text()) || 0);
 
-                                    // Diferencia: Efectivo + Tarjetas - Gastos
-                                    const diferencia = totalEfectivo + totalTarjetas - totalGastos;
+                                    // Calcular Total General Locales (Efectivo + Tarjetas)
+                                    const totalGeneralLocales = totalEfectivo + totalTarjetas;
 
-                                    // Actualizar valores en la nueva tabla de resumen
+                                    // Calcular Total (Efectivo + Tarjetas - Gastos)
+                                    const total = totalGeneralLocales - totalGastos;
+
+                                    // Obtener Total Sistema desde el input
+                                    const totalSistema = parseFloat($('#totalSistemaInput')
+                                    .val()) || 0;
+
+                                    // Calcular Diferencia Sistema: Total - Total Sistema
+                                    const diferenciaSistema = total - totalSistema;
+
+                                    // Actualizar los valores en la tabla
                                     $('#totalEfectivoGeneral').text(totalEfectivo.toFixed(2));
                                     $('#totalTarjetasGeneral').text(totalTarjetas.toFixed(2));
+                                    $('#totalGeneralLocales').text(totalGeneralLocales.toFixed(2));
                                     $('#totalGastosGeneral').text(totalGastos.toFixed(2));
+                                    $('#totalSumGeneral').text(total.toFixed(2));
+                                    $('#diferenciaSistemaGeneral').text(diferenciaSistema.toFixed(
+                                        2));
+
+                                    // Diferencia General (Efectivo + Tarjetas - Gastos)
+                                    const diferencia = totalTarjetas + totalEfectivo - totalGastos;
                                     $('#diferenciaTotalGeneral').text(diferencia.toFixed(2));
                                 }
+
+
                                 $(document).ready(function() {
                                     buscarDetalleRendicionesLocales();
 
@@ -570,21 +612,28 @@ include '../../backend/controller/access/AccessController.php';
 
                                         // Dentro del success de tu AJAX, después de construir las tablas:
                                         crearTablaResumenGeneral
-                                            (); // Crear la nueva tabla de resumen
+                                            (); // Crear la tabla de resumen
+                                        actualizarTablaResumenGeneral
+                                            (); // Inicializar los valores actuales
 
-                                        // Actualizar valores dinámicamente en tiempo real
+                                        // Escuchar eventos dinámicos en tablas locales
                                         $(document).on('input',
                                             '.table-input-locales, .cantidad-input-locales',
                                             function() {
                                                 actualizarTablaResumenGeneral();
                                             });
 
-                                        actualizarTablaResumenGeneral
-                                            (); // Inicializar con valores actuales
+                                        // Escuchar cambios en el campo "Total Sistema"
+                                        $(document).on('input', '#totalSistemaInput',
+                                            function() {
+                                                actualizarTablaResumenGeneral();
+                                            });
                                     }
                                 });
 
-                                        
+
+
+
 
 
                             } else {

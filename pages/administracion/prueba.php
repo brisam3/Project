@@ -208,6 +208,22 @@ include '../../backend/controller/access/AccessController.php';
 
                                     <div class="tab-pane fade" id="banco" role="tabpanel">
                                         <div class="row">
+                                            <div class="container-xxl flex-grow-1 container-p-y">
+                                                <div class="table-responsive-xl mb-6 mb-lg-0">
+                                                    <div class="dataTables_wrapper no-footer"
+                                                        style="width: 100% !important;">
+                                                        <div class="col-md-12 my-2">
+                                                         
+                                                                <div class="table-container my-2">
+                                                                    <div id="totalBanco">
+                                                                        <!-- Aquí se generará la tabla dinámica -->
+                                                                    </div>
+                                                                </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -277,6 +293,8 @@ include '../../backend/controller/access/AccessController.php';
                             const data = response.data;
 
                             if (data && data.length > 0) {
+                                actualizarTablaBanco
+                                    (); // Llamar después de cargar datos de Preventa
                                 // Crear encabezados de la tabla principal
                                 let headers = `
                             <tr>
@@ -717,6 +735,7 @@ include '../../backend/controller/access/AccessController.php';
                                 $(document).on('input', '.cantidad-input, .table-input',
                                     function() {
                                         actualizarTablaResumen();
+                                        actualizarTablaBanco(); // Actualizar BANCO
                                     });
 
                                 // Crear la tabla "LIBRE" al inicializar las tablas secundarias
@@ -788,6 +807,7 @@ include '../../backend/controller/access/AccessController.php';
                                         // Actualizar totales y diferencias dinámicas
                                         actualizarTotalNeto();
                                         actualizarTotalPreventa();
+                                        actualizarTablaBanco(); // Actualizar BANCO
                                         actualizarTablaResumen();
                                     });
                                 }
@@ -906,6 +926,7 @@ include '../../backend/controller/access/AccessController.php';
 
 
                             if (data && data.length > 0) {
+                                actualizarTablaBanco(); // Llamar después de cargar datos de Locales
                                 // Crear encabezados de la tabla principal
                                 let headers = `
                            
@@ -1147,6 +1168,7 @@ include '../../backend/controller/access/AccessController.php';
 
                                     // Actualizar TOTAL PREVENTA
                                     actualizarTotalLocales();
+                                    actualizarTablaBanco(); // Actualizar BANCO
                                 });
 
                                 // Función para actualizar la tabla TOTAL PREVENTA
@@ -1211,34 +1233,57 @@ include '../../backend/controller/access/AccessController.php';
 
                                 function crearTablaResumenGeneral() {
                                     let resumenHtmlGeneral = `
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Descripción</th>
-                                                                <th>Total</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>Total Efectivo</td>
-                                                                <td id="totalEfectivoGeneral">0.00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Total Tarjetas</td>
-                                                                <td id="totalTarjetasGeneral">0.00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Total Gastos</td>
-                                                                <td id="totalGastosGeneral">0.00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Diferencia</td>
-                                                                <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>`;
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Efectivo</td>
+                                    <td id="totalEfectivoGeneral">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Tarjetas</td>
+                                    <td id="totalTarjetasGeneral">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Gastos</td>
+                                    <td id="totalGastosGeneral">0.00</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td><strong>Total</strong></td>
+                                    <td id="totalSumGeneral" class="font-weight-bold text-success">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Sistema</td>
+                                    <td>
+                                        <input type="number" value="0.00" class="form-control table-input-locales" 
+                                        id="totalSistemaInput" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Diferencia Sistema</strong></td>
+                                    <td id="diferenciaSistemaGeneral" class="font-weight-bold text-warning">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Diferencia</td>
+                                    <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Total General Locales</strong></td>
+                                    <td id="totalGeneralLocales" class="font-weight-bold text-info">0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>`;
                                     $('#resumenGeneralContainer').html(resumenHtmlGeneral);
                                 }
+
+
 
                                 function actualizarTablaResumenGeneral() {
                                     // Total Efectivo desde la tabla "Total Locales"
@@ -1263,36 +1308,65 @@ include '../../backend/controller/access/AccessController.php';
                                             '#tbodyRendicionesLocales tr:nth-child(4) .total-column-locales'
                                         ).text()) || 0);
 
-                                    // Diferencia: Efectivo + Tarjetas - Gastos
-                                    const diferencia = totalEfectivo + totalTarjetas - totalGastos;
+                                    // Calcular Total General Locales (Efectivo + Tarjetas)
+                                    const totalGeneralLocales = totalEfectivo + totalTarjetas;
 
-                                    // Actualizar valores en la nueva tabla de resumen
+                                    // Calcular Total (Efectivo + Tarjetas - Gastos)
+                                    const total = totalGeneralLocales - totalGastos;
+
+                                    // Obtener Total Sistema desde el input
+                                    const totalSistema = parseFloat($('#totalSistemaInput')
+                                        .val()) || 0;
+
+                                    // Calcular Diferencia Sistema: Total - Total Sistema
+                                    const diferenciaSistema = total - totalSistema;
+
+                                    // Actualizar los valores en la tabla
                                     $('#totalEfectivoGeneral').text(totalEfectivo.toFixed(2));
                                     $('#totalTarjetasGeneral').text(totalTarjetas.toFixed(2));
+                                    $('#totalGeneralLocales').text(totalGeneralLocales.toFixed(2));
                                     $('#totalGastosGeneral').text(totalGastos.toFixed(2));
+                                    $('#totalSumGeneral').text(total.toFixed(2));
+                                    $('#diferenciaSistemaGeneral').text(diferenciaSistema.toFixed(
+                                        2));
+
+                                    // Diferencia General (Efectivo + Tarjetas - Gastos)
+                                    const diferencia = totalTarjetas + totalEfectivo - totalGastos;
                                     $('#diferenciaTotalGeneral').text(diferencia.toFixed(2));
                                 }
+
+
                                 $(document).ready(function() {
                                     buscarDetalleRendicionesLocales();
+                                    actualizarTablaBanco();
 
                                     function buscarDetalleRendicionesLocales() {
                                         // Tu código existente para obtener los datos...
 
                                         // Dentro del success de tu AJAX, después de construir las tablas:
                                         crearTablaResumenGeneral
-                                            (); // Crear la nueva tabla de resumen
+                                            (); // Crear la tabla de resumen
+                                        actualizarTablaResumenGeneral
+                                            (); // Inicializar los valores actuales
 
-                                        // Actualizar valores dinámicamente en tiempo real
+                                        // Escuchar eventos dinámicos en tablas locales
                                         $(document).on('input',
                                             '.table-input-locales, .cantidad-input-locales',
                                             function() {
                                                 actualizarTablaResumenGeneral();
+                                                actualizarTablaBanco
+                                                    (); // Actualizar BANCO
                                             });
 
-                                        actualizarTablaResumenGeneral
-                                            (); // Inicializar con valores actuales
+                                        // Escuchar cambios en el campo "Total Sistema"
+                                        $(document).on('input', '#totalSistemaInput',
+                                            function() {
+                                                actualizarTablaResumenGeneral();
+                                            });
                                     }
                                 });
+
+
 
 
 
@@ -1317,6 +1391,182 @@ include '../../backend/controller/access/AccessController.php';
                 }
             });
             </script>
+
+            <script>
+            function actualizarTablaBanco() {
+                const denominaciones = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10];
+                let html = `
+                 <div class="card p-3 my-2">
+                            <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Denominación</th>
+                                        ${denominaciones.map(den => `<th>${den.toLocaleString()}</th>`).join('')}
+                                        <th>Total General</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-weight-bold">Cantidad</td>
+                                        ${denominaciones.map(den => {
+                                            const cantidadPreventa = Array.from($(`.cantidad-input[data-denominacion="${den}"]`))
+                                                .reduce((sum, input) => sum + (parseFloat($(input).val()) || 0), 0);
+                                            const cantidadLocales = Array.from($(`.cantidad-input-locales[data-denominacion="${den}"]`))
+                                                .reduce((sum, input) => sum + (parseFloat($(input).val()) || 0), 0);
+                                            const totalCantidad = cantidadPreventa + cantidadLocales;
+                                            return `<td data-denominacion="${den}" class="cantidad-banco">${totalCantidad}</td>`;
+                                        }).join('')}
+                                        <td id="total-billetes-banco-cantidad" class="font-weight-bold">0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Total por Denominación</td>
+                                        ${denominaciones.map(den => {
+                                            const cantidadPreventa = Array.from($(`.cantidad-input[data-denominacion="${den}"]`))
+                                                .reduce((sum, input) => sum + (parseFloat($(input).val()) || 0), 0);
+                                            const cantidadLocales = Array.from($(`.cantidad-input-locales[data-denominacion="${den}"]`))
+                                                .reduce((sum, input) => sum + (parseFloat($(input).val()) || 0), 0);
+                                            const totalCantidad = cantidadPreventa + cantidadLocales;
+                                            const totalPorDenominacion = totalCantidad * den;
+                                            return `<td class="total-por-denominacion">${totalPorDenominacion.toFixed(2)}</td>`;
+                                        }).join('')}
+                                        <td id="total-billetes-banco-total" class="font-weight-bold">0.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                             </div>
+                        `;
+
+                $('#totalBanco').html(html);
+                agregarTablaCheques();
+                agregarTablaTotalGeneral();
+
+                actualizarTotalBanco();
+                actualizarTotalCheques();
+                actualizarTotalGeneral();
+            }
+
+            function actualizarTotalBanco() {
+                let totalGlobal = 0;
+                $('.cantidad-banco').each(function() {
+                    const denominacion = parseFloat($(this).data('denominacion')) || 0;
+                    const cantidad = parseFloat($(this).text()) || 0;
+                    totalGlobal += denominacion * cantidad;
+                });
+
+                $('#total-billetes-banco-total').text(totalGlobal.toFixed(2));
+                actualizarTotalGeneral();
+            }
+
+            function agregarTablaCheques() {
+    let chequesHtml = `
+    <div class="card p-3 my-2">
+        <table class="table table-bordered table-sm" id="tabla-cheques">
+            <thead>
+                <tr><th colspan="2" class="text-center font-weight-bold">CHEQUES</th></tr>
+                <tr>
+                    <th>BANCO</th>
+                    <th>IMPORTE</th>
+                </tr>
+            </thead>
+            <tbody id="cheques-body">
+                <tr>
+                    <td><input type="text" class="form-control banco-cheque" placeholder="Nombre del banco"></td>
+                    <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00" style="text-align: right;"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="font-weight-bold text-right">TOTAL CHEQUES</td>
+                    <td id="total-cheques" class="font-weight-bold text-right">$ 0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+        <button id="agregar-fila-cheque" class="btn btn-primary btn-sm mt-2">Agregar Fila</button>
+         </div>
+    `;
+
+    $('#totalBanco').append(chequesHtml);
+
+    // Eliminar evento previo y volver a asignarlo
+    $('#totalBanco').off('click', '#agregar-fila-cheque');
+    $('#totalBanco').on('click', '#agregar-fila-cheque', function () {
+        agregarFilaCheque();
+    });
+
+    // Evento para actualizar el total de cheques
+    $(document).off('input', '.importe-cheque'); // Eliminar eventos previos
+    $(document).on('input', '.importe-cheque', actualizarTotalCheques);
+}
+function agregarFilaCheque() {
+    let nuevaFila = `
+        <tr>
+            <td><input type="text" class="form-control banco-cheque" placeholder="Nombre del banco"></td>
+            <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00" style="text-align: right;"></td>
+        </tr>
+    `;
+
+    $('#cheques-body').append(nuevaFila);
+}
+
+            function actualizarTotalCheques() {
+                let totalCheques = 0;
+                $('.importe-cheque').each(function() {
+                    totalCheques += parseFloat($(this).val()) || 0;
+                });
+                $('#total-cheques').text(`$ ${totalCheques.toFixed(2)}`);
+                actualizarTotalGeneral();
+            }
+
+            function agregarTablaTotalGeneral() {
+                let totalGeneralHtml = `
+                 <div class="card p-3 my-2">
+                    <table class="table table-bordered table-sm mt-3">
+                        <thead>
+                            <tr><th colspan="2" class="text-center font-weight-bold">TOTAL GENERAL</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-weight-bold">TOTAL EFECTIVO</td>
+                                <td id="total-efectivo-general" class="text-right">$ 0.00</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold">TOTAL CHEQUES</td>
+                                <td id="total-cheques-general" class="text-right">$ 0.00</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold text-primary">TOTAL GENERAL</td>
+                                <td id="total-general" class="font-weight-bold text-right text-primary">$ 0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                     </div>
+                `;
+                $('#totalBanco').append(totalGeneralHtml);
+            }
+
+            function actualizarTotalGeneral() {
+                const totalEfectivo = parseFloat($('#total-billetes-banco-total').text()) || 0;
+                const totalCheques = parseFloat($('#total-cheques').text().replace('$', '').trim()) || 0;
+                const totalGeneral = totalEfectivo + totalCheques;
+
+                $('#total-efectivo-general').text(`$ ${totalEfectivo.toFixed(2)}`);
+                $('#total-cheques-general').text(`$ ${totalCheques.toFixed(2)}`);
+                $('#total-general').text(`$ ${totalGeneral.toFixed(2)}`);
+            }
+
+            $(document).on('input', '.cantidad-input, .cantidad-input-locales', function() {
+                actualizarTablaBanco();
+            });
+
+            $(document).ready(function() {
+                actualizarTablaBanco();
+            });
+            </script>
+
+
+
+
+
 
 
 
