@@ -120,7 +120,7 @@ include '../../backend/controller/access/AccessController.php';
                                                 
 
                                                     <div class="card p-3 my-2">
-                                                        <div id="resumenGeneralContainer" class="my-4"></div>
+                                                        <div id="resumenGeneralContainer"></div>
                                                     </div>
 
 
@@ -596,7 +596,7 @@ include '../../backend/controller/access/AccessController.php';
                                 // Ocultar los divs adicionales
                                 $('#tablasSecundariasLocales').closest('.card').hide();
                                 $('#totalLocales').closest('.card').hide();
-                                $('#resumenLocalesContainer').closest('.card').hide();
+                                $('#resumenGeneralContainer').closest('.card').hide();
                             }
                         },
                         error: function(xhr, status, error) {

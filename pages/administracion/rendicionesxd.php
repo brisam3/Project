@@ -906,10 +906,13 @@ include '../../backend/controller/access/AccessController.php';
 
                             } else {
                                 $('#theadRendiciones').html(
-                                    '<tr><th>No se encontraron detalles</th></tr>');
-                                $('#tbodyRendiciones').html('');
-                                $('#tablasSecundarias').html('');
-                                $('#totalPreventa').html('');
+                                    '<tr><th>No se encontraron detalles</th></tr>'
+                                );
+                                $('#tablasSecundarias').closest('.card').hide();
+                                $('#totalPreventa').closest('.card').hide(); 
+                                $('#resumenPreventaContainer').closest('.card').hide(); 
+
+
                             }
                         },
                         error: function(xhr, status, error) {
