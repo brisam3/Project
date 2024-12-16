@@ -1471,7 +1471,7 @@ include '../../backend/controller/access/AccessController.php';
             <tbody id="cheques-body">
                 <tr>
                     <td><input type="text" class="form-control banco-cheque" placeholder="Nombre del banco"></td>
-                    <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00" style="text-align: right;"></td>
+                    <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00"></td>
                 </tr>
             </tbody>
             <tfoot>
@@ -1501,7 +1501,7 @@ function agregarFilaCheque() {
     let nuevaFila = `
         <tr>
             <td><input type="text" class="form-control banco-cheque" placeholder="Nombre del banco"></td>
-            <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00" style="text-align: right;"></td>
+            <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00"></td>
         </tr>
     `;
 

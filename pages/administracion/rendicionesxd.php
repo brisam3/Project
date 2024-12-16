@@ -65,163 +65,234 @@ include '../../backend/controller/access/AccessController.php';
     <script src="../../assets/js/config.js"></script>
 
     <style>
+    #tablaRendiciones {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: #e1e5f6;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        font-size: 12px;
+        /* Reduced base font size */
+    }
+
+    /* Estilos para el encabezado */
+    #tablaRendiciones thead th {
+        background-color: #4e5cac;
+        color: #f9f9f7 !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 10px;
+        /* Reduced padding */
+        border-bottom: 2px solid #000000;
+    }
+
+    /* Estilos para las celdas del cuerpo */
+
+    #tablaRendiciones tbody td {
+        padding: 8px;
+        /* Reduced padding */
+        border-bottom: 1px solid #8f9afa;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Efecto hover para las filas */
+    #tablaRendiciones tbody tr:hover {
+        background-color: #8f9afa;
+        /* color4 para el hover */
+    }
+
+    /* Estilos para filas alternas */
+    #tablaRendiciones tbody tr:nth-child(even) {
+        background-color: #edf0fc;
+        /* color5 para filas pares */
+        color: #1d274d;
+        /* Añadido color de texto para filas pares */
+    }
+
+    #tablaRendiciones tbody tr:nth-child(odd) {
+        background-color: #f5f7ff;
+        /* Un tono más claro que color5 para filas impares */
+        color: #1d274d;
+        /* Añadido color de texto para filas impares */
+    }
+
+    /* Estilos modernos para los inputs */
+    #tablaRendiciones input[type="number"] {
+        width: 100%;
+        padding: 6px 0;
+        /* Reduced padding */
+        font-size: 12px;
+        /* Reduced font size */
+        border: none;
+        border-bottom: 2px solid #4e5cac;
+        /* color3 para el borde inferior */
+        border-radius: 0;
+        text-align: right;
+
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+        /* color1 para el texto de los inputs */
+    }
+
+    #tablaRendiciones input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        /* color2 para el borde inferior al enfocar */
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+
+    #tablaRendiciones input[type="number"]:hover {
+        background-color: #e1e5f6;
+        /* color5 para el fondo al hacer hover */
+    }
+
+    /* Estilos para las celdas de totales */
+    #tablaRendiciones .font-weight-bold {
+        font-weight: 600;
+        color: #1d274d;
+        /* color2 para texto en negrita */
+    }
 
 
-            #tablaRendiciones {
-                width: 100%;
-                border-collapse: separate;
-                border-spacing: 0;
-              
-                background-color: #e1e5f6; /* color5 como fondo base */
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            }
+    /* Estilos para el pie de tabla */
 
-            /* Estilos para el encabezado */
-            #tablaRendiciones thead th {
-                background-color: #4e5cac; /* color3 para el encabezado, más claro que antes */
-                color: #f9f9f7 !important; /* Cambiado de #e1e5f6 a blanco puro para mayor contraste */
-                font-weight: 600;
-                text-transform: uppercase;
-                padding: 15px;
-                border-bottom: 2px solid #000000; /* color2 para el borde inferior */
-            }
+    /* Estilos para columnas específicas */
+    #tablaRendiciones td:first-child {
+        background-color: #8f9afa;
+        /* color4 para la primera columna, más claro */
+        color: #1d274d;
+        /* Cambiado de #140f07 a #1d274d para mayor contraste con el fondo #8f9afa */
+        font-weight: 600;
+    }
 
-            /* Estilos para las celdas del cuerpo */
-            #tablaRendiciones tbody td {
-                padding: 12px;
-                border-bottom: 1px solid #8f9afa; /* color4 para los bordes de las celdas */
-                transition: background-color 0.3s ease;
-            }
-
-            /* Efecto hover para las filas */
-            #tablaRendiciones tbody tr:hover {
-                background-color: #8f9afa; /* color4 para el hover */
-            }
-
-            /* Estilos para filas alternas */
-            #tablaRendiciones tbody tr:nth-child(even) {
-                background-color: #edf0fc; /* color5 para filas pares */
-                color: #1d274d; /* Añadido color de texto para filas pares */
-            }
-
-            #tablaRendiciones tbody tr:nth-child(odd) {
-                background-color: #f5f7ff; /* Un tono más claro que color5 para filas impares */
-                color: #1d274d; /* Añadido color de texto para filas impares */
-            }
-
-            /* Estilos modernos para los inputs */
-            #tablaRendiciones input[type="number"] {
-                width: 100%;
-                padding: 8px 0;
-                border: none;
-                border-bottom: 2px solid #4e5cac; /* color3 para el borde inferior */
-                border-radius: 0;
-                text-align: right;
-                font-size: 14px;
-                transition: all 0.3s ease;
-                background-color: transparent;
-                color: #140f07; /* color1 para el texto de los inputs */
-            }
-
-            #tablaRendiciones input[type="number"]:focus {
-                outline: none;
-                border-bottom-color: #1d274d; /* color2 para el borde inferior al enfocar */
-                box-shadow: 0 1px 0 0 #1d274d;
-            }
-
-            #tablaRendiciones input[type="number"]:hover {
-                background-color: #e1e5f6; /* color5 para el fondo al hacer hover */
-            }
-
-            /* Estilos para las celdas de totales */
-            #tablaRendiciones .font-weight-bold {
-                font-weight: 600;
-                color: #1d274d; /* color2 para texto en negrita */
-            }
-
-            #tablaRendiciones .total-general {
-                background-color: #1d274d; /* color2 para el fondo del total general */
-                color: #e1e5f6; /* color5 para el texto del total general */
-                font-weight: 700;
-            }
-
-            /* Estilos para el pie de tabla */
-            #tablaRendiciones tfoot td {
-                background-color: #4e5cac; /* color3 para el fondo del pie */
-                color: #e1e5f6; /* color5 para el texto del pie */
-                font-weight: 600;
-                border-top: 2px solid #1d274d; /* color2 para el borde superior */
-                padding: 15px;
-            }
-
-            /* Estilos para columnas específicas */
-            #tablaRendiciones td:first-child{
-                background-color: #8f9afa; /* color4 para la primera columna, más claro */
-                color: #1d274d; /* Cambiado de #140f07 a #1d274d para mayor contraste con el fondo #8f9afa */
-                font-weight: 600;
-            }
-
-            /* Estilos para el título de la tabla */
-            #tablaRendiciones thead th h6 {
-                margin: 0;
-                font-size: 1.2em;
-                color: #e1e5f6; /* color5 para el texto del título */
-                font-weight: 600;
-            }
-
-            /* Estilos para tipos de datos específicos */
-            #tablaRendiciones .cantidad-input {
-                font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada para números */
-                font-size: 13px;
-            }
-
-            #tablaRendiciones .columna-total,
-            #tablaRendiciones .total-row {
-                font-weight: 700;
-                color: #1d274d; /* color2 para totales */
-            }
-
-            #tablaRendiciones .diferencia-column {
-                font-style: italic;
-                color: #4e5cac; /* color3 para la diferencia */
-            }
-
-            /* Estilo para resaltar la fila de total neto */
-            #tablaRendiciones tr.total-neto {
-                background-color: #1d274d; /* color2 para el fondo */
-                color: #ffffff; /* Cambiado de #e1e5f6 a blanco puro para mayor contraste */
-                font-weight: 700;
-                font-size: 1.1em;
-            }
-
-            #tablaRendiciones tr.total-neto td {
-                padding: 15px 12px;
-                border-top: 2px solid #4e5cac; /* color3 para el borde superior */
-                border-bottom: 2px solid #4e5cac; /* color3 para el borde inferior */
-            }
-
-            /* Responsive design */
-            @media (max-width: 768px) {
-                #tablaRendiciones {
-                    font-size: 14px;
-                }
-
-                #tablaRendiciones thead th,
-                #tablaRendiciones tbody td,
-                #tablaRendiciones tfoot td {
-                    padding: 10px;
-                }
-
-                #tablaRendiciones input[type="number"] {
-                    font-size: 12px;
-                    padding: 6px 0;
-                }
-            }
+    /* Estilos para el título de la tabla */
 
 
+    @media (max-width: 768px) {
+        #tablaRendiciones {
+            font-size: 11px;
+            /* Further reduced font size for mobile */
+        }
+
+        #tablaRendiciones thead th,
+        #tablaRendiciones tbody td,
+        #tablaRendiciones tfoot td {
+            padding: 8px;
+            /* Further reduced padding for mobile */
+        }
+
+        #tablaRendiciones input[type="number"] {
+            font-size: 10px;
+            /* Further reduced font size for inputs on mobile */
+            padding: 4px 0;
+            /* Further reduced padding for inputs on mobile */
+        }
+    }
     </style>
+    <style>
+    #tablasecundaria {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: #e1e5f6;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        font-size: 11px;
+    }
+
+    #tablasecundaria thead th {
+        background-color: #4e5cac;
+        color: #f9f9f7 !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 5px;
+        border-bottom: 2px solid #000000;
+    }
+
+    #tablasecundaria tbody td {
+        padding: 4px;
+        border-bottom: 1px solid #8f9afa;
+        text-align: center;
+    }
+    #tablasecundaria tfoot td {
+        padding: 6px;
+        border-bottom: 1px solid #8f9afa;
+        text-align: center;
+    }
+
+    #tablasecundaria tbody tr:hover {
+        background-color:rgb(190, 195, 231);
+    }
+
+
+    #tablasecundaria .font-weight-bold {
+        font-weight: 600;
+        color: #1d274d;
+    }
+
+    #tablasecundaria thead th h6 {
+        margin: 0;
+        font-size: 0.9em;
+        color: #e1e5f6;
+        font-weight: 600;
+
+    }
+
+    
+
+    #tablasecundaria input[type="number"] {
+        width: 100%;
+        padding: 6px 0;
+        /* Reduced padding */
+        font-size: 12px;
+        /* Reduced font size */
+        border: none;
+        border-bottom: 2px solid #4e5cac;
+        /* color3 para el borde inferior */
+        border-radius: 0;
+        text-align: right;
+
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+        /* color1 para el texto de los inputs */
+    }
+
+    #tablasecundaria input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        /* color2 para el borde inferior al enfocar */
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+
+    #tablasecundaria input[type="number"]:hover {
+        background-color: #e1e5f6;
+        /* color5 para el fondo al hacer hover */
+    }
+
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        #tablasecundaria {
+            font-size: 10px;
+        }
+
+        #tablasecundaria thead th,
+        #tablasecundaria tbody td {
+            padding: 6px;
+        }
+
+        #tablasecundaria thead th h6 {
+            font-size: 0.8em;
+        }
+    }
+    </style>
+
+
 
 
 </head>
@@ -343,7 +414,7 @@ include '../../backend/controller/access/AccessController.php';
                                 console.error('Error del backend:', response.mensaje);
                                 alert(
                                     'Ocurrió un error al obtener los detalles de las rendiciones.'
-                                    );
+                                );
                                 return;
                             }
 
@@ -517,7 +588,7 @@ include '../../backend/controller/access/AccessController.php';
                                         <div class="card">
                                             <div class="sub-table my-2">
                                                 <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                    <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
+                                                    <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped" id="tablasecundaria">
                                                         <thead>
                                                             <tr>
                                                                 <th colspan="13" class="text-center">
@@ -743,7 +814,7 @@ include '../../backend/controller/access/AccessController.php';
                                 function actualizarTablaResumen() {
                                     // Obtener Total Efectivo desde la tabla "Total Preventa"
                                     const totalEfectivo = parseFloat($('#total-global').text()) ||
-                                    0;
+                                        0;
 
                                     // Obtener Total MP desde la tabla principal
                                     const totalMpIndex = $('#theadRendiciones th').index($(
@@ -774,9 +845,9 @@ include '../../backend/controller/access/AccessController.php';
 
                                 // Escuchar cambios en las tablas relacionadas para actualizar dinámicamente la nueva tabla
                                 $(document).on('input', '.cantidad-input, .table-input',
-                            function() {
-                                    actualizarTablaResumen();
-                                });
+                                    function() {
+                                        actualizarTablaResumen();
+                                    });
 
                                 // Crear la tabla "LIBRE" al inicializar las tablas secundarias
                                 function agregarTablaLibre() {
@@ -835,7 +906,7 @@ include '../../backend/controller/access/AccessController.php';
                                             const denominacion = parseFloat($(this)
                                                 .data('denominacion'));
                                             const cantidad = parseFloat($(this)
-                                            .val()) || 0;
+                                                .val()) || 0;
                                             totalFila += denominacion * cantidad;
                                         });
 
@@ -857,7 +928,7 @@ include '../../backend/controller/access/AccessController.php';
                                     $('#tbodyRendiciones tr').each(function() {
                                         const $row = $(this);
                                         const esEditable = $row.find('td input').length >
-                                        0; // Verificar si la fila es editable
+                                            0; // Verificar si la fila es editable
 
                                         $row.append(
                                             esEditable ?
@@ -883,7 +954,7 @@ include '../../backend/controller/access/AccessController.php';
                                         $(`.cantidad-input[data-denominacion="${denominacion}"], .cantidad-libre[data-denominacion="${denominacion}"]`)
                                             .each(function() {
                                                 totalCantidad += parseFloat($(this)
-                                                .val()) || 0;
+                                                    .val()) || 0;
                                             });
 
                                         $(`.total-cantidad[data-denominacion="${denominacion}"]`)
@@ -909,8 +980,8 @@ include '../../backend/controller/access/AccessController.php';
                                     '<tr><th>No se encontraron detalles</th></tr>'
                                 );
                                 $('#tablasSecundarias').closest('.card').hide();
-                                $('#totalPreventa').closest('.card').hide(); 
-                                $('#resumenPreventaContainer').closest('.card').hide(); 
+                                $('#totalPreventa').closest('.card').hide();
+                                $('#resumenPreventaContainer').closest('.card').hide();
 
 
                             }
@@ -924,26 +995,28 @@ include '../../backend/controller/access/AccessController.php';
             });
             </script>
 
-            <script>            // Realiza una solicitud AJAX con jQuery
-                    $.ajax({
-                        type: 'POST',
-                        url: '../../backend/controller/administracion/Rendiciones.php',  // Asegúrate de que la URL sea correcta
-                        data: { action: 'obtenerCierreCajaHoy' },  // El nombre de la acción que estamos enviando
-                        success: function(response) {
-                            // Aquí manejamos la respuesta del servidor
-                            if (response.error) {
-                                console.log('Error: ' + response.mensaje);
-                            } else {
-                                // Si no hay error, mostramos los datos de la respuesta en la consola
-                                console.log('Datos de Cierre de Caja:', response.data);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            // Si ocurre algún error en la solicitud AJAX, lo mostramos en la consola
-                            console.log('Error en la solicitud AJAX:', error);
-                        }
-                    });
-
+            <script>
+            // Realiza una solicitud AJAX con jQuery
+            $.ajax({
+                type: 'POST',
+                url: '../../backend/controller/administracion/Rendiciones.php', // Asegúrate de que la URL sea correcta
+                data: {
+                    action: 'obtenerCierreCajaHoy'
+                }, // El nombre de la acción que estamos enviando
+                success: function(response) {
+                    // Aquí manejamos la respuesta del servidor
+                    if (response.error) {
+                        console.log('Error: ' + response.mensaje);
+                    } else {
+                        // Si no hay error, mostramos los datos de la respuesta en la consola
+                        console.log('Datos de Cierre de Caja:', response.data);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Si ocurre algún error en la solicitud AJAX, lo mostramos en la consola
+                    console.log('Error en la solicitud AJAX:', error);
+                }
+            });
             </script>
 
 
