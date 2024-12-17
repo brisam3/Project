@@ -73,49 +73,65 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
     <style>
     table {
         width: 100%;
-        border-collapse: collapse; /* Elimina espacios entre bordes */
-        table-layout: auto; /* Permite que las columnas se ajusten automáticamente */
+        border-collapse: collapse;
+        /* Elimina espacios entre bordes */
+        table-layout: auto;
+        /* Permite que las columnas se ajusten automáticamente */
     }
 
-    thead th, tbody td {
-        padding: 8px; /* Reduce el padding */
+    thead th,
+    tbody td {
+        padding: 8px;
+        /* Reduce el padding */
         text-align: left;
-        font-size: 14px; /* Tamaño de fuente equilibrado */
-        word-wrap: break-word; /* Evita que el contenido salga de la celda */
+        font-size: 14px;
+        /* Tamaño de fuente equilibrado */
+        word-wrap: break-word;
+        /* Evita que el contenido salga de la celda */
     }
 
     tbody tr td:first-child {
-        width: 35%; /* Ajusta el ancho de la primera columna */
+        width: 35%;
+        /* Ajusta el ancho de la primera columna */
     }
 
     tbody tr td {
-        vertical-align: middle; /* Alineación vertical del contenido */
+        vertical-align: middle;
+        /* Alineación vertical del contenido */
     }
 
     .form-control {
-        width: 100%; /* Ocupa el 100% del espacio disponible */
-        font-size: 14px; /* Tamaño del texto dentro del input */
-        padding: 6px; /* Espaciado interno reducido */
-        box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+        width: 100%;
+        /* Ocupa el 100% del espacio disponible */
+        font-size: 14px;
+        /* Tamaño del texto dentro del input */
+        padding: 6px;
+        /* Espaciado interno reducido */
+        box-sizing: border-box;
+        /* Asegura que el padding no afecte el ancho */
     }
 
     .btn {
-        font-size: 14px; /* Tamaño del texto de los botones */
-        padding: 6px 10px; /* Reduce el tamaño de los botones */
+        font-size: 14px;
+        /* Tamaño del texto de los botones */
+        padding: 6px 10px;
+        /* Reduce el tamaño de los botones */
     }
 
     tbody tr {
-        height: auto; /* Permite que la altura se ajuste al contenido */
+        height: auto;
+        /* Permite que la altura se ajuste al contenido */
     }
 
     tbody tr.table-light {
-        background-color: #f9f9f9; /* Fondo claro para filas destacadas */
+        background-color: #f9f9f9;
+        /* Fondo claro para filas destacadas */
     }
-</style>
+    </style>
 
 
 
-        
+
 </head>
 
 <body>
@@ -148,7 +164,8 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                         </td>
                                                         <td>
                                                             <select id="idUsuarioPreventista" class="form-control">
-                                                                <option value="" disabled selected>Seleccione un preventista</option>
+                                                                <option value="" disabled selected>Seleccione un
+                                                                    preventista</option>
                                                                 <option value="8">Movil101-Mica</option>
                                                                 <option value="9">Movil102-Gustavo</option>
                                                                 <option value="10">Movil103-Leo</option>
@@ -169,7 +186,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                                 onclick="abrirModalBilletes()"><i
                                                                     class="fas fa-plus-circle"> $</i></button>
                                                         </td>
-                                                        
+
                                                     </tr>
                                                     <tr>
                                                         <td><i class="bx bx-transfer"></i> Transferencias</td>
@@ -377,12 +394,17 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 const rechazos = parseFloat(document.getElementById('total-rechazos').value) || 0;
 
                 const totalGeneral = efectivo + mercadoPago + transferencias + cheques + fiados + gastos +
-                    pagoSecretario +
-                    mecFaltante + rechazos;
+                    pagoSecretario + mecFaltante + rechazos;
 
                 document.getElementById('total-acumulado').innerText = `$${totalGeneral.toFixed(2)}`;
+
+                // Actualiza los campos ocultos
+                document.getElementById('total_general').value = totalGeneral.toFixed(2);
+                document.getElementById('total_menos_gastos').value = (totalGeneral - gastos).toFixed(2);
+
                 calcularDiferencia(); // Recalcula la diferencia después de actualizar el total acumulado
             }
+
 
             // Agrega un listener a cada input para actualizar dinámicamente
             document.querySelectorAll('input[type="number"]').forEach(input => {
@@ -390,6 +412,8 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
             });
 
             function guardarCierreCajaChofer() {
+                
+
                 const idUsuarioPreventista = document.getElementById('idUsuarioPreventista').value;
                 const totalEfectivo = document.getElementById('total-efectivo')?.value || 0;
                 const totalTransferencia = document.getElementById('total-transferencia')?.value || 0;

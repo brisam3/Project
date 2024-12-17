@@ -37,6 +37,8 @@ class CierreCajaChoferController {
         $total_mec_faltante = (float)$_POST['total_mec_faltante'];
         $total_rechazos = (float)$_POST['total_rechazos'];
         $idUsuarioPreventista = (int)$_POST['idUsuarioPreventista'];
+        $total_general = (float)$_POST['total_general'];
+        $total_menos_gastos = (float)$_POST['total_menos_gastos'];
 
         $billetes_20000 = (float)$_POST['billetes_20000'];
         $billetes_10000 = (float)$_POST['billetes_10000'];
@@ -48,12 +50,7 @@ class CierreCajaChoferController {
         $billetes_50 = (float)$_POST['billetes_50'];
         $billetes_20 = (float)$_POST['billetes_20'];
         $billetes_10 = (int)$_POST['billetes_10'];
-
-        
-        // Capturar los nuevos valores
-        $total_general = (float)$_POST['total_general'];
-        $total_menos_gastos = (float)$_POST['total_menos_gastos'];
-
+      
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO rendicion_choferes
