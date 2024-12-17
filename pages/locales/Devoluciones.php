@@ -5,7 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include '../../backend/controller/access/AccessController.php';
 
+$accessController = new AccessController();
 
+// Verificar si el acceso está permitido
+if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
+    $accessController->denyAccess();
+    exit;
+}
 ?>
 
 
