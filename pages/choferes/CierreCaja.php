@@ -412,6 +412,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 const billetes_50 = document.getElementById('billetes_50')?.value || 0;
                 const billetes_20 = document.getElementById('billetes_20')?.value || 0;
                 const billetes_10 = document.getElementById('billetes_10')?.value || 0;
+                const contrareembolso = parseFloat(document.getElementById('contrareembolso').innerText) || 0;
 
                 $.ajax({
                     url: '../../backend/controller/choferes/CierreCajaController.php',
@@ -439,6 +440,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                         billetes_50: parseFloat(billetes_50),
                         billetes_20: parseFloat(billetes_20),
                         billetes_10: parseFloat(billetes_10),
+                        contrareembolso: contrareembolso // Nuevo campo
 
                     },
                     success: function(response) {

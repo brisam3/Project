@@ -26,7 +26,7 @@ class CierreCajaChoferController {
             echo json_encode(['error' => 'Usuario no autenticado']);
             exit;
         }
-
+        $contrareembolso = (float)$_POST['contrareembolso']; // Nuevo campo
         $total_efectivo = (float)$_POST['total_efectivo'];
         $total_transferencia = (float)$_POST['total_transferencia'];
         $total_mercadopago = (float)$_POST['total_mercadopago'];
@@ -61,12 +61,12 @@ class CierreCajaChoferController {
                 total_fiados, total_gastos, pago_secretario, total_mec_faltante, total_rechazos, 
                 idUsuarioPreventista, total_general, total_menos_gastos, 
                 billetes_20000, billetes_10000, billetes_2000, billetes_1000, billetes_500, 
-                billetes_200, billetes_100, billetes_50, billetes_20, billetes_10)
+                billetes_200, billetes_100, billetes_50, billetes_20, billetes_10, contrareembolso)
                 VALUES (:idUsuarioChofer, CURDATE(), :total_efectivo, :total_transferencia, :total_mercadopago, 
                 :total_cheques, :total_fiados, :total_gastos, :pago_secretario, :total_mec_faltante, 
                 :total_rechazos, :idUsuarioPreventista, :total_general, :total_menos_gastos, 
                 :billetes_20000, :billetes_10000, :billetes_2000, :billetes_1000, :billetes_500, 
-                :billetes_200, :billetes_100, :billetes_50, :billetes_20, :billetes_10)
+                :billetes_200, :billetes_100, :billetes_50, :billetes_20, :billetes_10, :contrareembolso)
             ");
 
 
@@ -94,6 +94,7 @@ class CierreCajaChoferController {
             $stmt->bindParam(':billetes_50', $billetes_50);
             $stmt->bindParam(':billetes_20', $billetes_20);
             $stmt->bindParam(':billetes_10', $billetes_10);
+            $stmt->bindParam(':contrareembolso', $contrareembolso); // Nuevo campo
 
             $stmt->execute();
             echo json_encode(['success' => 'Cierre guardado']);
