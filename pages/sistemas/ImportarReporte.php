@@ -8,7 +8,7 @@ include '../../backend/controller/access/AccessController.php';
 $accessController = new AccessController();
 
 // Verificar si el acceso está permitido
-if (!$accessController->checkAccess('/pages/administracion/ImportarReporte.php')) {
+if (!$accessController->checkAccess('/pages/sistemas/ImportarReporte.php')) {
     $accessController->denyAccess();
     exit;
 }

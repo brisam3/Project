@@ -63,7 +63,38 @@ include '../../backend/controller/access/AccessController.php';
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
+    <style>
+          /* Estilos modernos para los inputs */
+    #tablaRendiciones input[type="number"] {
+        width: 100%;
+        padding: 6px 0;
+        /* Reduced padding */
+        font-size: 12px;
+        /* Reduced font size */
+        border: none;
+        border-bottom: 2px solid #4e5cac;
+        /* color3 para el borde inferior */
+        border-radius: 0;
+        text-align: right;
 
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+        /* color1 para el texto de los inputs */
+    }
+
+    #tablaRendiciones input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        /* color2 para el borde inferior al enfocar */
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+
+    #tablaRendiciones input[type="number"]:hover {
+        background-color: #e1e5f6;
+        /* color5 para el fondo al hacer hover */
+    }
+    </style>
 </head>
 
 <body>

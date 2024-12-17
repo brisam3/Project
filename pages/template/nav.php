@@ -398,7 +398,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                         <ul class="menu-sub">
                             <li class="menu-item">
                                 <a href="../locales/Devoluciones.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-cart-download"></i>
+                                    <i class="menu-icon tf-icons bx bx-cart-download"></i>
 
 
                                     <div data-i18n="Generar Devolución">Generar Devolución</div>
@@ -406,7 +406,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             </li>
                             <li class="menu-item">
                                 <a href="../locales/CierreCaja.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-wallet"></i>
+                                    <i class="menu-icon tf-icons bx bx-wallet"></i>
 
                                     <div data-i18n="Cierre de Caja">Cierre de Caja</div>
                                 </a>
@@ -417,7 +417,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Transferencias">Transferencias</div>
                                 </a>
                             </li>
-                        
+
                         </ul>
                     </li>
 
@@ -432,14 +432,14 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                         <ul class="menu-sub">
                             <li class="menu-item">
                                 <a href="../preventa/ReportePreventa.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-chart"></i>
+                                    <i class="menu-icon tf-icons bx bx-chart"></i>
 
                                     <div data-i18n="Reporte Diario">Reporte Diario</div>
                                 </a>
                             </li>
                             <li class="menu-item">
                                 <a href="../preventa/reporteAsistencia.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-chart"></i>
+                                    <i class="menu-icon tf-icons bx bx-chart"></i>
 
                                     <div data-i18n="Reporte Asistencia">Reporte Asistencia</div>
                                 </a>
@@ -459,7 +459,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                         <ul class="menu-sub">
                             <li class="menu-item">
                                 <a href="../deposito/Devoluciones.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-cart-download"></i>
+                                    <i class="menu-icon tf-icons bx bx-cart-download"></i>
                                     <div data-i18n="Ver Devoluciones">Ver Devoluciones</div>
                                 </a>
                             </li>
@@ -469,7 +469,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Solicitudes Transferencias">Ver Solicitudes Transferencias</div>
                                 </a>
                             </li>
-                            
+
                         </ul>
                     </li>
 
@@ -483,12 +483,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="../administracion/ImportarReporte.php" class="menu-link">
-                                    <i class="menu-icon tf-icons bx bx-store"></i>
-                                    <div data-i18n="Subir Reporte Diario">Importar Reporte</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
                                 <a href="../administracion/ReporteVentas.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
                                     <div data-i18n="Reporte ventas">Reporte Ventas</div>
@@ -496,7 +490,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             </li>
                             <li class="menu-item">
                                 <a href="../administracion/RendicionChoferes.php" class="menu-link">
-                                    <i class="menu-icon tf-icons bx bx-store"></i>
+                                    <i class="menu-icon tf-icons bx bx-printer"></i>
                                     <div data-i18n="Imprimir Rendiciones">Imprimir Rendiciones</div>
                                 </a>
                             </li>
@@ -525,6 +519,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             <i class="menu-icon tf-icons bx bx-laptop"></i>
                             <div data-i18n="Sistemas">Sistemas</div>
                         </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="../sistemas/ImportarReporte.php" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bxs-download"></i>  <div data-i18n="Importar Reporte Sistema">Importar Reporte</div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li class="menu-item">
@@ -534,9 +535,9 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             <div data-i18n="Choferes">Choferes</div>
                         </a>
                         <ul class="menu-sub">
-                        <li class="menu-item">
+                            <li class="menu-item">
                                 <a href="../choferes/Devoluciones.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-cart-download"></i>
+                                    <i class="menu-icon tf-icons bx bx-cart-download"></i>
 
 
                                     <div data-i18n="Ver Devoluciones">Ver Devoluciones</div>
@@ -544,12 +545,12 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             </li>
                             <li class="menu-item">
                                 <a href="../choferes/CierreCaja.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-wallet"></i>
+                                    <i class="menu-icon tf-icons bx bx-wallet"></i>
 
                                     <div data-i18n="Cierre de Caja">Cierre de Caja</div>
                                 </a>
                             </li>
-                          
+
 
 
                         </ul>

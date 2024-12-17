@@ -18,7 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
             //contaduria
             6 => ['/'],
             //sistemas
-            7 => ['/pages/register/register.php'],
+            7 => ['/pages/register/register.php', '/pages/sistemas/ImportarReporte.php'],
             //chofer
             8 => ['/pages/choferes/CierreCaja.php', '/pages/choferes/Devoluciones.php']
         ];
