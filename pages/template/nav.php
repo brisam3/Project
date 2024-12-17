@@ -495,9 +495,9 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="../administracion/rendicionesxd.php" class="menu-link">
+                                <a href="../administracion/RendicionChoferes.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-store"></i>
-                                    <div data-i18n="Rendiciones">Rendiciones</div>
+                                    <div data-i18n="Imprimir Rendiciones">Imprimir Rendiciones</div>
                                 </a>
                             </li>
                         </ul>
