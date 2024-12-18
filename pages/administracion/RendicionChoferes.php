@@ -312,8 +312,9 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                     </div>
                                     <div class="page" id="printable-record">
                                         <div class="header">
+                                        <p style="text-align: right">Fecha: <?= htmlspecialchars($row['fecha']) ?></p>
                                             <h1>Rendición de Choferes</h1>
-                                            <p>Fecha: <?= htmlspecialchars($row['fecha']) ?></p>
+                                          
                                         </div>
 
                                         <div class="content">
