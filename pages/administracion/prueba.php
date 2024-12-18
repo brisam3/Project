@@ -63,39 +63,43 @@ include '../../backend/controller/access/AccessController.php';
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
-    <style>
-          /* Estilos modernos para los inputs */
-          <style>
+   <style>
+    #tablaRendiciones, #tablaRendiciones th, #tablaRendiciones td {
+        color: #000; /* Negro sólido */
+    }
+    
+    #tablaRendiciones input[type="number"] {
+        color: #000 !important; /* Negro para los inputs */
+    }
     .table-responsive {
         overflow-x: auto;
     }
     #tablaRendiciones {
-        font-size: 0.9rem;
+        font-size: 0.85rem; /* Reducido ligeramente para mejor proporción */
         width: 100%;
-        border-collapse: separate;
         border-spacing: 0;
     }
     #tablaRendiciones th, #tablaRendiciones td {
-        padding: 0.75rem;
+        padding: 0.45rem; /* Tamaño ajustado */
         vertical-align: middle;
         border: 1px solid #dee2e6;
     }
     #tablaRendiciones thead th {
-        background-color:rgb(0, 0, 0);
+        background-color: rgb(0, 0, 0);
         color: white;
         font-weight: bold;
         text-align: center;
         white-space: nowrap;
     }
     #tablaRendiciones tbody tr:nth-of-type(odd) {
-        background-color: rgba(0,0,0,.05);
+        background-color: rgba(0, 0, 0, 0.05);
     }
     #tablaRendiciones tbody tr:hover {
-        background-color: rgba(0,0,0,.075);
+        background-color: rgba(0, 0, 0, 0.075);
     }
     .table-input {
         width: 100%;
-        padding: 0.25rem;
+        padding: 0.2rem; /* Ajustado para coincidir con el nuevo diseño */
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
         text-align: right;
@@ -105,31 +109,60 @@ include '../../backend/controller/access/AccessController.php';
         background-color: #f8f9fa;
     }
     #filaTotalNeto {
-        background-color: #e9ecef;
+        background-color: rgb(221, 223, 224);
     }
+    
     #filaTotalNeto td {
         font-weight: bold;
     }
-      /* Estilos modernos para los inputs */
-      #tablaRendiciones input[type="number"] {
+    /* Estilos modernos para los inputs */
+    #tablaRendiciones input[type="number"] {
         width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
         border: none;
         transition: all 0.3s ease;
         background-color: transparent;
         color: #140f07;
-        /* color1 para el texto de los inputs */
     }
+    
 
     #tablaRendiciones input[type="number"]:focus {
         outline: none;
         border-bottom-color: #1d274d;
-        /* color2 para el borde inferior al enfocar */
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    table.datatables-ajax {
+    color: black; /* Establece el color de la letra en negro */
+    }   
+    #miTabla {
+    color: black !important; /* Establece el color de la letra en negro para toda la tabla */
+}
+
+#miTabla td.font-weight-bold, #miTabla th {
+    color: black !important; /* Fuerza el color negro para las celdas con la clase font-weight-bold */
+}
+#miTabla input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+    #miTabla input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
         box-shadow: 0 1px 0 0 #1d274d;
     }
 
-   
+
+
+    
 </style>
-    </style>
+
+
 </head>
 
 <body>
@@ -172,15 +205,15 @@ include '../../backend/controller/access/AccessController.php';
                                     </ul>
                                 </div>
 
-                                <div class="tab-content" id="myTabContent">
+                                <div class="tab-content" id="myTabContent" style="margin: 0; padding: 0;">
                                     <!-- Resumen Tab -->
-                                    <div class="tab-pane fade show active" id="wolchuk" role="tabpanel">
+                                    <div class="tab-pane fade show active" id="wolchuk" role="tabpanel" style="margin: 0; padding: 0;">
 
-                                        <div class="row">
-                                            <div class="container-xxl flex-grow-1 container-p-y">
-                                                <div class="table-responsive-xl mb-6 mb-lg-0">
+                                        <div class="row" style="margin: 0; padding: 0;">
+                                            <div class="container-xxl flex-grow-1 container-p-y" style="margin: 0; padding: 0;">
+                                                <div class="table-responsive-xl mb-6 mb-lg-0" style="margin: 0; padding: 0;">
                                                     <div class="dataTables_wrapper no-footer"
-                                                        style="width: 100% !important;">
+                                                        style="width: 100% !important;" >
                                                         <div class="col-md-12 my-2">
                                                             <!-- Tabla de Detalle de Rendiciones -->
                                                             <div class="card p-3 my-2">
@@ -369,8 +402,9 @@ include '../../backend/controller/access/AccessController.php';
                                 <th>Totales</th>
                             </tr>
                             <tr>
-                                <th>Preventista - Chofer</th>
-                                ${data.map(detalle => `<th>${detalle.nombre_preventista} - ${detalle.nombre_chofer}</th>`).join('')}
+                                <th>Preventista<br>
+                                Chofer</th>
+                                ${data.map(detalle => `<th>${detalle.nombre_preventista} <br> ${detalle.nombre_chofer}</th>`).join('')}
                                 <th></th>
                             </tr>`;
                                 $('#theadRendiciones').html(headers);
@@ -531,7 +565,7 @@ include '../../backend/controller/access/AccessController.php';
                                     let billetesHtml = `
                                        <div class="card mb-3 billetes-card" data-index="${index}">
                                             <div class="card-header billetes-header" style="cursor: pointer;">
-                                               <h5 class="mb-0 d-flex align-items-center justify-content-between">
+                                               <h5 class="mb-0 d-flex align-items-center justify-content-between" style="color: #000;">
                                                 <span class=" font-weight-bold">
                                                   <i class="fas fa-money-bill-wave mr-2"></i> BILLETES:
                                                     ${detalle.movil}
@@ -546,7 +580,7 @@ include '../../backend/controller/access/AccessController.php';
                                               <div class="card-body billetes-body" style="display: none;">
                                             <div class="sub-table my-2">
                                                 <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                    <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
+                                                    <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped" id="miTabla">
                                                         <thead>
                                                             <tr>
                                                                 <th class="text-center">Denominación</th>

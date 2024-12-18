@@ -551,8 +551,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Cierre de Caja">Cierre de Caja</div>
                                 </a>
                             </li>
+                            <li class="menu-item">
+                                <a href="../choferes/VerRendiciones.php" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-notepad"></i>
 
-
+                                    <div data-i18n="Ver Rendiciones">Ver Rendiciones</div>
+                                </a>
+                            </li>
 
                         </ul>
             </div>

@@ -5,25 +5,32 @@ if (session_status() === PHP_SESSION_NONE) {
 
 setlocale(LC_TIME, 'es_ES.UTF-8', 'es_ES', 'es');
 
+date_default_timezone_set('America/Argentina/Buenos_Aires'); // Configurar zona horaria
+
 require_once('../../database/Database.php');
 
 $db = new Database();
 $pdo = $db->getConnection();
 
+// Obtener la fecha actual en Buenos Aires
+$fecha_actual = date('Y-m-d');
+
 $query = "
     SELECT c.*, 
-           chofer.nombre AS nombre_chofer, 
-           chofer.apellido AS apellido_chofer,
-           preventista.nombre AS nombre_preventista,
-           preventista.apellido AS apellido_preventista
-    FROM rendicion_choferes c
-    JOIN usuarios chofer ON c.idUsuarioChofer = chofer.idUsuario
-    JOIN usuarios preventista ON c.idUsuarioPreventista = preventista.idUsuario
-    WHERE DATE(c.fecha) = CURDATE()
+       chofer.nombre AS nombre_chofer, 
+       chofer.apellido AS apellido_chofer,
+       preventista.nombre AS nombre_preventista,
+       preventista.apellido AS apellido_preventista,
+       (c.total_general - c.contrareembolso) AS diferencia
+FROM rendicion_choferes c
+JOIN usuarios chofer ON c.idUsuarioChofer = chofer.idUsuario
+JOIN usuarios preventista ON c.idUsuarioPreventista = preventista.idUsuario
+WHERE DATE(c.fecha) = :fecha_actual;
+
 ";
 
-
 $stmt = $pdo->prepare($query);
+$stmt->bindParam(':fecha_actual', $fecha_actual, PDO::PARAM_STR);
 $stmt->execute();
 $results = $stmt->fetchAll();
 
@@ -313,9 +320,10 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                     </div>
                                     <div class="page" id="printable-record">
                                         <div class="header">
-                                        <p style="text-align: right">Fecha: <?= strftime('%d de %B de %Y', strtotime($row['fecha'])) ?></p>
+                                            <p style="text-align: right">Fecha:
+                                                <?= strftime('%d de %B de %Y', strtotime($row['fecha'])) ?></p>
                                             <h1>Rendición de Choferes</h1>
-                                           
+
 
                                         </div>
 
@@ -368,17 +376,23 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                 <div class="grid">
                                                     <p><strong>Billetes de 20000:</strong> <?= $row['billetes_20000'] ?>
                                                     </p>
+                                                    <p><strong>Billetes de 200:</strong> <?= $row['billetes_200'] ?></p>
+
                                                     <p><strong>Billetes de 10000:</strong> <?= $row['billetes_10000'] ?>
                                                     </p>
+                                                    <p><strong>Billetes de 100:</strong> <?= $row['billetes_100'] ?></p>
+
                                                     <p><strong>Billetes de 2000:</strong> <?= $row['billetes_2000'] ?>
                                                     </p>
+                                                    <p><strong>Billetes de 50:</strong> <?= $row['billetes_50'] ?></p>
+
+
                                                     <p><strong>Billetes de 1000:</strong> <?= $row['billetes_1000'] ?>
                                                     </p>
-                                                    <p><strong>Billetes de 500:</strong> <?= $row['billetes_500'] ?></p>
-                                                    <p><strong>Billetes de 200:</strong> <?= $row['billetes_200'] ?></p>
-                                                    <p><strong>Billetes de 100:</strong> <?= $row['billetes_100'] ?></p>
-                                                    <p><strong>Billetes de 50:</strong> <?= $row['billetes_50'] ?></p>
                                                     <p><strong>Billetes de 20:</strong> <?= $row['billetes_20'] ?></p>
+
+
+                                                    <p><strong>Billetes de 500:</strong> <?= $row['billetes_500'] ?></p>
                                                     <p><strong>Billetes de 10:</strong> <?= $row['billetes_10'] ?></p>
                                                 </div>
                                             </div>
@@ -389,9 +403,12 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                     $<?= number_format($row['total_general'], 2) ?></p>
                                                 <p class="total"><strong>Contrareembolso:</strong>
                                                     $<?= number_format($row['contrareembolso'], 2) ?></p>
-                                                <p class="total"><strong>Diferencia:</strong>
-                                                    $<?= number_format($row['contrareembolso'] - $row['total_general'], 2) ?>
+                                                <p
+                                                    class="total <?= $row['diferencia'] < 0 ? 'negative' : 'positive' ?>">
+                                                    <strong>Diferencia:</strong>
+                                                    <?= $row['diferencia'] > 0 ? '+' : '' ?>$<?= number_format($row['diferencia'], 2) ?>
                                                 </p>
+
                                             </div>
                                         </div>
                                     </div>
