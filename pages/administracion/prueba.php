@@ -65,18 +65,55 @@ include '../../backend/controller/access/AccessController.php';
     <script src="../../assets/js/config.js"></script>
     <style>
           /* Estilos modernos para los inputs */
-    #tablaRendiciones input[type="number"] {
+          <style>
+    .table-responsive {
+        overflow-x: auto;
+    }
+    #tablaRendiciones {
+        font-size: 0.9rem;
         width: 100%;
-        padding: 6px 0;
-        /* Reduced padding */
-        font-size: 12px;
-        /* Reduced font size */
-        border: none;
-        border-bottom: 2px solid #4e5cac;
-        /* color3 para el borde inferior */
-        border-radius: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    #tablaRendiciones th, #tablaRendiciones td {
+        padding: 0.75rem;
+        vertical-align: middle;
+        border: 1px solid #dee2e6;
+    }
+    #tablaRendiciones thead th {
+        background-color:rgb(0, 0, 0);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        white-space: nowrap;
+    }
+    #tablaRendiciones tbody tr:nth-of-type(odd) {
+        background-color: rgba(0,0,0,.05);
+    }
+    #tablaRendiciones tbody tr:hover {
+        background-color: rgba(0,0,0,.075);
+    }
+    .table-input {
+        width: 100%;
+        padding: 0.25rem;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
         text-align: right;
-
+    }
+    .total-column, .neto-column, .total-neto-global {
+        font-weight: bold;
+        background-color: #f8f9fa;
+    }
+    #filaTotalNeto {
+        background-color: #e9ecef;
+    }
+    #filaTotalNeto td {
+        font-weight: bold;
+    }
+      /* Estilos modernos para los inputs */
+      #tablaRendiciones input[type="number"] {
+        width: 100%;
+        border: none;
         transition: all 0.3s ease;
         background-color: transparent;
         color: #140f07;
@@ -90,10 +127,8 @@ include '../../backend/controller/access/AccessController.php';
         box-shadow: 0 1px 0 0 #1d274d;
     }
 
-    #tablaRendiciones input[type="number"]:hover {
-        background-color: #e1e5f6;
-        /* color5 para el fondo al hacer hover */
-    }
+   
+</style>
     </style>
 </head>
 
@@ -494,16 +529,25 @@ include '../../backend/controller/access/AccessController.php';
                                         a + b, 0);
 
                                     let billetesHtml = `
-                                        <div class="card">
+                                       <div class="card mb-3 billetes-card" data-index="${index}">
+                                            <div class="card-header billetes-header" style="cursor: pointer;">
+                                               <h5 class="mb-0 d-flex align-items-center justify-content-between">
+                                                <span class=" font-weight-bold">
+                                                  <i class="fas fa-money-bill-wave mr-2"></i> BILLETES:
+                                                    ${detalle.movil}
+                                                </span>
+                                                <span class="text-secondary">
+                                                    <span class="font-weight-bold">Preventista: ${detalle.nombre_preventista}</span>
+                                                    <span class="mx-2">|</span>
+                                                    <span class="font-italic">Chofer: ${detalle.nombre_chofer}</span>
+                                                </span>
+                                            </h5>
+                                            </div>
+                                              <div class="card-body billetes-body" style="display: none;">
                                             <div class="sub-table my-2">
                                                 <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
                                                     <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
                                                         <thead>
-                                                            <tr>
-                                                                <th colspan="13" class="text-center">
-                                                                    <h6  style="margin: 10px 0;">${detalle.movil} ${detalle.nombre_preventista} ---- ${detalle.nombre_chofer}</h6>
-                                                                </th>
-                                                            </tr>
                                                             <tr>
                                                                 <th class="text-center">Denominación</th>
                                                                 <th class="text-center">20,000</th>
@@ -543,11 +587,22 @@ include '../../backend/controller/access/AccessController.php';
                                                     </table>
                                                 </div>
                                             </div>
+                                              </div>
+        </div>
                                         </div>`;
                                     subTablesHtml += billetesHtml;
                                 });
 
                                 $('#tablasSecundarias').html(subTablesHtml);
+
+                                                                    // Funcionalidad para expandir/contraer las tablas
+                                    $('.billetes-header').on('click', function() {
+                                        const $body = $(this).next('.billetes-body');
+                                        $body.slideToggle(300);
+                                    });
+
+                                    // Mostrar la primera tabla por defecto
+                                    $('.billetes-card:first-child .billetes-body').show();
 
                                 // Actualizar dinámicamente la fila de diferencia en las tablas secundarias
                                 function actualizarDiferenciaDinamica() {
