@@ -609,7 +609,7 @@ include '../../backend/controller/access/AccessController.php';
                                                             <tr>
                                                                 <td class="font-weight-bold">Total</td>
                                                                 ${sumas.totalColumnas.map(total => `<td class="font-weight-bold columna-total">${total.toFixed(2)}</td>`).join('')}
-                                                                <td class="font-weight-bold total-general" style="background-color: #ffe5e5;">${sumas.totalFila.toFixed(2)}</td>
+                                                                <td class="font-weight-bold total-general">${sumas.totalFila.toFixed(2)}</td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
