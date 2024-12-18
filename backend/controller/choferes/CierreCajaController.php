@@ -167,4 +167,4 @@ class CierreCajaChoferController {
             echo json_encode(['error' => 'Acción no reconocida']);
         }
     }
-    
+?>

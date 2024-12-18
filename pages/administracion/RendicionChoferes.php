@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+setlocale(LC_TIME, 'es_ES.UTF-8', 'es_ES', 'es');
 
 require_once('../../database/Database.php');
 
@@ -249,7 +250,7 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
             display: none !important;
         }
     }
-</style>
+    </style>
 
 </head>
 
@@ -274,7 +275,7 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
 
 
                                     <div class="records-list">
-                                        <h1 style="text-align: center">Listado de Rendiciones de Choferes</h1>
+                                        <h1>Listado de Rendiciones de Choferes</h1>
 
                                         <table>
                                             <thead>
@@ -312,22 +313,31 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                     </div>
                                     <div class="page" id="printable-record">
                                         <div class="header">
-                                        <p style="text-align: right">Fecha: <?= htmlspecialchars($row['fecha']) ?></p>
+                                        <p style="text-align: right">Fecha: <?= strftime('%d de %B de %Y', strtotime($row['fecha'])) ?></p>
                                             <h1>Rendición de Choferes</h1>
-                                          
+                                           
+
                                         </div>
 
                                         <div class="content">
                                             <div class="section">
-                                                <h2>Información General</h2>
-                                                <div class="grid">
-                                                    <p><strong>Chofer:</strong>
+                                                <h2
+                                                    style="border-bottom: 2px solid #ddd; padding-bottom: 5px; font-size: 16pt; color: #444; margin-bottom: 10px;">
+                                                    Información General
+                                                </h2>
+                                                <div
+                                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                                    <p style="margin: 0; font-size: 12pt;"><strong>Chofer:</strong>
                                                         <?= htmlspecialchars($row['nombre_chofer']) ?></p>
-                                                    <p><strong>Preventista:</strong>
+                                                    <p style="margin: 0; font-size: 12pt;"><strong>Preventista:</strong>
                                                         <?= htmlspecialchars($row['nombre_preventista'] . ' ' . $row['apellido_preventista']) ?>
                                                     </p>
+                                                    <p style="margin: 0; font-size: 12pt;"><strong>Código
+                                                            Rendición:</strong>
+                                                        <?= htmlspecialchars($row['codigo_rendicion']) ?></p>
                                                 </div>
                                             </div>
+
 
                                             <div class="section">
                                                 <h2>Resumen Financiero</h2>
@@ -350,15 +360,7 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                         $<?= number_format($row['pago_secretario'], 2) ?></p>
                                                     <p><strong>Total MEC Faltante:</strong>
                                                         $<?= number_format($row['total_mec_faltante'], 2) ?></p>
-                                                </div> <br>
-                                                <h2>Total</h2>
-                                                <p class="total"><strong>Total General:</strong>
-                                                    $<?= number_format($row['total_general'], 2) ?></p>
-                                                <p class="total"><strong>Contrareembolso:</strong>
-                                                    $<?= number_format($row['contrareembolso'], 2) ?></p>
-                                                <p class="total"><strong>Diferencia:</strong>
-                                                    $<?= number_format($row['contrareembolso'] - $row['total_general'], 2) ?>
-                                                </p>
+                                                </div>
                                             </div>
 
                                             <div class="section">
@@ -380,10 +382,21 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                     <p><strong>Billetes de 10:</strong> <?= $row['billetes_10'] ?></p>
                                                 </div>
                                             </div>
+
+                                            <div class="section">
+                                                <h2>Total</h2>
+                                                <p class="total"><strong>Total General:</strong>
+                                                    $<?= number_format($row['total_general'], 2) ?></p>
+                                                <p class="total"><strong>Contrareembolso:</strong>
+                                                    $<?= number_format($row['contrareembolso'], 2) ?></p>
+                                                <p class="total"><strong>Diferencia:</strong>
+                                                    $<?= number_format($row['contrareembolso'] - $row['total_general'], 2) ?>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                    
-        <?php endif; ?>
+
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
