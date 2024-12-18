@@ -274,7 +274,7 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
 
 
                                     <div class="records-list">
-                                        <h1>Listado de Rendiciones de Choferes</h1>
+                                        <h1 style="text-align: center">Listado de Rendiciones de Choferes</h1>
 
                                         <table>
                                             <thead>
