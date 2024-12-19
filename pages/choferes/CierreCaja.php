@@ -228,6 +228,12 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                         <td><input type="number" id="total-rechazos"
                                                                 class="form-control" placeholder="0" /></td>
                                                     </tr>
+                                                    <tr>
+                                                        <td><i class="bx bx-calculator"></i> Retenciones</td>
+                                                        <td><input type="number" id="total-retenciones"
+                                                                class="form-control" placeholder="0" /></td>
+                                                    </tr>
+
                                                     <input type="hidden" id="total_general" name="total_general" />
                                                     <input type="hidden" id="total_menos_gastos"
                                                         name="total_menos_gastos" />
@@ -273,7 +279,8 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                     </div>
                                 </div>
                                 <div class="text-center mt-3">
-                                    <a href="CierreCajaAnterior.php" class="text-decoration-underline fs-5">¿Deseas realizar el cierre de caja de un día anterior? </a>
+                                    <a href="CierreCajaAnterior.php" class="text-decoration-underline fs-5">¿Deseas
+                                        realizar el cierre de caja de un día anterior?</a>
                                 </div>
                             </div>
                         </div>
@@ -395,9 +402,12 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 const pagoSecretario = parseFloat(document.getElementById('pago-secretario').value) || 0;
                 const mecFaltante = parseFloat(document.getElementById('total-mec-faltante').value) || 0;
                 const rechazos = parseFloat(document.getElementById('total-rechazos').value) || 0;
+                const retenciones = parseFloat(document.getElementById('total-retenciones').value) || 0;
+                const totalRetenciones = document.getElementById('total-retenciones')?.value || 0; 
+
 
                 const totalGeneral = efectivo + mercadoPago + transferencias + cheques + fiados + gastos +
-                    pagoSecretario + mecFaltante + rechazos;
+                    pagoSecretario + mecFaltante + rechazos + retenciones;
 
                 document.getElementById('total-acumulado').innerText = `$${totalGeneral.toFixed(2)}`;
 
@@ -439,7 +449,9 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 const billetes_50 = document.getElementById('billetes_50')?.value || 0;
                 const billetes_20 = document.getElementById('billetes_20')?.value || 0;
                 const billetes_10 = document.getElementById('billetes_10')?.value || 0;
+                const totalRetenciones = document.getElementById('total-retenciones')?.value || 0; // Nuevo campo
                 const contrareembolso = parseFloat(document.getElementById('contrareembolso').innerText) || 0;
+                
 
                 $.ajax({
                     url: '../../backend/controller/choferes/CierreCajaController.php',
@@ -467,7 +479,8 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                         billetes_50: parseFloat(billetes_50),
                         billetes_20: parseFloat(billetes_20),
                         billetes_10: parseFloat(billetes_10),
-                        contrareembolso: contrareembolso // Nuevo campo
+                        contrareembolso: contrareembolso, // Nuevo campo
+                        total_retenciones: parseFloat(totalRetenciones), // Nuevo campo
 
                     },
                     success: function(response) {
