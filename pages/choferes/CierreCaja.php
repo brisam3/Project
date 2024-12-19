@@ -273,7 +273,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                     </div>
                                 </div>
                                 <div class="text-center mt-3">
-                                    <a href="CierreCajaAnterior.php" class="btn btn-link">Rendición de día anterior</a>
+                                    <a href="CierreCajaAnterior.php" class="text-decoration-underline fs-5">¿Deseas realizar el cierre de caja de un día anterior? </a>
                                 </div>
                             </div>
                         </div>
