@@ -20,7 +20,7 @@ if (session_status() === PHP_SESSION_NONE) {
             //sistemas
             7 => ['/pages/register/register.php', '/pages/sistemas/ImportarReporte.php'],
             //chofer
-            8 => ['/pages/choferes/CierreCaja.php', '/pages/choferes/Devoluciones.php', '/pages/choferes/VerRendiciones.php']
+            8 => ['/pages/choferes/CierreCaja.php', '/pages/choferes/CierreCajaAnterior.php', '/pages/choferes/Devoluciones.php', '/pages/choferes/VerRendiciones.php']
         ];
     
     public function checkAccess($page) {

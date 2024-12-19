@@ -8,7 +8,7 @@ include '../../backend/controller/access/AccessController.php';
 $accessController = new AccessController();
 
 // Verificar si el acceso está permitido
-if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
+if (!$accessController->checkAccess('/pages/choferes/CierreCajaAnterior.php')) {
     $accessController->denyAccess();
     exit;
 }
