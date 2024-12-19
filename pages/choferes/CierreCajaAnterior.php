@@ -145,7 +145,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 <div class="content-wrapper">
                     <div class="container-xxl flex-grow-1 container-p-y">
                         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Formulario /</span> Cierre de
-                            Caja - Chofer</h4>
+                            Caja Día Anterior - Chofer</h4>
                         <div class="row">
                             <!-- Columna Izquierda - Formulario de Cierre -->
                             <div class="col-xl-6">
@@ -159,9 +159,16 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                 </thead>
                                                 <tbody>
                                                     <tr class="table-light">
+                                                        <td><i class="bx bx-calendar"></i> Fecha</td>
+                                                        <td>
+                                                            <input type="date" id="fecha" class="form-control" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="table-light">
                                                         <td>
                                                             <i class="bx bx-user"></i> Preventista
                                                         </td>
+
                                                         <td>
                                                             <select id="idUsuarioPreventista" class="form-control">
                                                                 <option value="" disabled selected>Seleccione un
@@ -178,6 +185,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                             </select>
                                                         </td>
                                                     </tr>
+
                                                     <tr>
                                                         <td><i class="bx bx-money"></i> Efectivo</td>
                                                         <td><input type="number" id="total-efectivo"
@@ -272,9 +280,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-center mt-3">
-                                    <a href="cierreCajaAnterior.php" class="btn btn-link">Rendición de día anterior</a>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -416,7 +422,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
 
             function guardarCierreCajaChofer() {
 
-
+                const fecha = document.getElementById('fecha')?.value || ''; // Obtener la fecha seleccionada
                 const idUsuarioPreventista = document.getElementById('idUsuarioPreventista').value;
                 const totalEfectivo = document.getElementById('total-efectivo')?.value || 0;
                 const totalTransferencia = document.getElementById('total-transferencia')?.value || 0;
@@ -442,9 +448,11 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 const contrareembolso = parseFloat(document.getElementById('contrareembolso').innerText) || 0;
 
                 $.ajax({
-                    url: '../../backend/controller/choferes/CierreCajaController.php',
+                    url: '../../backend/controller/choferes/CierreCajaFechaController.php',
                     type: 'POST',
                     data: {
+
+                        fecha: fecha, // Enviar la fecha al backend
                         total_efectivo: parseFloat(totalEfectivo),
                         total_transferencia: parseFloat(totalTransferencia),
                         total_mercadopago: parseFloat(totalMercadoPago),
@@ -517,17 +525,30 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 document.getElementById('diferencia').innerText = `${diferenciaFormateada}`;
             }
 
-
             // Actualiza el contrareembolso al seleccionar un preventista
-            document.getElementById('idUsuarioPreventista').addEventListener('change', function() {
-                const idUsuarioPreventista = this.value;
+            function obtenerContrareembolso() {
+                const idUsuarioPreventista = document.getElementById('idUsuarioPreventista')?.value;
+                const fechaSeleccionada = document.getElementById('fecha')?.value; // Obtener la fecha seleccionada
 
+                // Validación de datos
+                if (!idUsuarioPreventista) {
+                    console.error('Debe seleccionar un preventista válido.');
+                    return;
+                }
+
+                if (!fechaSeleccionada) {
+                    console.error('Debe seleccionar una fecha válida.');
+                    return;
+                }
+
+                // Realizar la solicitud AJAX
                 $.ajax({
-                    url: '../../backend/controller/choferes/CierreCajaController.php',
+                    url: '../../backend/controller/choferes/CierreCajaFechaController.php',
                     type: 'POST',
                     data: {
                         action: 'obtenerContrareembolso',
-                        idUsuarioPreventista: idUsuarioPreventista
+                        idUsuarioPreventista: idUsuarioPreventista,
+                        fecha: fechaSeleccionada // Enviar la fecha seleccionada
                     },
                     success: function(response) {
                         try {
@@ -535,22 +556,27 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
 
                             if (!data.error) {
                                 const contrareembolso = parseFloat(data.total_ventas).toFixed(2);
-                                document.getElementById('contrareembolso').innerText =
-                                    `${contrareembolso}`;
+                                document.getElementById('contrareembolso').innerText = `${contrareembolso}`;
                                 calcularDiferencia(); // Recalcula la diferencia
                             } else {
                                 console.error('Error en la respuesta:', data.error);
+                                document.getElementById('contrareembolso').innerText = '0.00';
                             }
                         } catch (e) {
                             console.error('Error al procesar la respuesta JSON:', e);
+                            document.getElementById('contrareembolso').innerText = '0.00';
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        console.error('Detalles del error:', textStatus, errorThrown, jqXHR
-                            .responseText);
+                        console.error('Detalles del error:', textStatus, errorThrown, jqXHR.responseText);
+                        document.getElementById('contrareembolso').innerText = '0.00';
                     }
                 });
-            });
+            }
+
+            // Asociar eventos a los elementos
+            document.getElementById('idUsuarioPreventista').addEventListener('change', obtenerContrareembolso);
+            document.getElementById('fecha').addEventListener('change', obtenerContrareembolso);
             </script>
 
 

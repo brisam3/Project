@@ -21,12 +21,19 @@ class CierreCajaChoferController {
 
     public function guardarCierreCajaChofer() {
         $idUsuarioChofer = $_SESSION['idUsuario'] ?? null;
-        $fecha = date('Y-m-d'); // Solo la fecha en formato YYYY-MM-DD
+       
 
         if (!$idUsuarioChofer) {
             echo json_encode(['error' => 'Usuario no autenticado']);
             exit;
         }
+        // Recibir y validar la fecha desde el frontend
+        $fecha = $_POST['fecha'] ?? null;
+        if (!$fecha || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+            echo json_encode(['error' => 'Fecha inválida o no proporcionada']);
+            exit;
+        }
+    
         $contrareembolso = (float)$_POST['contrareembolso']; // Nuevo campo
         $total_efectivo = (float)$_POST['total_efectivo'];
         $total_transferencia = (float)$_POST['total_transferencia'];
@@ -103,22 +110,29 @@ class CierreCajaChoferController {
         }
     }
 
+
      
     public function obtenerContrareembolso() {
         $idUsuarioPreventista = $_POST['idUsuarioPreventista'] ?? null;
+        $fechaElegida = $_POST['fecha'] ?? null; // Recibir la fecha desde el frontend
     
         if (!$idUsuarioPreventista) {
             echo json_encode(['error' => 'Falta el idUsuarioPreventista']);
             return;
         }
     
-        // Verificar el día de la semana
-        $hoy = date('Y-m-d');
-        $diaDeLaSemana = date('w', strtotime($hoy)); // 1 = Lunes, 0 = Domingo
+        if (!$fechaElegida || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fechaElegida)) {
+            echo json_encode(['error' => 'Falta o es inválida la fecha seleccionada']);
+            return;
+        }
     
-        // Calcular la fecha correspondiente (restar 2 días si es lunes)
-        $diasARestar = ($diaDeLaSemana == 1) ? 2 : 1; // Si es lunes, restar 2; de lo contrario, restar 1
-        $fechaConsulta = date('Y-m-d', strtotime("-{$diasARestar} day", strtotime($hoy)));
+        // Verificar si la fecha seleccionada es lunes
+        $timestampFechaElegida = strtotime($fechaElegida);
+        $diaDeLaSemana = date('w', $timestampFechaElegida); // 1 = Lunes, 0 = Domingo
+    
+        // Calcular el día anterior (o dos días antes si es lunes)
+        $diasARestar = ($diaDeLaSemana == 1) ? 2 : 1; // Restar 2 si es lunes, 1 en otros casos
+        $diaAnterior = date('Y-m-d', strtotime("-{$diasARestar} day", $timestampFechaElegida));
     
         $queryVentas = "
             SELECT
@@ -132,7 +146,7 @@ class CierreCajaChoferController {
             JOIN 
                 usuarios u ON TRIM(c.Comp_Vendedor_Cod) = TRIM(u.usuario)
             WHERE 
-                d.fecha = :fechaConsulta
+                d.fecha = :diaAnterior
                 AND u.idUsuario = :idUsuarioPreventista
             GROUP BY 
                 u.idUsuario, u.nombre
@@ -141,7 +155,7 @@ class CierreCajaChoferController {
         try {
             $stmtVentas = $this->pdo->prepare($queryVentas);
             $stmtVentas->execute([
-                ':fechaConsulta' => $fechaConsulta,
+                ':diaAnterior' => $diaAnterior,
                 ':idUsuarioPreventista' => $idUsuarioPreventista
             ]);
     
@@ -156,6 +170,7 @@ class CierreCajaChoferController {
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
+    
     
     
     

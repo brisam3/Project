@@ -408,7 +408,6 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                     <strong>Diferencia:</strong>
                                                     <?= $row['diferencia'] > 0 ? '+' : '' ?>$<?= number_format($row['diferencia'], 2) ?>
                                                 </p>
-
                                             </div>
                                         </div>
                                     </div>
