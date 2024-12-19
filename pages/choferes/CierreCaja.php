@@ -229,7 +229,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                                 class="form-control" placeholder="0" /></td>
                                                     </tr>
                                                     <tr>
-                                                        <td><i class="bx bx-calculator"></i> Retenciones</td>
+                                                        <td><i class="bx bx-dollar-circle"></i> Retenciones</td>
                                                         <td><input type="number" id="total-retenciones"
                                                                 class="form-control" placeholder="0" /></td>
                                                     </tr>
