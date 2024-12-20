@@ -63,7 +63,7 @@ include '../../backend/controller/access/AccessController.php';
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
-   
+
 
 </head>
 
@@ -109,13 +109,16 @@ include '../../backend/controller/access/AccessController.php';
 
                                 <div class="tab-content" id="myTabContent" style="margin: 0; padding: 0;">
                                     <!-- Resumen Tab -->
-                                    <div class="tab-pane fade show active" id="wolchuk" role="tabpanel" style="margin: 0; padding: 0;">
+                                    <div class="tab-pane fade show active" id="wolchuk" role="tabpanel"
+                                        style="margin: 0; padding: 0;">
 
                                         <div class="row" style="margin: 0; padding: 0;">
-                                            <div class="container-xxl flex-grow-1 container-p-y" style="margin: 0; padding: 0;">
-                                                <div class="table-responsive-xl mb-6 mb-lg-0" style="margin: 0; padding: 0;">
+                                            <div class="container-xxl flex-grow-1 container-p-y"
+                                                style="margin: 0; padding: 0;">
+                                                <div class="table-responsive-xl mb-6 mb-lg-0"
+                                                    style="margin: 0; padding: 0;">
                                                     <div class="dataTables_wrapper no-footer"
-                                                        style="width: 100% !important;" >
+                                                        style="width: 100% !important;">
                                                         <div class="col-md-12 my-2">
                                                             <!-- Tabla de Detalle de Rendiciones -->
                                                             <div class="card p-3 my-2">
@@ -214,13 +217,13 @@ include '../../backend/controller/access/AccessController.php';
                                                     <div class="dataTables_wrapper no-footer"
                                                         style="width: 100% !important;">
                                                         <div class="col-md-12 my-2">
-                                                         
-                                                                <div class="table-container my-2">
-                                                                    <div id="totalBanco">
-                                                                        <!-- Aquí se generará la tabla dinámica -->
-                                                                    </div>
+
+                                                            <div class="table-container my-2">
+                                                                <div id="totalBanco">
+                                                                    <!-- Aquí se generará la tabla dinámica -->
                                                                 </div>
-                                                            
+                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -524,21 +527,21 @@ include '../../backend/controller/access/AccessController.php';
                                                 </div>
                                             </div>
                                               </div>
-        </div>
-                                        </div>`;
+                                            </div>
+                                            </div>`;
                                     subTablesHtml += billetesHtml;
                                 });
 
                                 $('#tablasSecundarias').html(subTablesHtml);
 
-                                                                    // Funcionalidad para expandir/contraer las tablas
-                                    $('.billetes-header').on('click', function() {
-                                        const $body = $(this).next('.billetes-body');
-                                        $body.slideToggle(300);
-                                    });
+                                // Funcionalidad para expandir/contraer las tablas
+                                $('.billetes-header').on('click', function() {
+                                    const $body = $(this).next('.billetes-body');
+                                    $body.slideToggle(300);
+                                });
 
-                                    // Mostrar la primera tabla por defecto
-                                    $('.billetes-card:first-child .billetes-body').show();
+                                // Mostrar la primera tabla por defecto
+                                $('.billetes-card:first-child .billetes-body').show();
 
                                 // Actualizar dinámicamente la fila de diferencia en las tablas secundarias
                                 function actualizarDiferenciaDinamica() {
@@ -791,7 +794,7 @@ include '../../backend/controller/access/AccessController.php';
                                                                                 data-denominacion="${denominacion}" 
                                                                                 style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;">
                                                                         </td>`).join('')}
-                                                                    <td class="font-weight-bold total-libre" style="background-color: #ffe5e5;">0.00</td>
+                                                                    <td class="font-weight-bold total-libre">0.00</td>
                                                                 </tr>
                                                             </tbody>
                                                             <tfoot>
@@ -1029,21 +1032,32 @@ include '../../backend/controller/access/AccessController.php';
                                         ].map(denominacion => {
                                             return (detalle[
                                                 `billetes_${denominacion}`
-                                            ] || 0) * denominacion;
+                                                ] || 0) * denominacion;
                                         })
                                     };
                                     sumas.totalFila = sumas.totalColumnas.reduce((a, b) =>
                                         a + b, 0);
 
                                     let billetesHtml = `
-                                        <div class="card">
+                                    <div class="card mb-3 billetes-card-locales" data-index="${index}">
+                                        <div class="card-header billetes-header-locales" style="cursor: pointer;">
+                                            <h5 class="mb-0 d-flex align-items-center justify-content-between" style="color: #000;">
+                                                <span class="font-weight-bold">
+                                                    <i class="fas fa-money-bill-wave mr-2"></i> ${detalle.nombre_local}
+                                                </span>
+                                                <span class="text-secondary">
+                                                    <span class="font-weight-bold">Total: ${sumas.totalFila.toFixed(2)}</span>
+                                                </span>
+                                            </h5>
+                                        </div>
+                                        <div class="card-body billetes-body-locales" style="display: none;">
                                             <div class="sub-table my-2">
                                                 <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
                                                     <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
                                                         <thead>
                                                             <tr>
                                                                 <th colspan="13" class="text-center">
-                                                                    <h6  style="margin: 10px 0;">${detalle.nombre_local}</h6>
+                                                                    <h6 style="margin: 10px 0;">${detalle.nombre_local}</h6>
                                                                 </th>
                                                             </tr>
                                                             <tr>
@@ -1072,24 +1086,37 @@ include '../../backend/controller/access/AccessController.php';
                                                             </tr>
                                                             <tr>
                                                                 <td class="font-weight-bold">Total</td>
-                                                                ${sumas.totalColumnas.map(total => `<td class="font-weight-bold columna-total">${total.toFixed(2)}</td>`).join('')}
-                                                                <td class="font-weight-bold total-general-locales" style="background-color: #ffe5e5;">${sumas.totalFila.toFixed(2)}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <td class="font-weight-bold">Diferencia</td>
-                                                                <td colspan="12" class="font-weight-bold diferencia-column-locales text-center">0.00</td>
-                                                            </tr>
-                                                        </tfoot>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>`;
+                                    ${sumas.totalColumnas.map(total => `<td class="font-weight-bold columna-total">${total.toFixed(2)}</td>`).join('')}
+                                    <td class="font-weight-bold total-general-locales">${sumas.totalFila.toFixed(2)}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="font-weight-bold">Diferencia</td>
+                                    <td colspan="12" class="font-weight-bold diferencia-column-locales text-center">0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>`;
                                     subTablesHtml += billetesHtml;
                                 });
 
                                 $('#tablasSecundariasLocales').html(subTablesHtml);
+
+                                // Funcionalidad para expandir/contraer las tablas
+                                $('.billetes-header-locales').on('click', function() {
+                                    const $body = $(this).next(
+                                    '.billetes-body-locales'); // Selecciona el contenido correspondiente
+                                    $body.slideToggle(
+                                    300); // Alterna entre mostrar y ocultar con animación
+                                });
+
+                                // Mostrar la primera tabla por defecto
+                                $('.billetes-card-locales:first-child .billetes-body-locales')
+                                .show();
 
                                 // Actualizar dinámicamente la fila de diferencia en las tablas secundarias
                                 function actualizarDiferenciaDinamica() {
@@ -1255,53 +1282,53 @@ include '../../backend/controller/access/AccessController.php';
 
                                 function crearTablaResumenGeneral() {
                                     let resumenHtmlGeneral = `
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Descripción</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Total Efectivo</td>
-                                    <td id="totalEfectivoGeneral">0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Total Tarjetas</td>
-                                    <td id="totalTarjetasGeneral">0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Total Gastos</td>
-                                    <td id="totalGastosGeneral">0.00</td>
-                                </tr>
-                            
-                                <tr>
-                                    <td><strong>Total</strong></td>
-                                    <td id="totalSumGeneral" class="font-weight-bold text-success">0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Sistema</td>
-                                    <td>
-                                        <input type="number" value="0.00" class="form-control table-input-locales" 
-                                        id="totalSistemaInput" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Diferencia Sistema</strong></td>
-                                    <td id="diferenciaSistemaGeneral" class="font-weight-bold text-warning">0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Diferencia</td>
-                                    <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
-                                </tr>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Descripción</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Total Efectivo</td>
+                                                <td id="totalEfectivoGeneral">0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Tarjetas</td>
+                                                <td id="totalTarjetasGeneral">0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Gastos</td>
+                                                <td id="totalGastosGeneral">0.00</td>
+                                            </tr>
+                                        
+                                            <tr>
+                                                <td><strong>Total</strong></td>
+                                                <td id="totalSumGeneral" class="font-weight-bold text-success">0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sistema</td>
+                                                <td>
+                                                    <input type="number" value="0.00" class="form-control table-input-locales" 
+                                                    id="totalSistemaInput" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Diferencia Sistema</strong></td>
+                                                <td id="diferenciaSistemaGeneral" class="font-weight-bold text-warning">0.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Diferencia</td>
+                                                <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
+                                            </tr>
 
-                                <tr>
-                                    <td><strong>Total General Locales</strong></td>
-                                    <td id="totalGeneralLocales" class="font-weight-bold text-info">0.00</td>
-                                </tr>
-                            </tbody>
-                        </table>`;
+                                            <tr>
+                                                <td><strong>Total General Locales</strong></td>
+                                                <td id="totalGeneralLocales" class="font-weight-bold text-info">0.00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>`;
                                     $('#resumenGeneralContainer').html(resumenHtmlGeneral);
                                 }
 
@@ -1480,55 +1507,56 @@ include '../../backend/controller/access/AccessController.php';
             }
 
             function agregarTablaCheques() {
-    let chequesHtml = `
-    <div class="card p-3 my-2">
-        <table class="table table-bordered table-sm" id="tabla-cheques">
-            <thead>
-                <tr><th colspan="2" class="text-center font-weight-bold">CHEQUES</th></tr>
-                <tr>
-                    <th>BANCO</th>
-                    <th>IMPORTE</th>
-                </tr>
-            </thead>
-            <tbody id="cheques-body">
-                <tr>
-                    <td><input type="text" class="form-control banco-cheque" placeholder="Nombre del banco"></td>
-                    <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00"></td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td class="font-weight-bold text-right">TOTAL CHEQUES</td>
-                    <td id="total-cheques" class="font-weight-bold text-right">$ 0.00</td>
-                </tr>
-            </tfoot>
-        </table>
-        <button id="agregar-fila-cheque" class="btn btn-primary btn-sm mt-2">Agregar Fila</button>
-         </div>
-    `;
+                let chequesHtml = `
+                        <div class="card p-3 my-2">
+                            <table class="table table-bordered table-sm" id="tabla-cheques">
+                                <thead>
+                                    <tr><th colspan="2" class="text-center font-weight-bold">CHEQUES</th></tr>
+                                    <tr>
+                                        <th>BANCO</th>
+                                        <th>IMPORTE</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cheques-body">
+                                    <tr>
+                                        <td><input type="text" class="form-control banco-cheque" placeholder="Nombre del banco"></td>
+                                        <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00"></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td class="font-weight-bold text-right">TOTAL CHEQUES</td>
+                                        <td id="total-cheques" class="font-weight-bold text-right">$ 0.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <button id="agregar-fila-cheque" class="btn btn-primary btn-sm mt-2">Agregar Fila</button>
+                            </div>
+                        `;
 
-    $('#totalBanco').append(chequesHtml);
+                $('#totalBanco').append(chequesHtml);
 
-    // Eliminar evento previo y volver a asignarlo
-    $('#totalBanco').off('click', '#agregar-fila-cheque');
-    $('#totalBanco').on('click', '#agregar-fila-cheque', function () {
-        agregarFilaCheque();
-    });
+                // Eliminar evento previo y volver a asignarlo
+                $('#totalBanco').off('click', '#agregar-fila-cheque');
+                $('#totalBanco').on('click', '#agregar-fila-cheque', function() {
+                    agregarFilaCheque();
+                });
 
-    // Evento para actualizar el total de cheques
-    $(document).off('input', '.importe-cheque'); // Eliminar eventos previos
-    $(document).on('input', '.importe-cheque', actualizarTotalCheques);
-}
-function agregarFilaCheque() {
-    let nuevaFila = `
-        <tr>
-            <td><input type="text" class="form-control banco-cheque" placeholder="Nombre del banco"></td>
-            <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00"></td>
-        </tr>
-    `;
+                // Evento para actualizar el total de cheques
+                $(document).off('input', '.importe-cheque'); // Eliminar eventos previos
+                $(document).on('input', '.importe-cheque', actualizarTotalCheques);
+            }
 
-    $('#cheques-body').append(nuevaFila);
-}
+            function agregarFilaCheque() {
+                let nuevaFila = `
+                                <tr>
+                                    <td><input type="text" class="form-control banco-cheque" placeholder="Nombre del banco"></td>
+                                    <td><input type="number" class="form-control importe-cheque" min="0" placeholder="0.00"></td>
+                                </tr>
+                            `;
+
+                $('#cheques-body').append(nuevaFila);
+            }
 
             function actualizarTotalCheques() {
                 let totalCheques = 0;
