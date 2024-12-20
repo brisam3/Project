@@ -64,7 +64,84 @@ include '../../backend/controller/access/AccessController.php';
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
 
+    <style>
+          /* Estilos modernos para los inputs */
+    #tablaRendiciones input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
 
+    #tablaRendiciones input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+   #myTable input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+    #myTable input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    #miTabla input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+    #miTabla input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    #tablaRendicionesLocales input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+  #tablaRendicionesLocales input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    #libre input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+  #libre input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    </style>
 </head>
 
 <body>
@@ -772,7 +849,7 @@ include '../../backend/controller/access/AccessController.php';
                                             <div class="card">
                                                 <div class="sub-table my-2">
                                                     <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                        <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
+                                                        <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped" id="libre">
                                                             <thead>
                                                                 <tr>
                                                                     <th colspan="13" class="text-center">
@@ -1032,90 +1109,75 @@ include '../../backend/controller/access/AccessController.php';
                                         ].map(denominacion => {
                                             return (detalle[
                                                 `billetes_${denominacion}`
-                                            ] || 0) * denominacion;
+                                                ] || 0) * denominacion;
                                         })
                                     };
                                     sumas.totalFila = sumas.totalColumnas.reduce((a, b) =>
                                         a + b, 0);
 
                                     let billetesHtml = `
-                        <div class="card mb-3 billetes-card-locales" data-index="${index}">
-                            <div class="card-header billetes-header-locales" style="cursor: pointer;">
-                                <h5 class="mb-0 d-flex align-items-center justify-content-between" style="color: #000;">
-                                    <span class="font-weight-bold">
-                                        <i class="fas fa-money-bill-wave mr-2"></i> ${detalle.nombre_local}
-                                    </span>
-                                    <span class="text-secondary">
-                                        <span class="font-weight-bold">Total: ${sumas.totalFila.toFixed(2)}</span>
-                                    </span>
-                                </h5>
-                            </div>
-                            <div class="card-body billetes-body-locales" style="display: none;">
-                                <div class="sub-table my-2">
-                                    <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                        <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">Denominación</th>
-                                                    ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10]
-                                                        .map(denominacion => `<th class="text-center">${denominacion}</th>`)
-                                                        .join('')}
-                                                    <th class="text-center">Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="font-weight-bold">Cantidad</td>
-                                                    ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10]
-                                                        .map(denominacion => {
-                                                            return `<td><input type="number" class="form-control cantidad-input-locales" value="${detalle[`billetes_${denominacion}`] || 0}" data-denominacion="${denominacion}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" /></td>`;
-                                                        })
-                                                        .join('')}
-                                                    <td class="font-weight-bold total-row">${sumas.totalFila.toFixed(2)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="font-weight-bold">Total</td>
-                                                    ${sumas.totalColumnas
-                                                        .map(total => `<td class="font-weight-bold columna-total">${total.toFixed(2)}</td>`)
-                                                        .join('')}
-                                                    <td class="font-weight-bold total-general-locales">${sumas.totalFila.toFixed(2)}</td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot>
-                                             <tr>
-                                                            <td colspan="13" class="font-weight-bold text-center"><strong>
-                                                                Tarjetas </strong> (Payway + Mercado Pago): 
-                                                                <span class="tarjetas-column-locales text-success">0.00</span>
-                                                            </td>
-                                                        </tr>
-                                                        <!-- Fila Gastos (Dinámica) -->
-                                                        <tr>
-                                                            <td colspan="13" class="font-weight-bold text-center">
-                                                               <strong> Gastos </strong>  (Gastos + Cuenta Corriente): 
-                                                                <span class="gastos-column-locales text-success">0.00</span>
-                                                            </td>
-                                                        </tr>
-                                                <tr>
-                                                   <td colspan="13" class="font-weight-bold text-center">
-                                                <label for="sistema-input-${index}">Sistema:</label>
-                                                <input id="sistema-input-${index}" type="number" class="form-control sistema-input-locales mx-auto" 
-                                                    value="0" style="width: 30%; text-align: right;" />
-                                            </td>
-
-                                                </tr>
-                                               
-                                                <tr>
-                                                    <td colspan="13" class="font-weight-bold text-center">
-                                                         <strong> Diferencia: </strong> <span class="diferencia-column-locales text-danger">0.00</span>
-                                                    </td>
-                                                </tr>
-                                                
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
+                                    <div class="card mb-3 billetes-card-locales" data-index="${index}">
+                                        <div class="card-header billetes-header-locales" style="cursor: pointer;">
+                                            <h5 class="mb-0 d-flex align-items-center justify-content-between" style="color: #000;">
+                                                <span class="font-weight-bold">
+                                                    <i class="fas fa-money-bill-wave mr-2"></i> ${detalle.nombre_local}
+                                                </span>
+                                                <span class="text-secondary">
+                                                    <span class="font-weight-bold">Total: ${sumas.totalFila.toFixed(2)}</span>
+                                                </span>
+                                            </h5>
+                                        </div>
+                                        <div class="card-body billetes-body-locales" style="display: none;">
+                                            <div class="sub-table my-2">
+                                                <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                    <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped" id="myTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="13" class="text-center">
+                                                                    <h6 style="margin: 10px 0;">${detalle.nombre_local}</h6>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="text-center">Denominación</th>
+                                                                <th class="text-center">20,000</th>
+                                                                <th class="text-center">10,000</th>
+                                                                <th class="text-center">5,000</th>
+                                                                <th class="text-center">2,000</th>
+                                                                <th class="text-center">1,000</th>
+                                                                <th class="text-center">500</th>
+                                                                <th class="text-center">200</th>
+                                                                <th class="text-center">100</th>
+                                                                <th class="text-center">50</th>
+                                                                <th class="text-center">20</th>
+                                                                <th class="text-center">10</th>
+                                                                <th class="text-center">Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="font-weight-bold">Cantidad</td>
+                                                                ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
+                                                                    return `<td><input type="number" class="form-control cantidad-input-locales" value="${detalle[`billetes_${denominacion}`] || 0}" data-denominacion="${denominacion}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" /></td>`;
+                                                                }).join('')}
+                                                                <td class="font-weight-bold total-row">${sumas.totalFila.toFixed(2)}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="font-weight-bold">Total</td>
+                                    ${sumas.totalColumnas.map(total => `<td class="font-weight-bold columna-total">${total.toFixed(2)}</td>`).join('')}
+                                    <td class="font-weight-bold total-general-locales">${sumas.totalFila.toFixed(2)}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="font-weight-bold">Diferencia</td>
+                                    <td colspan="12" class="font-weight-bold diferencia-column-locales text-center">0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>`;
                                     subTablesHtml += billetesHtml;
                                 });
 
@@ -1124,85 +1186,37 @@ include '../../backend/controller/access/AccessController.php';
                                 // Funcionalidad para expandir/contraer las tablas
                                 $('.billetes-header-locales').on('click', function() {
                                     const $body = $(this).next(
-                                        '.billetes-body-locales'
-                                    ); // Selecciona el contenido correspondiente
+                                    '.billetes-body-locales'); // Selecciona el contenido correspondiente
                                     $body.slideToggle(
-                                        300
-                                    ); // Alterna entre mostrar y ocultar con animación
+                                    300); // Alterna entre mostrar y ocultar con animación
                                 });
 
                                 // Mostrar la primera tabla por defecto
                                 $('.billetes-card-locales:first-child .billetes-body-locales')
-                                    .show();
-
-                                // Función para actualizar 'Tarjetas' y 'Gastos' dinámicamente por local
-                                function actualizarTarjetasYGastos() {
-                                    $('.sub-table').each(function() {
-                                        const table = $(this).find('table');
-
-                                        // Obtener el índice de la tabla secundaria
-                                        const index = $(this).closest(
-                                            '.billetes-card-locales').data('index');
-
-                                        // Obtener valores de la tabla principal para este local (por columna)
-                                        const payway = parseFloat($(
-                                            `#tbodyRendicionesLocales tr:nth-child(1) td:eq(${index + 1}) input`
-                                        ).val()) || 0;
-                                        const mercadoPago = parseFloat($(
-                                            `#tbodyRendicionesLocales tr:nth-child(2) td:eq(${index + 1}) input`
-                                        ).val()) || 0;
-                                        const gastos = parseFloat($(
-                                            `#tbodyRendicionesLocales tr:nth-child(3) td:eq(${index + 1}) input`
-                                        ).val()) || 0;
-                                        const cuentaCorriente = parseFloat($(
-                                            `#tbodyRendicionesLocales tr:nth-child(4) td:eq(${index + 1}) input`
-                                        ).val()) || 0;
-
-                                        // Calcular totales dinámicamente
-                                        const totalTarjetas = payway + mercadoPago;
-                                        const totalGastos = gastos + cuentaCorriente;
-
-                                        // Actualizar las filas correspondientes a este local
-                                        table.find('.tarjetas-column-locales').text(
-                                            totalTarjetas.toFixed(2));
-                                        table.find('.gastos-column-locales').text(
-                                            totalGastos.toFixed(2));
-                                    });
-                                }
-
-                                // Detectar cambios en la tabla principal y actualizar las tablas secundarias
-                                $(document).on('input', '.table-input-locales', function() {
-                                    actualizarTarjetasYGastos();
-                                });
-
-                                // Llamar a la función al cargar la tabla secundaria
-                                actualizarTarjetasYGastos();
-
-
+                                .show();
 
                                 // Actualizar dinámicamente la fila de diferencia en las tablas secundarias
                                 function actualizarDiferenciaDinamica() {
-                                    $('.sub-table').each(function() {
+                                    $('.sub-table').each(function(index) {
                                         const table = $(this).find('table');
                                         const totalEfectivo = parseFloat(table.find(
                                             '.total-general-locales').text()) || 0;
-                                        const sistema = parseFloat(table.find(
-                                            '.sistema-input-locales').val()) || 0;
 
-                                        // Diferencia = Sistema - TotalEfectivo
-                                        const diferencia = totalEfectivo - sistema;
+                                        const diferencia = totalEfectivo;
 
                                         // Actualizar la fila de diferencia
                                         table.find('.diferencia-column-locales').text(
-                                            diferencia.toFixed(2));
+                                            diferencia
+                                            .toFixed(2));
                                     });
                                 }
+
                                 // Inicializar las diferencias desde el inicio
                                 actualizarDiferenciaDinamica();
 
                                 // Recalcular diferencias dinámicamente al modificar valores
                                 $(document).on('input',
-                                    '.cantidad-input-locales, .sistema-input-locales',
+                                    '.cantidad-input-locales, .table-input-locales',
                                     function() {
                                         actualizarDiferenciaDinamica();
                                     });
@@ -1367,7 +1381,7 @@ include '../../backend/controller/access/AccessController.php';
                                             </tr>
                                         
                                             <tr>
-                                                <td><strong>Total</strong></td>
+                                                <td><strong>Diferencia</strong></td>
                                                 <td id="totalSumGeneral" class="font-weight-bold text-success">0.00</td>
                                             </tr>
                                             <tr>
@@ -1381,10 +1395,7 @@ include '../../backend/controller/access/AccessController.php';
                                                 <td><strong>Diferencia Sistema</strong></td>
                                                 <td id="diferenciaSistemaGeneral" class="font-weight-bold text-warning">0.00</td>
                                             </tr>
-                                            <tr>
-                                                <td>Diferencia</td>
-                                                <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
-                                            </tr>
+                                           
 
                                             <tr>
                                                 <td><strong>Total General Locales</strong></td>
@@ -1441,13 +1452,10 @@ include '../../backend/controller/access/AccessController.php';
                                     $('#totalSumGeneral').text(total.toFixed(2));
                                     $('#diferenciaSistemaGeneral').text(diferenciaSistema.toFixed(
                                         2));
-
                                     // Diferencia General (Efectivo + Tarjetas - Gastos)
                                     const diferencia = totalTarjetas + totalEfectivo - totalGastos;
                                     $('#diferenciaTotalGeneral').text(diferencia.toFixed(2));
                                 }
-
-
                                 $(document).ready(function() {
                                     buscarDetalleRendicionesLocales();
                                     actualizarTablaBanco();
@@ -1503,7 +1511,6 @@ include '../../backend/controller/access/AccessController.php';
                 }
             });
             </script>
-
 
             <script>
             function actualizarTablaBanco() {

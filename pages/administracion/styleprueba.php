@@ -97,3 +97,106 @@
 
     
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+_______________________________
+
+
+
+<style>
+          /* Estilos modernos para los inputs */
+    #tablaRendiciones input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+    #tablaRendiciones input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+   #myTable input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+    #myTable input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    #miTabla input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+    #miTabla input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    #tablaRendicionesLocales input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+  #tablaRendicionesLocales input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    #libre input[type="number"] {
+        width: 100%;
+        padding: 0.3rem; /* Ajustado para mantener consistencia */
+        border: none;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        color: #140f07;
+    }
+    
+
+  #libre input[type="number"]:focus {
+        outline: none;
+        border-bottom-color: #1d274d;
+        box-shadow: 0 1px 0 0 #1d274d;
+    }
+    </style>
