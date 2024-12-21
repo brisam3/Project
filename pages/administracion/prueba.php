@@ -1099,7 +1099,7 @@ include '../../backend/controller/access/AccessController.php';
                                                    <td colspan="13" class="font-weight-bold text-center">
                                                 <label for="sistema-input-${index}">Sistema:</label>
                                                 <input id="sistema-input-${index}" type="number" class="form-control sistema-input-locales mx-auto" 
-                                                    value="0" style="width: 30%; text-align: right;" />
+                                                    value="0" style="width: 10%; text-align: right;" />
                                             </td>
 
                                                 </tr>
