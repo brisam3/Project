@@ -13,7 +13,14 @@ class DetalleRendicionController {
 
     public function obtenerRendicionesConVentas() {
         $fechaHoy = date('Y-m-d'); // Fecha actual
-        $yesterday = date('Y-m-d', strtotime('-1 day')); // Fecha de ayer
+
+                // Determinar si hoy es lunes para usar el sábado como referencia
+                if (date('N') == 1) {
+                    $yesterday = date('Y-m-d', strtotime('-2 days')); // Usar sábado
+                } else {
+                    $yesterday = date('Y-m-d', strtotime('-1 day')); // Usar día anterior
+                }
+
     
         // Mapeo del orden de los preventistas
         $ordenPreventistas = [
@@ -220,4 +227,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     exit;
 }
-
