@@ -5,6 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include '../../backend/controller/access/AccessController.php';
 
+$accessController = new AccessController();
+
+// Verificar si el acceso está permitido
+if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php')) {
+    $accessController->denyAccess();
+    exit;
+}
 
 ?>
 
@@ -301,11 +308,11 @@ include '../../backend/controller/access/AccessController.php';
                                     (); // Llamar después de cargar datos de Preventa
                                 // Crear encabezados de la tabla principal
                                 let headers = `
-                            <tr>
-                                <th>Movil</th>
-                                ${data.map(detalle => `<th>${detalle.movil}</th>`).join('')}
-                                <th>Totales</th>
-                            </tr>
+                           <tr>
+                                    <th>Movil</th>
+                                    ${data.map(detalle => `<th data-id="${detalle.id}">${detalle.movil}</th>`).join('')}
+                                    <th>Totales</th>
+                                </tr>
                             <tr>
                                 <th>Preventista<br>
                                 Chofer</th>
@@ -838,27 +845,103 @@ include '../../backend/controller/access/AccessController.php';
                                 }
 
                                 // Agregar la columna "LIBRE" en la tabla principal
-                                function agregarColumnaLibre() {
-                                    $('#theadRendiciones tr:first-child').append(
-                                        '<th>LIBRE</th>');
-                                    $('#theadRendiciones tr:nth-child(2)').append('<th></th>');
+                                // Crear la tabla "LIBRE" al inicializar las tablas secundarias
+                                function agregarTablaLibre() {
+                                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
+                                        200, 100, 50, 20, 10
+                                    ];
 
-                                    $('#tbodyRendiciones tr').each(function() {
-                                        const $row = $(this);
-                                        const esEditable = $row.find('td input')
-                                            .length >
-                                            0; // Verificar si la fila es editable
+                                    let libreHtml = `
+                                        <div class="card">
+                                            <div class="sub-table my-2">
+                                                <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                    <table class="datatables-ajax table table-bordered table-hover table-sm table-striped" id="tablaLibre">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="${denominaciones.length + 2}" class="text-center">
+                                                                    <h6 style="margin: 10px 0;">LIBRE</h6>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="text-center">Motivo</th>
+                                                                <th class="text-center">Denominación</th>
+                                                                ${denominaciones.map(denominacion => `<th class="text-center">${denominacion}</th>`).join('')}
+                                                                <th class="text-center">Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            ${crearFilaLibre(denominaciones)}
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="${denominaciones.length + 1}" class="text-center">
+                                                                    <button type="button" class="btn btn-primary btn-sm" id="btnAgregarFilaLibre">Agregar Fila</button>
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>`;
 
-                                        $row.append(
-                                            esEditable ?
-                                            `<td><input type="number" class="form-control table-input" value="0" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" data-campo="libre" /></td>` :
-                                            `<td>0.00</td>`
-                                        );
+                                    // Agregar la tabla al contenedor
+                                    $('#tablasSecundarias').append(libreHtml);
+
+                                    // Evento para agregar una nueva fila
+                                    $(document).on('click', '#btnAgregarFilaLibre', function() {
+                                        $('#tablaLibre tbody').append(crearFilaLibre(
+                                            denominaciones));
                                     });
 
-                                    // Agregar columna "LIBRE" en la fila "Total Neto"
-                                    $('#filaTotalNeto').append(
-                                        '<td class="neto-column">0.00</td>');
+                                    // Actualizar los cálculos al cambiar valores en la tabla LIBRE
+                                    $(document).on('input', '.cantidad-libre', function() {
+                                        actualizarTotalLibre(denominaciones);
+                                    });
+                                }
+
+                                // Función para crear una nueva fila en la tabla LIBRE
+                                function crearFilaLibre(denominaciones) {
+                                    return `
+                                                <tr>
+                                                    <td><input type="text" class="form-control motivo-libre" placeholder="Ingrese el motivo" style="width: 100%;"></td>
+                                                    <td class="font-weight-bold">Cantidad</td>
+                                                    ${denominaciones.map(denominacion => `
+                                                        <td>
+                                                            <input type="number" class="form-control cantidad-libre" value="0" 
+                                                                data-denominacion="${denominacion}" 
+                                                                style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;">
+                                                        </td>`).join('')}
+                                                    <td class="font-weight-bold total-libre">0.00</td>
+                                                </tr>`;
+                                }
+
+                                // Función para actualizar el total de la tabla LIBRE
+                                function actualizarTotalLibre(denominaciones) {
+                                    let totalGeneral = 0;
+
+                                    $('#tablaLibre tbody tr').each(function() {
+                                        let totalFila = 0;
+
+                                        $(this).find('.cantidad-libre').each(function() {
+                                            const denominacion = parseFloat($(this)
+                                                .data('denominacion'));
+                                            const cantidad = parseFloat($(this)
+                                                .val()) || 0;
+                                            totalFila += denominacion * cantidad;
+                                        });
+
+                                        $(this).find('.total-libre').text(totalFila.toFixed(
+                                            2));
+                                        totalGeneral += totalFila;
+                                    });
+
+                                    // Aquí podrías actualizar un total general si fuera necesario
+                                    // Por ejemplo: $(".total-general-libre").text(totalGeneral.toFixed(2));
+
+                                    actualizarTotalNeto();
+                                    actualizarTotalPreventa();
+                                    actualizarTablaBanco(); // Actualizar BANCO
+                                    actualizarTablaResumen();
                                 }
 
                                 function actualizarTotalPreventa() {
@@ -884,11 +967,46 @@ include '../../backend/controller/access/AccessController.php';
 
                                     $('#total-global').text(totalGlobal.toFixed(2));
                                 }
+                                function recorrerTablaPrincipal() {
+    let resultado = {};
+
+    // Recorremos cada columna de la tabla principal
+    $('#theadRendiciones th[data-id]').each(function(index) {
+        const columnaId = $(this).data('id');  // Obtener el ID de la columna
+        let columnaValores = {};
+
+        // Recorremos cada fila de la tabla principal (tbody)
+        $('#tbodyRendiciones tr').each(function() {
+            const nombreFila = $(this).find('td:first').text();  // Nombre de la fila (Total Ventas, etc.)
+            const valorCelda = $(this).find(`td`).eq(index + 1).text() || 
+                               $(this).find(`td`).eq(index + 1).find('input').val();
+
+            columnaValores[nombreFila] = valorCelda;
+        });
+
+        // Recorremos la tabla secundaria correspondiente (usando data-index)
+        let billetes = {};
+        $(`.billetes-card[data-index="${index}"] .cantidad-input`).each(function() {
+            const denominacion = $(this).data('denominacion');
+            const cantidad = $(this).val() || 0;
+            billetes[`billetes_${denominacion}`] = cantidad;
+        });
+
+        // Almacenar los datos de la columna con los billetes correspondientes
+        resultado[columnaId] = {
+            datos: columnaValores,
+            billetes: billetes
+        };
+    });
+
+    // Mostrar el resultado en la consola (o enviarlo a otro lugar)
+    console.log(resultado);
+}
 
                                 // Inicializar la tabla "LIBRE" y la columna en la tabla principal
                                 $(document).ready(function() {
                                     agregarTablaLibre();
-
+                                    recorrerTablaPrincipal();
                                     actualizarTotalPreventa();
 
                                 });
@@ -981,6 +1099,11 @@ include '../../backend/controller/access/AccessController.php';
                                     {
                                         nombre: 'Cuenta Corriente',
                                         campo: 'cuenta_corriente',
+                                        esEditable: true
+                                    },
+                                    {
+                                        nombre: 'Cambios',
+                                        campo: 'cambios',
                                         esEditable: true
                                     },
 
@@ -1097,10 +1220,13 @@ include '../../backend/controller/access/AccessController.php';
                                                         </tr>
                                                 <tr>
                                                    <td colspan="13" class="font-weight-bold text-center">
-                                                <label for="sistema-input-${index}">Sistema:</label>
-                                                <input id="sistema-input-${index}" type="number" class="form-control sistema-input-locales mx-auto" 
-                                                    value="0" style="width: 10%; text-align: right;" />
-                                            </td>
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            <label for="sistema-input-${index}" class="mr-2">Sistema:</label>
+                                                            <input id="sistema-input-${index}" type="number" class="form-control sistema-input-locales" 
+                                                                value="0" style="width: 10%; text-align: right;" />
+                                                        </div>
+                                                    </td>
+
 
                                                 </tr>
                                                
@@ -1370,17 +1496,7 @@ include '../../backend/controller/access/AccessController.php';
                                                 <td><strong>Total</strong></td>
                                                 <td id="totalSumGeneral" class="font-weight-bold text-success">0.00</td>
                                             </tr>
-                                            <tr>
-                                                <td>Sistema</td>
-                                                <td>
-                                                    <input type="number" value="0.00" class="form-control table-input-locales" 
-                                                    id="totalSistemaInput" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Diferencia Sistema</strong></td>
-                                                <td id="diferenciaSistemaGeneral" class="font-weight-bold text-warning">0.00</td>
-                                            </tr>
+                                           
                                             <tr>
                                                 <td>Diferencia</td>
                                                 <td id="diferenciaTotalGeneral" class="font-weight-bold text-primary">0.00</td>
@@ -1424,14 +1540,12 @@ include '../../backend/controller/access/AccessController.php';
                                     const totalGeneralLocales = totalEfectivo + totalTarjetas;
 
                                     // Calcular Total (Efectivo + Tarjetas - Gastos)
-                                    const total = totalGeneralLocales - totalGastos;
+                                    const total = totalGeneralLocales + totalGastos;
 
                                     // Obtener Total Sistema desde el input
-                                    const totalSistema = parseFloat($('#totalSistemaInput')
-                                        .val()) || 0;
 
-                                    // Calcular Diferencia Sistema: Total - Total Sistema
-                                    const diferenciaSistema = total - totalSistema;
+
+
 
                                     // Actualizar los valores en la tabla
                                     $('#totalEfectivoGeneral').text(totalEfectivo.toFixed(2));
@@ -1439,8 +1553,7 @@ include '../../backend/controller/access/AccessController.php';
                                     $('#totalGeneralLocales').text(totalGeneralLocales.toFixed(2));
                                     $('#totalGastosGeneral').text(totalGastos.toFixed(2));
                                     $('#totalSumGeneral').text(total.toFixed(2));
-                                    $('#diferenciaSistemaGeneral').text(diferenciaSistema.toFixed(
-                                        2));
+
 
                                     // Diferencia General (Efectivo + Tarjetas - Gastos)
                                     const diferencia = totalTarjetas + totalEfectivo - totalGastos;
@@ -1676,6 +1789,10 @@ include '../../backend/controller/access/AccessController.php';
                 actualizarTablaBanco();
             });
             </script>
+
+
+
+
 
 
 
