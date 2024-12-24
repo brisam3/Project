@@ -163,6 +163,9 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <button onclick="ejecutarRecorridoPreventa()">Recorrer Todas las
+                                                    Tablas</button>
+
                                             </div>
                                         </div>
                                     </div>
@@ -967,49 +970,23 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
 
                                     $('#total-global').text(totalGlobal.toFixed(2));
                                 }
-                                function recorrerTablaPrincipal() {
-    let resultado = {};
 
-    // Recorremos cada columna de la tabla principal
-    $('#theadRendiciones th[data-id]').each(function(index) {
-        const columnaId = $(this).data('id');  // Obtener el ID de la columna
-        let columnaValores = {};
 
-        // Recorremos cada fila de la tabla principal (tbody)
-        $('#tbodyRendiciones tr').each(function() {
-            const nombreFila = $(this).find('td:first').text();  // Nombre de la fila (Total Ventas, etc.)
-            const valorCelda = $(this).find(`td`).eq(index + 1).text() || 
-                               $(this).find(`td`).eq(index + 1).find('input').val();
 
-            columnaValores[nombreFila] = valorCelda;
-        });
 
-        // Recorremos la tabla secundaria correspondiente (usando data-index)
-        let billetes = {};
-        $(`.billetes-card[data-index="${index}"] .cantidad-input`).each(function() {
-            const denominacion = $(this).data('denominacion');
-            const cantidad = $(this).val() || 0;
-            billetes[`billetes_${denominacion}`] = cantidad;
-        });
 
-        // Almacenar los datos de la columna con los billetes correspondientes
-        resultado[columnaId] = {
-            datos: columnaValores,
-            billetes: billetes
-        };
-    });
 
-    // Mostrar el resultado en la consola (o enviarlo a otro lugar)
-    console.log(resultado);
-}
 
                                 // Inicializar la tabla "LIBRE" y la columna en la tabla principal
                                 $(document).ready(function() {
                                     agregarTablaLibre();
-                                    recorrerTablaPrincipal();
+
                                     actualizarTotalPreventa();
 
+
                                 });
+
+
 
 
 
@@ -1788,6 +1765,141 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
             $(document).ready(function() {
                 actualizarTablaBanco();
             });
+            </script>
+
+
+
+            <script>
+            function recorrerTablaPrincipal() {
+                let resultado = {};
+
+                // Recorremos cada columna de la tabla principal
+                $('#theadRendiciones th[data-id]').each(function(index) {
+                    const columnaId = $(this).data(
+                        'id'); // Obtener el ID de la columna
+                    let columnaValores = {};
+
+                    // Recorremos cada fila de la tabla principal (tbody) y extraemos los valores
+                    $('#tbodyRendiciones tr').each(function() {
+                        const nombreFila = $(this).find(
+                                'td:first')
+                            .text(); // Nombre de la fila (Total Ventas, etc.)
+                        const valorCelda = $(this).find(`td`)
+                            .eq(index + 1).text() ||
+                            $(this).find(`td`).eq(index + 1)
+                            .find('input').val();
+
+                        columnaValores[nombreFila] = valorCelda;
+                    });
+
+                    // Recorremos la tabla secundaria correspondiente y añadimos los billetes al mismo objeto
+                    $(`.billetes-card[data-index="${index}"] .cantidad-input`)
+                        .each(function() {
+                            const denominacion = $(this).data(
+                                'denominacion');
+                            const cantidad = $(this).val() || 0;
+                            columnaValores[
+                                    `billetes_${denominacion}`] =
+                                cantidad; // Añadir billetes directamente
+                        });
+
+                    // Guardar el resultado con todos los valores de la columna
+                    resultado[columnaId] = columnaValores;
+                });
+
+                // Mostrar el resultado final en consola
+                console.log(resultado);
+            }
+
+            function recorrerTablaLibre() {
+                let resultadoLibre = [];
+
+                // Recorremos cada fila de la tabla "LIBRE"
+                $('#tablaLibre tbody tr').each(function() {
+                    let fila = {};
+
+                    // Añadimos el motivo directamente al objeto
+                    fila.motivo = $(this).find('.motivo-libre').val() ||
+                        "Sin motivo";
+
+                    // Recorremos cada billete y lo añadimos al mismo objeto
+                    $(this).find('.cantidad-libre').each(function() {
+                        const denominacion = $(this).data(
+                            'denominacion'
+                        ); // Obtener la denominación
+                        const cantidad = $(this).val() ||
+                            0; // Obtener la cantidad
+                        fila[`billetes_${denominacion}`] =
+                            cantidad; // Añadir billete directamente
+                    });
+
+                    resultadoLibre.push(
+                        fila); // Agregar la fila al resultado
+                });
+
+                // Mostrar el resultado en consola
+                console.log(resultadoLibre);
+            }
+
+            function recorrerTablaTotalPreventa() {
+                let totalPreventa = {};
+
+                // Recorremos la fila de cantidades en la tabla "Total Preventa"
+                $('#totalPreventa tbody tr').each(function() {
+                    $(this).find('.total-cantidad').each(function() {
+                        const denominacion = $(this).data(
+                            'denominacion'
+                        ); // Obtener la denominación (20000, 10000, etc.)
+                        const cantidad = $(this).text() ||
+                            0; // Obtener el texto (cantidad total)
+
+                        // Guardar en el objeto con el formato billetes_20000, billetes_10000, etc.
+                        totalPreventa[
+                                `billetes_${denominacion}`] =
+                            cantidad;
+                    });
+
+                    // Obtener el total general de la tabla (última celda de la fila)
+                    const totalGeneral = $(this).find('#total-global')
+                        .text() || 0;
+                    totalPreventa['total_general'] = totalGeneral;
+                });
+
+                // Mostrar el resultado en consola
+                console.log(totalPreventa);
+            }
+
+            function recorrerTablaGeneral() {
+                let totalGeneral = {};
+
+                // Recorremos la fila de cantidades en la tabla "General"
+                $('#tablaResumenPreventa tbody tr').each(function() {
+                    const descripcion = $(this).find('td:first').text()
+                        .toLowerCase().replace(/ /g,
+                            '_'); // Ej: "TOTAL EFECTIVO" -> "total_efectivo"
+                    const valor = $(this).find('td:last').text() ||
+                        0; // Obtener el valor de la celda final
+
+                    // Guardar el valor con la clave basada en la descripción
+                    totalGeneral[descripcion] = valor;
+                });
+
+                // Obtener el total general preventa (última fila de la tabla)
+                const totalGeneralPreventa = $('#totalGeneralResumen').text() ||
+                    0;
+                totalGeneral['total_general'] = totalGeneralPreventa;
+
+                // Mostrar el resultado en consola
+                console.log(totalGeneral);
+            }
+
+
+            function ejecutarRecorridoPreventa() {
+                recorrerTablaPrincipal();
+                recorrerTablaLibre();
+                recorrerTablaTotalPreventa();
+                recorrerTablaGeneral();
+            }
             </script>
 
 
