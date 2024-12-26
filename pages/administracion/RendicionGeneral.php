@@ -1,4 +1,6 @@
 <?php
+
+
 // Incluir el controlador de acceso
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -1775,40 +1777,32 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
 
                 // Recorremos cada columna de la tabla principal
                 $('#theadRendiciones th[data-id]').each(function(index) {
-                    const columnaId = $(this).data(
-                        'id'); // Obtener el ID de la columna
+                    const columnaId = $(this).data('id'); // Obtener el ID de la columna
                     let columnaValores = {};
 
                     // Recorremos cada fila de la tabla principal (tbody) y extraemos los valores
                     $('#tbodyRendiciones tr').each(function() {
-                        const nombreFila = $(this).find(
-                                'td:first')
-                            .text(); // Nombre de la fila (Total Ventas, etc.)
-                        const valorCelda = $(this).find(`td`)
-                            .eq(index + 1).text() ||
-                            $(this).find(`td`).eq(index + 1)
-                            .find('input').val();
+                        const nombreFila = $(this).find('td:first')
+                    .text(); // Nombre de la fila (Total Ventas, etc.)
+                        const valorCelda = $(this).find(`td`).eq(index + 1).text() ||
+                            $(this).find(`td`).eq(index + 1).find('input').val();
 
                         columnaValores[nombreFila] = valorCelda;
                     });
 
                     // Recorremos la tabla secundaria correspondiente y añadimos los billetes al mismo objeto
-                    $(`.billetes-card[data-index="${index}"] .cantidad-input`)
-                        .each(function() {
-                            const denominacion = $(this).data(
-                                'denominacion');
-                            const cantidad = $(this).val() || 0;
-                            columnaValores[
-                                    `billetes_${denominacion}`] =
-                                cantidad; // Añadir billetes directamente
-                        });
+                    $(`.billetes-card[data-index="${index}"] .cantidad-input`).each(function() {
+                        const denominacion = $(this).data('denominacion');
+                        const cantidad = $(this).val() || 0;
+                        columnaValores[`billetes_${denominacion}`] =
+                        cantidad; // Añadir billetes directamente
+                    });
 
                     // Guardar el resultado con todos los valores de la columna
                     resultado[columnaId] = columnaValores;
                 });
 
-                // Mostrar el resultado final en consola
-                console.log(resultado);
+                return resultado;
             }
 
             function recorrerTablaLibre() {
@@ -1819,87 +1813,99 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                     let fila = {};
 
                     // Añadimos el motivo directamente al objeto
-                    fila.motivo = $(this).find('.motivo-libre').val() ||
-                        "Sin motivo";
+                    fila.motivo = $(this).find('.motivo-libre').val() || "Sin motivo";
 
                     // Recorremos cada billete y lo añadimos al mismo objeto
                     $(this).find('.cantidad-libre').each(function() {
-                        const denominacion = $(this).data(
-                            'denominacion'
-                        ); // Obtener la denominación
-                        const cantidad = $(this).val() ||
-                            0; // Obtener la cantidad
-                        fila[`billetes_${denominacion}`] =
-                            cantidad; // Añadir billete directamente
+                        const denominacion = $(this).data('denominacion'); // Obtener la denominación
+                        const cantidad = $(this).val() || 0; // Obtener la cantidad
+                        fila[`billetes_${denominacion}`] = cantidad; // Añadir billete directamente
                     });
 
-                    resultadoLibre.push(
-                        fila); // Agregar la fila al resultado
+                    resultadoLibre.push(fila); // Agregar la fila al resultado
                 });
 
-                // Mostrar el resultado en consola
-                console.log(resultadoLibre);
+                return resultadoLibre;
             }
 
-            function recorrerTablaTotalPreventa() {
-                let totalPreventa = {};
+            function combinarTotales() {
+                let resultadoCombinado = {};
 
-                // Recorremos la fila de cantidades en la tabla "Total Preventa"
+                // Obtener datos de la tabla "Total Preventa"
                 $('#totalPreventa tbody tr').each(function() {
                     $(this).find('.total-cantidad').each(function() {
-                        const denominacion = $(this).data(
-                            'denominacion'
-                        ); // Obtener la denominación (20000, 10000, etc.)
-                        const cantidad = $(this).text() ||
-                            0; // Obtener el texto (cantidad total)
-
-                        // Guardar en el objeto con el formato billetes_20000, billetes_10000, etc.
-                        totalPreventa[
-                                `billetes_${denominacion}`] =
-                            cantidad;
+                        const denominacion = $(this).data('denominacion'); // Obtener la denominación
+                        const cantidad = $(this).text() || 0; // Obtener la cantidad total
+                        resultadoCombinado[`billetes_${denominacion}`] = cantidad;
                     });
 
-                    // Obtener el total general de la tabla (última celda de la fila)
-                    const totalGeneral = $(this).find('#total-global')
-                        .text() || 0;
-                    totalPreventa['total_general'] = totalGeneral;
+                    // Obtener el total general de la tabla
+                    const totalGeneral = $(this).find('#total-global').text() || 0;
+                    resultadoCombinado['total_general_preventa'] = totalGeneral;
                 });
 
-                // Mostrar el resultado en consola
-                console.log(totalPreventa);
-            }
-
-            function recorrerTablaGeneral() {
-                let totalGeneral = {};
-
-                // Recorremos la fila de cantidades en la tabla "General"
+                // Agregar datos de la tabla "General"
                 $('#tablaResumenPreventa tbody tr').each(function() {
-                    const descripcion = $(this).find('td:first').text()
-                        .toLowerCase().replace(/ /g,
-                            '_'); // Ej: "TOTAL EFECTIVO" -> "total_efectivo"
-                    const valor = $(this).find('td:last').text() ||
-                        0; // Obtener el valor de la celda final
-
-                    // Guardar el valor con la clave basada en la descripción
-                    totalGeneral[descripcion] = valor;
+                    const descripcion = $(this).find('td:first').text().toLowerCase().replace(/ /g,
+                    '_'); // Ej: "TOTAL EFECTIVO" -> "total_efectivo"
+                    const valor = $(this).find('td:last').text() || 0; // Obtener el valor
+                    resultadoCombinado[descripcion] = valor;
                 });
 
-                // Obtener el total general preventa (última fila de la tabla)
-                const totalGeneralPreventa = $('#totalGeneralResumen').text() ||
-                    0;
-                totalGeneral['total_general'] = totalGeneralPreventa;
+                // Agregar el total general preventa (si existe)
+                const totalGeneralResumen = $('#totalGeneralResumen').text() || 0;
+                resultadoCombinado['total_general_resumen'] = totalGeneralResumen;
 
-                // Mostrar el resultado en consola
-                console.log(totalGeneral);
+                return resultadoCombinado;
             }
-
 
             function ejecutarRecorridoPreventa() {
-                recorrerTablaPrincipal();
-                recorrerTablaLibre();
-                recorrerTablaTotalPreventa();
-                recorrerTablaGeneral();
+                const tablaPrincipal = recorrerTablaPrincipal();
+                const tablaLibre = recorrerTablaLibre();
+                const totalesCombinados = combinarTotales();
+
+                // Crear objeto final para enviar al backend
+                const datosFinales = {
+                    tabla_principal: tablaPrincipal,
+                    tabla_libre: tablaLibre,
+                    totales: totalesCombinados
+                };
+
+                console.log(datosFinales); // Verificar en consola
+                enviarDatosAlBackend(datosFinales); // Enviar datos al servidor
             }
+
+            function enviarDatosAlBackend() {
+    // Construir el objeto completo con 'action' incluido
+    const data = {
+        action: 'insertarRendicion', // Campo 'action' ADENTRO del objeto
+        tabla_principal: recorrerTablaPrincipal(),
+        tabla_libre: recorrerTablaLibre(),
+        totales: combinarTotales()
+    };
+
+    // Enviar la solicitud AJAX
+    $.ajax({
+        url: '../../backend/controller/administracion/Rendiciones.php', // Ruta al backend
+        method: 'POST',
+        contentType: 'application/json', // Indicar que es un JSON
+        data: JSON.stringify(data), // Convertir el objeto a JSON
+        success: function(response) {
+            console.log('Respuesta del servidor:', response);
+            if (response.error) {
+                alert('Error: ' + response.mensaje);
+            } else {
+                alert('Datos insertados correctamente.');
+            }
+        },
+        error: function(error) {
+            console.error('Error al guardar los datos:', error);
+            alert('Error en la comunicación con el servidor.');
+        }
+    });
+}
+
+
             </script>
 
 

@@ -189,12 +189,143 @@ class DetalleRendicionController {
     }
     
 
+    public function insertarRendicion($data) {
+        try {
+            // Iniciar la transacción
+            $this->db->beginTransaction();
+
+            // Insertar en la tabla rendicion_general
+            $stmt_general = $this->db->prepare("
+                INSERT INTO rendicion_general (
+                    total_efectivo,
+                    total_general_preventa,
+                    total_mp,
+                    total_transferencias,
+                    billetes_20000,
+                    billetes_10000,
+                    billetes_5000,
+                    billetes_2000,
+                    billetes_1000,
+                    billetes_500,
+                    billetes_200,
+                    billetes_100,
+                    billetes_50,
+                    billetes_20,
+                    billetes_10
+                ) VALUES (
+                    :total_efectivo,
+                    :total_general_preventa,
+                    :total_mp,
+                    :total_transferencias,
+                    :billetes_20000,
+                    :billetes_10000,
+                    :billetes_5000,
+                    :billetes_2000,
+                    :billetes_1000,
+                    :billetes_500,
+                    :billetes_200,
+                    :billetes_100,
+                    :billetes_50,
+                    :billetes_20,
+                    :billetes_10
+                )
+            ");
+
+            $totales = $data['totales'];
+
+            $stmt_general->execute([
+                ':total_efectivo' => $totales['total_efectivo'] ?? 0.00,
+                ':total_general_preventa' => $totales['total_general_preventa'] ?? 0.00,
+                ':total_mp' => $totales['total_mp'] ?? 0.00,
+                ':total_transferencias' => $totales['total_transferencias'] ?? 0.00,
+                ':billetes_20000' => $totales['billetes_20000'] ?? 0,
+                ':billetes_10000' => $totales['billetes_10000'] ?? 0,
+                ':billetes_5000' => $totales['billetes_5000'] ?? 0,
+                ':billetes_2000' => $totales['billetes_2000'] ?? 0,
+                ':billetes_1000' => $totales['billetes_1000'] ?? 0,
+                ':billetes_500' => $totales['billetes_500'] ?? 0,
+                ':billetes_200' => $totales['billetes_200'] ?? 0,
+                ':billetes_100' => $totales['billetes_100'] ?? 0,
+                ':billetes_50' => $totales['billetes_50'] ?? 0,
+                ':billetes_20' => $totales['billetes_20'] ?? 0,
+                ':billetes_10' => $totales['billetes_10'] ?? 0
+            ]);
+
+            // Obtener el ID de la rendición general recién insertada
+            $idRendicionGeneral = $this->db->lastInsertId();
+
+            // Insertar en la tabla rendicion_libre si existen datos
+            if (!empty($data['tabla_libre'])) {
+                $stmt_libre = $this->db->prepare("
+                    INSERT INTO rendicion_libre (
+                        idRendicionGeneral,
+                        motivo,
+                        billetes_20000,
+                        billetes_10000,
+                        billetes_5000,
+                        billetes_2000,
+                        billetes_1000,
+                        billetes_500,
+                        billetes_200,
+                        billetes_100,
+                        billetes_50,
+                        billetes_20,
+                        billetes_10
+                    ) VALUES (
+                        :idRendicionGeneral,
+                        :motivo,
+                        :billetes_20000,
+                        :billetes_10000,
+                        :billetes_5000,
+                        :billetes_2000,
+                        :billetes_1000,
+                        :billetes_500,
+                        :billetes_200,
+                        :billetes_100,
+                        :billetes_50,
+                        :billetes_20,
+                        :billetes_10
+                    )
+                ");
+
+                foreach ($data['tabla_libre'] as $fila) {
+                    $stmt_libre->execute([
+                        ':idRendicionGeneral' => $idRendicionGeneral,
+                        ':motivo' => $fila['motivo'],
+                        ':billetes_20000' => $fila['billetes_20000'] ?? 0,
+                        ':billetes_10000' => $fila['billetes_10000'] ?? 0,
+                        ':billetes_5000' => $fila['billetes_5000'] ?? 0,
+                        ':billetes_2000' => $fila['billetes_2000'] ?? 0,
+                        ':billetes_1000' => $fila['billetes_1000'] ?? 0,
+                        ':billetes_500' => $fila['billetes_500'] ?? 0,
+                        ':billetes_200' => $fila['billetes_200'] ?? 0,
+                        ':billetes_100' => $fila['billetes_100'] ?? 0,
+                        ':billetes_50' => $fila['billetes_50'] ?? 0,
+                        ':billetes_20' => $fila['billetes_20'] ?? 0,
+                        ':billetes_10' => $fila['billetes_10'] ?? 0
+                    ]);
+                }
+            }
+
+            // Confirmar la transacción
+            $this->db->commit();
+
+            return ['success' => true, 'message' => 'Datos insertados correctamente'];
+        } catch (Exception $e) {
+            // Revertir transacción en caso de error
+            $this->db->rollBack();
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
     
 }
 
 // Manejo de las peticiones AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
+
+    
 
     $database = new Database();
     $dbConnection = $database->getConnection();
@@ -214,6 +345,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $cierresCaja = $controller->obtenerCierreCajaHoy(); // Llama a la nueva función
                     echo json_encode(['error' => false, 'data' => $cierresCaja]);
                     break;
+                case 'insertarRendicion': // Nuevo case
+                        $data = json_decode(file_get_contents('php://input'), true);
+                        $resultado = $controller->insertarRendicion($data);
+                        echo json_encode($resultado);
+                    break;
+    
 
                 default:
                     throw new Exception("Acción no válida.");
