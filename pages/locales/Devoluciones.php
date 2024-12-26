@@ -466,7 +466,7 @@ if (!$accessController->checkAccess('/pages/locales/Devoluciones.php')) {
 
                                 if (description && batch && quantity && codBejerman && codBarras) {
                                     // Validar duplicados
-                                    const exists = productData.some(product => product.codBarras === codBarras);
+                                    const exists = productData.some(product => product.codBejerman === codBejerman);
                                     if (exists) {
                                         alert('El producto ya está en la lista.');
                                         return;
