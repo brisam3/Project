@@ -190,20 +190,21 @@ class DetalleRendicionController {
     
 
     public function insertarRendicion($data) {
+        $fechaHoy = date('Y-m-d'); // Fecha actual
         try {
             // Iniciar la transacción
             $this->db->beginTransaction();
-
+    
             // Insertar en la tabla rendicion_general
             $stmt_general = $this->db->prepare("
                 INSERT INTO rendicion_general (
+                    fecha,
                     total_efectivo,
                     total_general_preventa,
                     total_mp,
                     total_transferencias,
                     billetes_20000,
                     billetes_10000,
-                    billetes_5000,
                     billetes_2000,
                     billetes_1000,
                     billetes_500,
@@ -213,13 +214,13 @@ class DetalleRendicionController {
                     billetes_20,
                     billetes_10
                 ) VALUES (
+                    :fecha,
                     :total_efectivo,
                     :total_general_preventa,
                     :total_mp,
                     :total_transferencias,
                     :billetes_20000,
                     :billetes_10000,
-                    :billetes_5000,
                     :billetes_2000,
                     :billetes_1000,
                     :billetes_500,
@@ -230,17 +231,17 @@ class DetalleRendicionController {
                     :billetes_10
                 )
             ");
-
+    
             $totales = $data['totales'];
-
+    
             $stmt_general->execute([
+                ':fecha' => $fechaHoy,
                 ':total_efectivo' => $totales['total_efectivo'] ?? 0.00,
                 ':total_general_preventa' => $totales['total_general_preventa'] ?? 0.00,
                 ':total_mp' => $totales['total_mp'] ?? 0.00,
                 ':total_transferencias' => $totales['total_transferencias'] ?? 0.00,
                 ':billetes_20000' => $totales['billetes_20000'] ?? 0,
                 ':billetes_10000' => $totales['billetes_10000'] ?? 0,
-                ':billetes_5000' => $totales['billetes_5000'] ?? 0,
                 ':billetes_2000' => $totales['billetes_2000'] ?? 0,
                 ':billetes_1000' => $totales['billetes_1000'] ?? 0,
                 ':billetes_500' => $totales['billetes_500'] ?? 0,
@@ -250,10 +251,10 @@ class DetalleRendicionController {
                 ':billetes_20' => $totales['billetes_20'] ?? 0,
                 ':billetes_10' => $totales['billetes_10'] ?? 0
             ]);
-
+    
             // Obtener el ID de la rendición general recién insertada
             $idRendicionGeneral = $this->db->lastInsertId();
-
+    
             // Insertar en la tabla rendicion_libre si existen datos
             if (!empty($data['tabla_libre'])) {
                 $stmt_libre = $this->db->prepare("
@@ -262,7 +263,6 @@ class DetalleRendicionController {
                         motivo,
                         billetes_20000,
                         billetes_10000,
-                        billetes_5000,
                         billetes_2000,
                         billetes_1000,
                         billetes_500,
@@ -276,7 +276,6 @@ class DetalleRendicionController {
                         :motivo,
                         :billetes_20000,
                         :billetes_10000,
-                        :billetes_5000,
                         :billetes_2000,
                         :billetes_1000,
                         :billetes_500,
@@ -287,14 +286,13 @@ class DetalleRendicionController {
                         :billetes_10
                     )
                 ");
-
+    
                 foreach ($data['tabla_libre'] as $fila) {
                     $stmt_libre->execute([
                         ':idRendicionGeneral' => $idRendicionGeneral,
                         ':motivo' => $fila['motivo'],
                         ':billetes_20000' => $fila['billetes_20000'] ?? 0,
                         ':billetes_10000' => $fila['billetes_10000'] ?? 0,
-                        ':billetes_5000' => $fila['billetes_5000'] ?? 0,
                         ':billetes_2000' => $fila['billetes_2000'] ?? 0,
                         ':billetes_1000' => $fila['billetes_1000'] ?? 0,
                         ':billetes_500' => $fila['billetes_500'] ?? 0,
@@ -306,51 +304,482 @@ class DetalleRendicionController {
                     ]);
                 }
             }
-
-            // Confirmar la transacción
+    
+            // Consultar chofer y preventista para rendicion_movil
+            $stmt_chofer_preventista = $this->db->prepare("
+            SELECT idUsuarioChofer, idUsuarioPreventista, codigo_rendicion
+            FROM rendicion_choferes
+            WHERE id = :id
+        ");
+        
+    
+            // Insertar en rendicion_movil
+            $stmt_movil = $this->db->prepare("
+                INSERT INTO rendicion_movil (
+                    idUsuarioChofer,
+                    idUsuarioPreventista,
+                    idRendicionGeneral,
+                    fecha,
+                   total_ventas,
+                    total_efectivo,
+                    total_transferencia,
+                    total_mercadopago,
+                    total_cheques,
+                    total_fiados,
+                    total_gastos,
+                    pago_secretario,
+                    total_mec_faltante,
+                    total_rechazos,
+                    total_neto,
+                    billetes_20000,
+                    billetes_10000,
+                    billetes_2000,
+                    billetes_1000,
+                    billetes_500,
+                    billetes_200,
+                    billetes_100,
+                    billetes_50,
+                    billetes_20,
+                    billetes_10,
+                    codigo_rendicion
+                ) VALUES (
+                    :idUsuarioChofer,
+                    :idUsuarioPreventista,
+                    :idRendicionGeneral,
+                    :fecha,
+                    :total_ventas,
+                    :total_efectivo,
+                    :total_transferencia,
+                    :total_mercadopago,
+                    :total_cheques,
+                    :total_fiados,
+                    :total_gastos,
+                    :pago_secretario,
+                    :total_mec_faltante,
+                    :total_rechazos,
+                    :total_neto,
+                    :billetes_20000,
+                    :billetes_10000,
+                    :billetes_2000,
+                    :billetes_1000,
+                    :billetes_500,
+                    :billetes_200,
+                    :billetes_100,
+                    :billetes_50,
+                    :billetes_20,
+                    :billetes_10,
+                    :codigo_rendicion
+                )
+            ");
+    
+            foreach ($data['tabla_principal'] as $idDetalle => $movil) {
+                $stmt_chofer_preventista->execute([':id' => $idDetalle]);
+                $choferPreventista = $stmt_chofer_preventista->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$choferPreventista || empty($choferPreventista['codigo_rendicion'])) {
+                    throw new Exception("No se encontró código de rendición para el detalle ID: $idDetalle");
+                }
+                
+                // Asegúrate de mapear correctamente los campos del objeto a los parámetros
+                $stmt_movil->execute([
+                    ':idUsuarioChofer' => $choferPreventista['idUsuarioChofer'],
+                    ':idUsuarioPreventista' => $choferPreventista['idUsuarioPreventista'],
+                    ':idRendicionGeneral' => $idRendicionGeneral,
+                    ':fecha' => $fechaHoy,
+                    ':total_ventas' => $movil['Total_Ventas'] ?? 0.00,
+                    ':total_efectivo' => $movil['Total_Efectivo'] ?? 0.00,
+                    ':total_transferencia' => $movil['Transferencias'] ?? 0.00,
+                    ':total_mercadopago' => $movil['Mercado_Pago'] ?? 0.00,
+                    ':total_cheques' => $movil['Cheques'] ?? 0.00,
+                    ':total_fiados' => $movil['Fiados'] ?? 0.00,
+                    ':total_gastos' => $movil['Gastos'] ?? 0.00,
+                    ':pago_secretario' => $movil['Pago_Secretario'] ?? 0.00,
+                    ':total_mec_faltante' => $movil['MEC_Faltante'] ?? 0.00,
+                    ':total_rechazos' => $movil['Rechazos'] ?? 0.00,
+                    ':total_neto' => $movil['Total_Neto'] ?? 0.00,
+                    ':billetes_20000' => $movil['billetes_20000'] ?? 0,
+                    ':billetes_10000' => $movil['billetes_10000'] ?? 0,
+                    ':billetes_2000' => $movil['billetes_2000'] ?? 0,
+                    ':billetes_1000' => $movil['billetes_1000'] ?? 0,
+                    ':billetes_500' => $movil['billetes_500'] ?? 0,
+                    ':billetes_200' => $movil['billetes_200'] ?? 0,
+                    ':billetes_100' => $movil['billetes_100'] ?? 0,
+                    ':billetes_50' => $movil['billetes_50'] ?? 0,
+                    ':billetes_20' => $movil['billetes_20'] ?? 0,
+                    ':billetes_10' => $movil['billetes_10'] ?? 0,
+                    ':codigo_rendicion' => $choferPreventista['codigo_rendicion']
+                ]);
+                
+            }
+            
+            
+    
             $this->db->commit();
-
             return ['success' => true, 'message' => 'Datos insertados correctamente'];
         } catch (Exception $e) {
-            // Revertir transacción en caso de error
             $this->db->rollBack();
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
+    public function insertarRendicionLocales($data) {
+        $fechaHoy = date('Y-m-d');
+        try {
+            // Validar que las claves necesarias existan
+            if (!isset($data['totalesFusionados']) || !isset($data['principales'])) {
+                throw new Exception('Datos incompletos: faltan totalesFusionados o principales.');
+            }
+    
+            // Iniciar la transacción
+            if (!$this->db->inTransaction()) {
+                $this->db->beginTransaction();
+            }
+    
+            $totalesFusionados = $data['totalesFusionados'];  // <- Modificado aquí
+            $principales = $data['principales'];  // <- Modificado aquí
+            
+            // Insertar en la tabla rendicion_general_locales
+            $stmt_general = $this->db->prepare("
+                INSERT INTO rendicion_general_locales (
+                    fecha,
+                    total_efectivo,
+                    total_general,
+                    total_mp,
+                    total_transferencias,
+                    billetes_20000,
+                    billetes_10000,
+                    billetes_2000,
+                    billetes_1000,
+                    billetes_500,
+                    billetes_200,
+                    billetes_100,
+                    billetes_50,
+                    billetes_20,
+                    billetes_10,
+                    diferencia,
+                    total_tarjetas
+                ) VALUES (
+                    :fecha,
+                    :total_efectivo,
+                    :total_general,
+                    :total_mp,
+                    :total_transferencias,
+                    :billetes_20000,
+                    :billetes_10000,
+                    :billetes_2000,
+                    :billetes_1000,
+                    :billetes_500,
+                    :billetes_200,
+                    :billetes_100,
+                    :billetes_50,
+                    :billetes_20,
+                    :billetes_10,
+                    :diferencia,
+                    :total_tarjetas
+                )
+            ");
+    
+            $stmt_general->execute([
+                ':fecha' => $fechaHoy,
+                ':total_efectivo' => $totalesFusionados['Total_Efectivo'] ?? 0.00,
+                ':total_general' => $totalesFusionados['Total_General_Locales'] ?? 0.00,
+                ':total_mp' => $totalesFusionados['Total_Tarjetas'] ?? 0.00,
+                ':total_transferencias' => $totalesFusionados['Total_Gastos'] ?? 0.00,
+                ':billetes_20000' => $totalesFusionados['billetes_20000'] ?? 0,
+                ':billetes_10000' => $totalesFusionados['billetes_10000'] ?? 0,
+                ':billetes_2000' => $totalesFusionados['billetes_2000'] ?? 0,
+                ':billetes_1000' => $totalesFusionados['billetes_1000'] ?? 0,
+                ':billetes_500' => $totalesFusionados['billetes_500'] ?? 0,
+                ':billetes_200' => $totalesFusionados['billetes_200'] ?? 0,
+                ':billetes_100' => $totalesFusionados['billetes_100'] ?? 0,
+                ':billetes_50' => $totalesFusionados['billetes_50'] ?? 0,
+                ':billetes_20' => $totalesFusionados['billetes_20'] ?? 0,
+                ':billetes_10' => $totalesFusionados['billetes_10'] ?? 0,
+                ':diferencia' => $totalesFusionados['Diferencia'] ?? 0.00,
+                ':total_tarjetas' => $totalesFusionados['Total_Tarjetas'] ?? 0.00
+            ]);
+    
+            $idRendicionGeneral = $this->db->lastInsertId();
+    
+            // Insertar en la tabla rendicion_locales
+            // Definir la consulta para rendicion_locales antes del bucle
+        $stmt_locales = $this->db->prepare("
+        INSERT INTO rendicion_locales (
+            id_rendicion_general,
+            id_local,
+            payway,
+            mercado_pago,
+            gastos,
+            cuenta_corriente,
+            cambios,
+            sistema,
+            sistema_mas_cambios,
+            total_efectivo,
+            tarjetas,
+            diferencia,
+            billetes_20000,
+            billetes_10000,
+            billetes_2000,
+            billetes_1000,
+            billetes_500,
+            billetes_200,
+            billetes_100,
+            billetes_50,
+            billetes_20,
+            billetes_10
+        ) VALUES (
+            :id_rendicion_general,
+            :id_local,
+            :payway,
+            :mercado_pago,
+            :gastos,
+            :cuenta_corriente,
+            :cambios,
+            :sistema,
+            :sistema_mas_cambios,
+            :total_efectivo,
+            :tarjetas,
+            :diferencia,
+            :billetes_20000,
+            :billetes_10000,
+            :billetes_2000,
+            :billetes_1000,
+            :billetes_500,
+            :billetes_200,
+            :billetes_100,
+            :billetes_50,
+            :billetes_20,
+            :billetes_10
+        )
+        ");
+
+                    // Bucle para insertar en rendicion_locales
+                    foreach ($principales as $idCierreCaja => $local) {
+                    // Validar que el idCierreCaja tenga datos en cierreCaja
+                    $stmt_cierreCaja = $this->db->prepare("SELECT idUsuario FROM cierreCaja WHERE idCierreCaja = :id");
+                    $stmt_cierreCaja->execute([':id' => $idCierreCaja]);
+                    $idUsuario = $stmt_cierreCaja->fetchColumn();
+
+                    if (!$idUsuario) {
+                        throw new Exception("No se encontró idUsuario para idCierreCaja: $idCierreCaja");
+                    }
+
+                    // Ejecutar la inserción usando la consulta preparada
+                    $stmt_locales->execute([
+                        ':id_rendicion_general' => $idRendicionGeneral,
+                        ':id_local' => $idUsuario,
+                        ':payway' => $local['Payway'] ?? 0.00,
+                        ':mercado_pago' => $local['Mercado_Pago'] ?? 0.00,
+                        ':gastos' => $local['Gastos'] ?? 0.00,
+                        ':cuenta_corriente' => $local['Cuenta_Corriente'] ?? 0.00,
+                        ':cambios' => $local['Cambios'] ?? 0.00,
+                        ':sistema' => $local['Sistema'] ?? 0.00,
+                        ':sistema_mas_cambios' => $local['Sistema_Mas_Cambios'] ?? 0.00,
+                        ':total_efectivo' => $local['Total_Efectivo'] ?? 0.00,
+                        ':tarjetas' => $local['Tarjetas'] ?? 0.00,
+                        ':diferencia' => $local['Diferencia'] ?? 0.00,
+                        ':billetes_20000' => $local['billetes_20000'] ?? 0,
+                        ':billetes_10000' => $local['billetes_10000'] ?? 0,
+                        ':billetes_2000' => $local['billetes_2000'] ?? 0,
+                        ':billetes_1000' => $local['billetes_1000'] ?? 0,
+                        ':billetes_500' => $local['billetes_500'] ?? 0,
+                        ':billetes_200' => $local['billetes_200'] ?? 0,
+                        ':billetes_100' => $local['billetes_100'] ?? 0,
+                        ':billetes_50' => $local['billetes_50'] ?? 0,
+                        ':billetes_20' => $local['billetes_20'] ?? 0,
+                        ':billetes_10' => $local['billetes_10'] ?? 0
+                    ]);
+                    }
+
+    
+            $this->db->commit();
+            return ['success' => true, 'message' => 'Datos insertados correctamente'];
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+    
+    public function insertarRendicionBanco($data) {
+        $fechaHoy = date('Y-m-d');
+        try {
+            // Validar que los datos requeridos estén presentes
+            if (!isset($data['fusionados']) || !isset($data['cheques'])) {
+                throw new Exception('Datos incompletos: faltan valores fusionados o cheques.');
+            }
+    
+            // Iniciar la transacción
+            if (!$this->db->inTransaction()) {
+                $this->db->beginTransaction();
+            }
+    
+            $fusionados = $data['fusionados'];
+            $cheques = $data['cheques']['cheques'];  // Lista de cheques
+    
+            // 1. Insertar en rendicion_general_banco
+            $stmt_general = $this->db->prepare("
+                INSERT INTO rendicion_general_banco (
+                    fecha,
+                    total_efectivo,
+                    total_cheques,
+                    total_general,
+                    billetes_20000,
+                    billetes_10000,
+                    billetes_2000,
+                    billetes_1000,
+                    billetes_500,
+                    billetes_200,
+                    billetes_100,
+                    billetes_50,
+                    billetes_20,
+                    billetes_10
+                ) VALUES (
+                    :fecha,
+                    :total_efectivo,
+                    :total_cheques,
+                    :total_general,
+                    :billetes_20000,
+                    :billetes_10000,
+                    :billetes_2000,
+                    :billetes_1000,
+                    :billetes_500,
+                    :billetes_200,
+                    :billetes_100,
+                    :billetes_50,
+                    :billetes_20,
+                    :billetes_10
+                )
+            ");
+    
+            // Ejecutar la inserción
+            $stmt_general->execute([
+                ':fecha' => $fechaHoy,
+                ':total_efectivo' => $fusionados['totalEfectivo'] ?? 0.00,
+                ':total_cheques' => $fusionados['totalCheques'] ?? 0.00,
+                ':total_general' => $fusionados['totalGeneral'] ?? 0.00,
+                ':billetes_20000' => $fusionados['billetes_20000'] ?? 0,
+                ':billetes_10000' => $fusionados['billetes_10000'] ?? 0,
+                ':billetes_2000' => $fusionados['billetes_2000'] ?? 0,
+                ':billetes_1000' => $fusionados['billetes_1000'] ?? 0,
+                ':billetes_500' => $fusionados['billetes_500'] ?? 0,
+                ':billetes_200' => $fusionados['billetes_200'] ?? 0,
+                ':billetes_100' => $fusionados['billetes_100'] ?? 0,
+                ':billetes_50' => $fusionados['billetes_50'] ?? 0,
+                ':billetes_20' => $fusionados['billetes_20'] ?? 0,
+                ':billetes_10' => $fusionados['billetes_10'] ?? 0
+            ]);
+    
+            $idRendicionBanco = $this->db->lastInsertId();
+    
+            // 2. Insertar cheques vinculados a esta rendición
+            $stmt_cheques = $this->db->prepare("
+                INSERT INTO cheques (id_rendicion_banco, banco, importe)
+                VALUES (:id_rendicion_banco, :banco, :importe)
+            ");
+    
+            foreach ($cheques as $cheque) {
+                $stmt_cheques->execute([
+                    ':id_rendicion_banco' => $idRendicionBanco,
+                    ':banco' => $cheque['banco'],
+                    ':importe' => $cheque['importe']
+                ]);
+            }
+    
+            // Confirmar la transacción
+            $this->db->commit();
+            return ['success' => true, 'message' => 'Datos de rendición bancaria insertados correctamente.'];
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+    
+
+
+    
+    
+    
+    
+    
+    
+    
+
     
 }
 
 // Manejo de las peticiones AJAX
+// Manejo de las peticiones AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
-
-    
 
     $database = new Database();
     $dbConnection = $database->getConnection();
     $controller = new DetalleRendicionController($dbConnection);
 
-    if (isset($_POST['action'])) {
-        $action = filter_var($_POST['action'], FILTER_SANITIZE_STRING);
+    // Intentar capturar desde $_POST o desde JSON
+    $data = json_decode(file_get_contents('php://input'), true);
+    $action = $_POST['action'] ?? ($data['action'] ?? null);
 
+    if ($action) {
+        $action = filter_var($action, FILTER_SANITIZE_STRING);
         try {
             switch ($action) {
                 case 'obtenerRendicionesConUsuarios':
-                    $detalles = $controller->obtenerRendicionesConVentas(); // Usa la nueva función
+                    $detalles = $controller->obtenerRendicionesConVentas();
                     echo json_encode(['error' => false, 'data' => $detalles]);
                     break;
 
                 case 'obtenerCierreCajaHoy':
-                    $cierresCaja = $controller->obtenerCierreCajaHoy(); // Llama a la nueva función
+                    $cierresCaja = $controller->obtenerCierreCajaHoy();
                     echo json_encode(['error' => false, 'data' => $cierresCaja]);
                     break;
-                case 'insertarRendicion': // Nuevo case
-                        $data = json_decode(file_get_contents('php://input'), true);
-                        $resultado = $controller->insertarRendicion($data);
-                        echo json_encode($resultado);
+
+                case 'insertarRendicion':
+                    // Verificar que 'tabla_principal' y otros datos existan
+                    if (!isset($data['tabla_principal']) || empty($data['tabla_principal'])) {
+                        echo json_encode(['error' => true, 'mensaje' => 'Datos incompletos.']);
+                        exit;
+                    }
+
+                    $resultado = $controller->insertarRendicion($data);
+                    echo json_encode($resultado);
                     break;
+
+                case 'insertarRendicionLocales':
+                        if (!isset($data['tablas']) || !is_array($data['tablas'])) {
+                            echo json_encode(['success' => false, 'error' => 'La clave "tablas" no está presente o no es válida.']);
+                            exit;
+                        }
     
+                        $totalesFusionados = $data['tablas']['totalesFusionados'] ?? null;
+                        $principales = $data['tablas']['principales'] ?? null;
+    
+                        if (!$totalesFusionados || !$principales) {
+                            echo json_encode(['success' => false, 'error' => 'Faltan los datos necesarios: "totalesFusionados" o "principales".']);
+                            exit;
+                        }
+    
+                        $resultado = $controller->insertarRendicionLocales([
+                            'totalesFusionados' => $totalesFusionados,
+                            'principales' => $principales,
+                        ]);
+    
+                        echo json_encode($resultado);
+                        break;
+                case 'insertarRendicionBanco':
+                            if (!isset($data['fusionados']) || !isset($data['cheques'])) {
+                                echo json_encode(['success' => false, 'error' => 'Datos incompletos para rendición de banco.']);
+                                exit;
+                            }
+                        
+                            $resultado = $controller->insertarRendicionBanco($data);
+                            echo json_encode($resultado);
+                            break;
+                        
 
                 default:
                     throw new Exception("Acción no válida.");
@@ -361,6 +790,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(['error' => true, 'mensaje' => 'Acción no especificada.']);
     }
-
     exit;
 }

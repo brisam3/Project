@@ -403,7 +403,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 const mecFaltante = parseFloat(document.getElementById('total-mec-faltante').value) || 0;
                 const rechazos = parseFloat(document.getElementById('total-rechazos').value) || 0;
                 const retenciones = parseFloat(document.getElementById('total-retenciones').value) || 0;
-                const totalRetenciones = document.getElementById('total-retenciones')?.value || 0; 
+                const totalRetenciones = document.getElementById('total-retenciones')?.value || 0;
 
 
                 const totalGeneral = efectivo + mercadoPago + transferencias + cheques + fiados + gastos +
@@ -451,7 +451,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                 const billetes_10 = document.getElementById('billetes_10')?.value || 0;
                 const totalRetenciones = document.getElementById('total-retenciones')?.value || 0; // Nuevo campo
                 const contrareembolso = parseFloat(document.getElementById('contrareembolso').innerText) || 0;
-                
+
 
                 $.ajax({
                     url: '../../backend/controller/choferes/CierreCajaController.php',
@@ -484,8 +484,16 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
 
                     },
                     success: function(response) {
-                        Swal.fire('Cierre Guardado', 'El cierre de caja se ha guardado exitosamente',
-                            'success');
+                        try {
+                            const data = JSON.parse(response);
+                            if (data.success) {
+                                Swal.fire('Cierre Guardado', data.success, 'success');
+                            } else if (data.error) {
+                                Swal.fire('Error', data.error, 'error');
+                            }
+                        } catch (e) {
+                            Swal.fire('Error', 'Respuesta inesperada del servidor', 'error');
+                        }
                     }
                 });
             }

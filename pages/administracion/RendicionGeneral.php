@@ -56,11 +56,70 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
     <link rel="stylesheet" href="../../assets/vendor/libs/typeahead-js/typeahead.css" />
     <link rel="stylesheet" href="../../assets/vendor/libs/apex-charts/apex-charts.css" />
 
-
+    <style>
+        
+    </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 
+    <style>
+    .btn-banco-guardar {
+        display: block;
+        width: 100%;
+        max-width: 300px;
+        margin: 20px auto;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        color: #ffffff;
+        background-color: #3498db;
+        border: 2px solid #2980b9;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
 
+    .btn-banco-guardar:hover {
+        background-color: #2980b9;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-banco-guardar:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+    }
+
+    .btn-banco-guardar:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-banco-guardar::before {
+        content: "⚠️ ";
+        margin-right: 8px;
+    }
+
+    .btn-banco-guardar::after {
+        content: "Acción importante";
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: #7f8c8d;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .btn-banco-guardar:hover::after {
+        bottom: -18px;
+        opacity: 1;
+    }
+    </style>
     <!-- Page CSS -->
     <link rel="stylesheet" href="../css/clima.css" />
 
@@ -165,8 +224,8 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button onclick="ejecutarRecorridoPreventa()">Recorrer Todas las
-                                                    Tablas</button>
+                                                <button onclick="ejecutarRecorridoPreventa()"
+                                                    class="btn-banco-guardar">Guardar</button>
 
                                             </div>
                                         </div>
@@ -218,6 +277,8 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <button onclick="enviarDatosLocalesAlBackend()"
+                                                    class="btn-banco-guardar">Guardar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -239,6 +300,9 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <button onclick="enviarDatosBanco()"
+                                                    class="btn-banco-guardar">Guardar</button>
+
                                             </div>
                                         </div>
                                     </div>
@@ -466,7 +530,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                 data.forEach(function(detalle, index) {
                                     let sumas = {
                                         totalFila: 0,
-                                        totalColumnas: [20000, 10000, 5000, 2000,
+                                        totalColumnas: [20000, 10000, 2000,
                                             1000,
                                             500, 200, 100, 50, 20, 10
                                         ].map(denominacion => {
@@ -503,7 +567,6 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                                 <th class="text-center">Denominación</th>
                                                                 <th class="text-center">20,000</th>
                                                                 <th class="text-center">10,000</th>
-                                                                <th class="text-center">5,000</th>
                                                                 <th class="text-center">2,000</th>
                                                                 <th class="text-center">1,000</th>
                                                                 <th class="text-center">500</th>
@@ -518,7 +581,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                         <tbody>
                                                             <tr>
                                                                 <td class="font-weight-bold">Cantidad</td>
-                                                                ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
+                                                                ${[20000, 10000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
                                                                     return `<td><input type="number" class="form-control cantidad-input" value="${detalle[`billetes_${denominacion}`] || 0}" data-denominacion="${denominacion}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" /></td>`;
                                                                 }).join('')}
                                                                 <td class="font-weight-bold total-row">${sumas.totalFila.toFixed(2)}</td>
@@ -592,7 +655,6 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                             <th>Denominación</th>
                                                             <th>20,000</th>
                                                             <th>10,000</th>
-                                                            <th>5,000</th>
                                                             <th>2,000</th>
                                                             <th>1,000</th>
                                                             <th>500</th>
@@ -607,7 +669,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                     <tbody>
                                                         <tr>
                                                             <td class="font-weight-bold">Cantidad</td>
-                                                            ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
+                                                            ${[20000, 10000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
                                                                 return `<td class="total-cantidad" data-denominacion="${denominacion}">0</td>`;
                                                             }).join('')}
                                                             <td class="font-weight-bold" id="total-global">0.00</td>
@@ -663,7 +725,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
 
                                 // Función para actualizar la tabla TOTAL PREVENTA
                                 function actualizarTotalPreventa() {
-                                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
+                                    const denominaciones = [20000, 10000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
                                     ];
                                     let totalGlobal = 0;
@@ -777,7 +839,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
 
                                 // Crear la tabla "LIBRE" al inicializar las tablas secundarias
                                 function agregarTablaLibre() {
-                                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
+                                    const denominaciones = [20000, 10000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
                                     ];
                                     let libreHtml = `
@@ -852,7 +914,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                 // Agregar la columna "LIBRE" en la tabla principal
                                 // Crear la tabla "LIBRE" al inicializar las tablas secundarias
                                 function agregarTablaLibre() {
-                                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
+                                    const denominaciones = [20000, 10000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
                                     ];
 
@@ -950,7 +1012,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                 }
 
                                 function actualizarTotalPreventa() {
-                                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
+                                    const denominaciones = [20000, 10000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
                                     ];
                                     let totalGlobal = 0;
@@ -1054,7 +1116,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                            
                             <tr>
                                 <th>Local</th>
-                                ${data.map(detalle => `<th>${detalle.nombre_local}</th>`).join('')}
+                                ${data.map(detalle => `<th  data-id="${detalle.idcierreCaja}">${detalle.nombre_local}</th>`).join('')}
                                 <th>Totales</th>
                             </tr>`;
                                 $('#theadRendicionesLocales').html(headers);
@@ -1129,7 +1191,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                 data.forEach(function(detalle, index) {
                                     let sumas = {
                                         totalFila: 0,
-                                        totalColumnas: [20000, 10000, 5000, 2000, 1000,
+                                        totalColumnas: [20000, 10000, 2000, 1000,
                                             500, 200, 100, 50, 20, 10
                                         ].map(denominacion => {
                                             return (detalle[
@@ -1159,7 +1221,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                             <thead>
                                                 <tr>
                                                     <th class="text-center">Denominación</th>
-                                                    ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10]
+                                                    ${[20000, 10000, 2000, 1000, 500, 200, 100, 50, 20, 10]
                                                         .map(denominacion => `<th class="text-center">${denominacion}</th>`)
                                                         .join('')}
                                                     <th class="text-center">Total</th>
@@ -1168,7 +1230,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                             <tbody>
                                                 <tr>
                                                     <td class="font-weight-bold">Cantidad</td>
-                                                    ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10]
+                                                    ${[20000, 10000, 2000, 1000, 500, 200, 100, 50, 20, 10]
                                                         .map(denominacion => {
                                                             return `<td><input type="number" class="form-control cantidad-input-locales" value="${detalle[`billetes_${denominacion}`] || 0}" data-denominacion="${denominacion}" style="-moz-appearance: textfield; width: 100%; padding: 2px; text-align: right;" /></td>`;
                                                         })
@@ -1294,14 +1356,47 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                         const sistema = parseFloat(table.find(
                                             '.sistema-input-locales').val()) || 0;
 
-                                        // Diferencia = Sistema - TotalEfectivo
-                                        const diferencia = totalEfectivo - sistema;
+                                        // Obtener el valor de 'Cambios' desde la tabla principal
+                                        const cambios = parseFloat($(
+                                            `#tbodyRendicionesLocales tr:contains('Cambios') td`
+                                        ).eq(table.closest(
+                                            '.billetes-card-locales').data(
+                                            'index') + 1).find('input').val()) || 0;
 
+                                        // Calcular diferencia
+
+
+                                        // Calcular sistema + cambios
+                                        const sistemaMasCambios = sistema + cambios;
+                                        const diferencia = totalEfectivo -
+                                            sistemaMasCambios;
                                         // Actualizar la fila de diferencia
                                         table.find('.diferencia-column-locales').text(
                                             diferencia.toFixed(2));
+
+                                        // Insertar o actualizar la fila 'Sistema + Cambios'
+                                        let filaSistemaMasCambios = table.find(
+                                            '.sistema-mas-cambios-row');
+                                        if (filaSistemaMasCambios.length === 0) {
+                                            filaSistemaMasCambios = $(
+                                                `<tr class="sistema-mas-cambios-row">
+                                                            <td colspan="13" class="font-weight-bold text-center">
+                                                                <strong>Sistema + Cambios: </strong> 
+                                                                <span class="sistema-mas-cambios-column text-success">${sistemaMasCambios.toFixed(2)}</span>
+                                                            </td>
+                                                        </tr>`
+                                            );
+                                            table.find('tfoot').append(
+                                                filaSistemaMasCambios);
+                                        } else {
+                                            filaSistemaMasCambios.find(
+                                                '.sistema-mas-cambios-column').text(
+                                                sistemaMasCambios.toFixed(2));
+                                        }
                                     });
                                 }
+
+
                                 // Inicializar las diferencias desde el inicio
                                 actualizarDiferenciaDinamica();
 
@@ -1323,7 +1418,6 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                             <th>Denominación</th>
                                                             <th>20,000</th>
                                                             <th>10,000</th>
-                                                            <th>5,000</th>
                                                             <th>2,000</th>
                                                             <th>1,000</th>
                                                             <th>500</th>
@@ -1338,7 +1432,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                                     <tbody>
                                                         <tr>
                                                             <td class="font-weight-bold">Cantidad</td>
-                                                            ${[20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
+                                                            ${[20000, 10000, 2000, 1000, 500, 200, 100, 50, 20, 10].map(denominacion => {
                                                                 return `<td class="total-cantidad-locales" data-denominacion="${denominacion}">0</td>`;
                                                             }).join('')}
                                                             <td class="font-weight-bold" id="total-global-locales">0.00</td>
@@ -1390,7 +1484,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
 
                                 // Función para actualizar la tabla TOTAL PREVENTA
                                 function actualizarTotalLocales() {
-                                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
+                                    const denominaciones = [20000, 10000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
                                     ];
                                     let totalGlobal = 0;
@@ -1416,7 +1510,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                 actualizarTotalLocales();
 
                                 function actualizarTotalLocales() {
-                                    const denominaciones = [20000, 10000, 5000, 2000, 1000, 500,
+                                    const denominaciones = [20000, 10000, 2000, 1000, 500,
                                         200, 100, 50, 20, 10
                                     ];
                                     let totalGlobal = 0;
@@ -1599,7 +1693,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
 
             <script>
             function actualizarTablaBanco() {
-                const denominaciones = [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10];
+                const denominaciones = [20000, 10000, 2000, 1000, 500, 200, 100, 50, 20, 10];
                 let html = `
                  <div class="card p-3 my-2">
                             <table class="datatables-ajax table table-bordered table-hover table-sm table table-striped">
@@ -1782,28 +1876,44 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
 
                     // Recorremos cada fila de la tabla principal (tbody) y extraemos los valores
                     $('#tbodyRendiciones tr').each(function() {
-                        const nombreFila = $(this).find('td:first')
-                    .text(); // Nombre de la fila (Total Ventas, etc.)
+                        let nombreFila = $(this).find('td:first').text().trim(); // Ej: Total Ventas
+                        nombreFila = nombreFila.replace(/\s+/g,
+                            '_'); // Reemplazar espacios por guiones bajos
+
                         const valorCelda = $(this).find(`td`).eq(index + 1).text() ||
-                            $(this).find(`td`).eq(index + 1).find('input').val();
+                            $(this).find(`td`).eq(index + 1).find('input')
+                            .val(); // Si hay input, tomar el valor
 
-                        columnaValores[nombreFila] = valorCelda;
+                        columnaValores[nombreFila] = valorCelda || 0; // Si no hay valor, establecer 0
                     });
 
-                    // Recorremos la tabla secundaria correspondiente y añadimos los billetes al mismo objeto
+                    // Inicializar el total de efectivo para esta columna
+                    let totalEfectivo = 0;
+
+                    // Recorremos billetes y sumamos al mismo objeto
                     $(`.billetes-card[data-index="${index}"] .cantidad-input`).each(function() {
-                        const denominacion = $(this).data('denominacion');
+                        const denominacion = $(this).data('denominacion'); // Ej: 1000, 500, etc.
                         const cantidad = $(this).val() || 0;
+
+                        const subtotal = parseInt(denominacion, 10) * parseInt(cantidad, 10) ||
+                            0; // Calcular subtotal por denominación
+                        totalEfectivo += subtotal; // Sumar al total de efectivo
+
                         columnaValores[`billetes_${denominacion}`] =
-                        cantidad; // Añadir billetes directamente
+                            cantidad; // Guardar con clave billetes_xxxx
                     });
 
-                    // Guardar el resultado con todos los valores de la columna
+                    // Agregar el total de efectivo al objeto
+                    columnaValores['Total_Efectivo'] = totalEfectivo;
+
+                    // Guardar la columna usando el id como clave
                     resultado[columnaId] = columnaValores;
                 });
 
                 return resultado;
             }
+
+
 
             function recorrerTablaLibre() {
                 let resultadoLibre = [];
@@ -1847,7 +1957,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                 // Agregar datos de la tabla "General"
                 $('#tablaResumenPreventa tbody tr').each(function() {
                     const descripcion = $(this).find('td:first').text().toLowerCase().replace(/ /g,
-                    '_'); // Ej: "TOTAL EFECTIVO" -> "total_efectivo"
+                        '_'); // Ej: "TOTAL EFECTIVO" -> "total_efectivo"
                     const valor = $(this).find('td:last').text() || 0; // Obtener el valor
                     resultadoCombinado[descripcion] = valor;
                 });
@@ -1860,28 +1970,52 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
             }
 
             function ejecutarRecorridoPreventa() {
-                const tablaPrincipal = recorrerTablaPrincipal();
-                const tablaLibre = recorrerTablaLibre();
-                const totalesCombinados = combinarTotales();
+    const tablaPrincipal = recorrerTablaPrincipal();
+    const tablaLibre = recorrerTablaLibre();
+    const totalesCombinados = combinarTotales();
 
-                // Crear objeto final para enviar al backend
-                const datosFinales = {
-                    tabla_principal: tablaPrincipal,
-                    tabla_libre: tablaLibre,
-                    totales: totalesCombinados
-                };
+    // Verificar si hay datos para enviar
+    if (Object.keys(tablaPrincipal).length === 0 && Object.keys(tablaLibre).length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Sin datos',
+            text: 'No hay datos en las tablas para enviar.'
+        });
+        return;
+    }
 
-                console.log(datosFinales); // Verificar en consola
-                enviarDatosAlBackend(datosFinales); // Enviar datos al servidor
-            }
+    // Crear objeto final para enviar al backend
+    const datosFinales = {
+        tabla_principal: tablaPrincipal,
+        tabla_libre: tablaLibre,
+        totales: totalesCombinados
+    };
 
-            function enviarDatosAlBackend() {
-    // Construir el objeto completo con 'action' incluido
+    console.log(datosFinales); // Verificar en consola
+
+    // Confirmación antes de enviar al backend
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Se guardará la rendición de preventa.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, guardar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            enviarDatosAlBackend(datosFinales); // Enviar datos al servidor si confirma
+        }
+    });
+}
+
+function enviarDatosAlBackend(datos) {
     const data = {
-        action: 'insertarRendicion', // Campo 'action' ADENTRO del objeto
-        tabla_principal: recorrerTablaPrincipal(),
-        tabla_libre: recorrerTablaLibre(),
-        totales: combinarTotales()
+        action: 'insertarRendicion',
+        tabla_principal: datos.tabla_principal,
+        tabla_libre: datos.tabla_libre,
+        totales: datos.totales
     };
 
     // Enviar la solicitud AJAX
@@ -1892,45 +2026,309 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
         data: JSON.stringify(data), // Convertir el objeto a JSON
         success: function(response) {
             console.log('Respuesta del servidor:', response);
-            if (response.error) {
-                alert('Error: ' + response.mensaje);
+
+            // Mostrar solo si la inserción fue exitosa
+            if (response.success) {
+                Swal.fire(
+                    'Guardado!',
+                    'Los datos de preventa se guardaron correctamente.',
+                    'success'
+                );
             } else {
-                alert('Datos insertados correctamente.');
+                // Mostrar error si la respuesta no tiene éxito
+                Swal.fire(
+                    'Error!',
+                    'No se pudo guardar: ' + response.error,
+                    'error'
+                );
             }
         },
         error: function(error) {
             console.error('Error al guardar los datos:', error);
-            alert('Error en la comunicación con el servidor.');
+            Swal.fire(
+                'Error!',
+                'Error en la comunicación con el servidor.',
+                'error'
+            );
         }
     });
 }
-
-
             </script>
 
 
 
+            <script>
+            function recorrerTablaPrincipalLocales() {
+                let resultado = {
+                    principales: {},
+                    totalLocales: {},
+                    resumenGeneral: {}
+                };
+
+                const headers = $('#theadRendicionesLocales th[data-id]');
+                const rows = $('#tbodyRendicionesLocales tr');
+
+                if (headers.length === 0 || rows.length === 0) {
+                    console.warn("No se encontraron tablas para recorrer.");
+                    return resultado;
+                }
+
+                headers.each(function(index) {
+                    const columnaId = $(this).data('id');
+                    let columnaValores = {};
+
+                    rows.each(function() {
+                        let nombreFila = $(this).find('td:first').text().trim();
+                        nombreFila = nombreFila.replace(/\s+/g, '_');
+
+                        let celda = $(this).find('td').eq(index + 1);
+                        let valorCelda = celda.find('input').val() || celda.text().trim() || 0;
+
+                        columnaValores[nombreFila] = parseFloat(valorCelda) || 0;
+                    });
+
+                    let totalEfectivo = 0;
+
+                    $(`.billetes-card-locales[data-index="${index}"] .cantidad-input-locales`).each(function() {
+                        const denominacion = $(this).data('denominacion');
+                        const cantidad = parseFloat($(this).val()) || 0;
+
+                        const subtotal = parseInt(denominacion, 10) * cantidad;
+                        totalEfectivo += subtotal;
+
+                        columnaValores[`billetes_${denominacion}`] = cantidad;
+                    });
+
+                    let sistema = parseFloat($(`#sistema-input-${index}`).val()) || 0;
+                    let sistemaMasCambios = parseFloat($(
+                        `.billetes-card-locales[data-index="${index}"] .sistema-mas-cambios-column`
+                    ).text()) || 0;
+                    let totalTarjetas = parseFloat($(
+                        `.billetes-card-locales[data-index="${index}"] .tarjetas-column-locales`
+                    ).text()) || 0;
+                    let totalEfectivoCalculado = parseFloat($(
+                        `.billetes-card-locales[data-index="${index}"] .total-general-locales`
+                    ).text()) || 0;
+                    let diferencia = parseFloat($(
+                        `.billetes-card-locales[data-index="${index}"] .diferencia-column-locales`
+                    ).text()) || 0;
+
+                    columnaValores['Total_Efectivo'] = totalEfectivo;
+                    columnaValores['Sistema'] = sistema;
+                    columnaValores['Sistema_Mas_Cambios'] = sistemaMasCambios;
+                    columnaValores['Tarjetas'] = totalTarjetas;
+                    columnaValores['Diferencia'] = diferencia;
+
+                    resultado.principales[columnaId] = columnaValores;
+                });
+
+                $('#totalLocales .total-cantidad-locales').each(function() {
+                    const denominacion = $(this).data('denominacion');
+                    const valor = parseFloat($(this).text()) || 0;
+                    resultado.totalLocales[`billetes_${denominacion}`] = valor;
+                });
+                resultado.totalLocales['Total'] = parseFloat($('#total-global-locales').text()) || 0;
+
+                resultado.resumenGeneral = {
+                    'Total_Efectivo': parseFloat($('#totalEfectivoGeneral').text()) || 0,
+                    'Total_Tarjetas': parseFloat($('#totalTarjetasGeneral').text()) || 0,
+                    'Total_Gastos': parseFloat($('#totalGastosGeneral').text()) || 0,
+                    'Total_Sum': parseFloat($('#totalSumGeneral').text()) || 0,
+                    'Diferencia': parseFloat($('#diferenciaTotalGeneral').text()) || 0,
+                    'Total_General_Locales': parseFloat($('#totalGeneralLocales').text()) || 0
+                };
+                console.log("Resultado de recorrerTablaPrincipalLocales:", resultado);
+                return resultado;
+            }
+
+            function enviarDatosLocalesAlBackend() {
+                const tablas = recorrerTablaPrincipalLocales();
+
+                // Verificar si hay datos antes de enviar
+                if (Object.keys(tablas.principales).length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sin datos',
+                        text: 'No hay datos para enviar. Verifique la tabla.'
+                    });
+                    return;
+                }
+
+                const totalesFusionados = {
+                    ...tablas.resumenGeneral,
+                    ...tablas.totalLocales
+                };
+
+                const data = {
+                    action: 'insertarRendicionLocales',
+                    tablas: {
+                        principales: tablas.principales,
+                        totalesFusionados: totalesFusionados
+                    }
+                };
+
+                console.log("Datos enviados al backend:", data);
+
+                // Mostrar alerta de confirmación
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Se guardará la rendición de locales.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, guardar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, enviar los datos al backend
+                        $.ajax({
+                            url: '../../backend/controller/administracion/Rendiciones.php',
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(data),
+                            success: function(response) {
+                                console.log('Respuesta del servidor:', response);
+                                if (response.success) {
+                                    Swal.fire(
+                                        'Guardado!',
+                                        'Los datos de rendición se han guardado correctamente.',
+                                        'success'
+                                    );
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'No se pudo guardar: ' + response.error,
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(error) {
+                                console.error('Error en la comunicación:', error);
+                                Swal.fire(
+                                    'Error!',
+                                    'Error de conexión con el servidor.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            }
+            </script>
 
 
+            <script>
+            function obtenerDatosTablas() {
+                let datosFusionados = {}; // Aquí se fusionan billetes y totales
+                let datosCheques = {}; // Cheques como un objeto independiente
+
+                let totalEfectivo = 0;
+
+                // 1. Recorrer la tabla de billetes y calcular total general
+                $('.cantidad-banco').each(function() {
+                    const denominacion = $(this).data('denominacion');
+                    const cantidad = parseFloat($(this).text()) || 0;
+                    const totalPorDenominacion = cantidad * denominacion;
+
+                    datosFusionados[`billetes_${denominacion}`] = cantidad;
+                    totalEfectivo += totalPorDenominacion;
+                });
+
+                // 2. Recorrer la tabla de cheques
+                let totalCheques = 0;
+                let listaCheques = [];
+
+                $('#tabla-cheques tbody tr').each(function() {
+                    const banco = $(this).find('.banco-cheque').val();
+                    const importe = parseFloat($(this).find('.importe-cheque').val()) || 0;
+
+                    if (banco && importe > 0) {
+                        listaCheques.push({
+                            banco: banco,
+                            importe: importe
+                        });
+                        totalCheques += importe;
+                    }
+                });
+
+                // 3. Añadir total general (efectivo y cheques) al mismo objeto de billetes
+                datosFusionados['totalEfectivo'] = totalEfectivo;
+                datosFusionados['totalCheques'] = totalCheques;
+                datosFusionados['totalGeneral'] = totalEfectivo + totalCheques;
+
+                // Almacenar los cheques por separado
+                datosCheques['cheques'] = listaCheques;
+
+                // Mostrar resultados en consola (para depuración)
+                console.log("Datos Fusionados (Billetes + Total General):", datosFusionados);
+                console.log("Cheques:", datosCheques);
+
+                // Devolver los datos
+                return {
+                    fusionados: datosFusionados,
+                    cheques: datosCheques
+                };
+            }
+
+            function enviarDatosBanco() {
+                const datos = obtenerDatosTablas(); // Recopila los datos de billetes y cheques
+
+                // Mostrar alerta de confirmación
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Se guardará la rendición bancaria.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, guardar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, enviar los datos al backend
+                        fetch('../../backend/controller/administracion/Rendiciones.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    action: 'insertarRendicionBanco',
+                                    fusionados: datos.fusionados,
+                                    cheques: datos.cheques
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire(
+                                        'Guardado!',
+                                        'La rendición bancaria ha sido guardada.',
+                                        'success'
+                                    );
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'No se pudo guardar: ' + data.error,
+                                        'error'
+                                    );
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error en la comunicación:', error);
+                                Swal.fire(
+                                    'Error!',
+                                    'Error de conexión con el servidor.',
+                                    'error'
+                                );
+                            });
+                    }
+                });
+            }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            // Ejecutar y guardar los datos
+            </script>
 
 
 

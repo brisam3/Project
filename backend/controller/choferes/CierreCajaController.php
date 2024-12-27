@@ -100,7 +100,14 @@ class CierreCajaChoferController {
             $stmt->bindParam(':contrareembolso', $contrareembolso); // Nuevo campo
 
             $stmt->execute();
-            echo json_encode(['success' => 'Cierre guardado']);
+
+            // Verificar el ID generado
+            $lastId = $this->pdo->lastInsertId();
+            if ($lastId) {
+                echo json_encode(['success' => "Registro insertado con éxito. ID generado: $lastId"]);
+            } else {
+                echo json_encode(['error' => 'No se generó un ID, posible fallo en la inserción.']);
+            }
         } catch (PDOException $e) {
             echo json_encode(['error' => $e->getMessage()]);
         }
