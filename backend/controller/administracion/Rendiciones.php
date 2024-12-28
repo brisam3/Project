@@ -174,7 +174,7 @@ class DetalleRendicionController {
                 cc.total_general,
                 cc.total_menos_gastos
             FROM 
-                cierrecaja cc
+                cierreCaja cc
             LEFT JOIN 
                 usuarios u ON cc.idUsuario = u.idUsuario  -- Hacemos el JOIN con la tabla 'usuarios' para obtener el nombre del local
             WHERE 
