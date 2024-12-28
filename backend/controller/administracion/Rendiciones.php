@@ -601,103 +601,112 @@ class DetalleRendicionController {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
-    
+
     public function insertarRendicionBanco($data) {
-        $fechaHoy = date('Y-m-d');
-        try {
-            // Validar que los datos requeridos estén presentes
-            if (!isset($data['fusionados']) || !isset($data['cheques'])) {
-                throw new Exception('Datos incompletos: faltan valores fusionados o cheques.');
-            }
-    
-            // Iniciar la transacción
-            if (!$this->db->inTransaction()) {
-                $this->db->beginTransaction();
-            }
-    
-            $fusionados = $data['fusionados'];
-            $cheques = $data['cheques']['cheques'];  // Lista de cheques
-    
-            // 1. Insertar en rendicion_general_banco
-            $stmt_general = $this->db->prepare("
-                INSERT INTO rendicion_general_banco (
-                    fecha,
-                    total_efectivo,
-                    total_cheques,
-                    total_general,
-                    billetes_20000,
-                    billetes_10000,
-                    billetes_2000,
-                    billetes_1000,
-                    billetes_500,
-                    billetes_200,
-                    billetes_100,
-                    billetes_50,
-                    billetes_20,
-                    billetes_10
-                ) VALUES (
-                    :fecha,
-                    :total_efectivo,
-                    :total_cheques,
-                    :total_general,
-                    :billetes_20000,
-                    :billetes_10000,
-                    :billetes_2000,
-                    :billetes_1000,
-                    :billetes_500,
-                    :billetes_200,
-                    :billetes_100,
-                    :billetes_50,
-                    :billetes_20,
-                    :billetes_10
-                )
-            ");
-    
-            // Ejecutar la inserción
-            $stmt_general->execute([
-                ':fecha' => $fechaHoy,
-                ':total_efectivo' => $fusionados['totalEfectivo'] ?? 0.00,
-                ':total_cheques' => $fusionados['totalCheques'] ?? 0.00,
-                ':total_general' => $fusionados['totalGeneral'] ?? 0.00,
-                ':billetes_20000' => $fusionados['billetes_20000'] ?? 0,
-                ':billetes_10000' => $fusionados['billetes_10000'] ?? 0,
-                ':billetes_2000' => $fusionados['billetes_2000'] ?? 0,
-                ':billetes_1000' => $fusionados['billetes_1000'] ?? 0,
-                ':billetes_500' => $fusionados['billetes_500'] ?? 0,
-                ':billetes_200' => $fusionados['billetes_200'] ?? 0,
-                ':billetes_100' => $fusionados['billetes_100'] ?? 0,
-                ':billetes_50' => $fusionados['billetes_50'] ?? 0,
-                ':billetes_20' => $fusionados['billetes_20'] ?? 0,
-                ':billetes_10' => $fusionados['billetes_10'] ?? 0
-            ]);
-    
-            $idRendicionBanco = $this->db->lastInsertId();
-    
-            // 2. Insertar cheques vinculados a esta rendición
-            $stmt_cheques = $this->db->prepare("
-                INSERT INTO cheques (id_rendicion_banco, banco, importe)
-                VALUES (:id_rendicion_banco, :banco, :importe)
-            ");
-    
-            foreach ($cheques as $cheque) {
-                $stmt_cheques->execute([
-                    ':id_rendicion_banco' => $idRendicionBanco,
-                    ':banco' => $cheque['banco'],
-                    ':importe' => $cheque['importe']
-                ]);
-            }
-    
-            // Confirmar la transacción
-            $this->db->commit();
-            return ['success' => true, 'message' => 'Datos de rendición bancaria insertados correctamente.'];
-        } catch (Exception $e) {
-            if ($this->db->inTransaction()) {
-                $this->db->rollBack();
-            }
-            return ['success' => false, 'error' => $e->getMessage()];
+    $fechaHoy = date('Y-m-d');
+    try {
+        // Validar que los datos requeridos estén presentes
+        if (!isset($data['fusionados']) || !isset($data['cheques'])) {
+            throw new Exception('Datos incompletos: faltan valores fusionados o cheques.');
         }
+
+        // Iniciar la transacción
+        if (!$this->db->inTransaction()) {
+            $this->db->beginTransaction();
+        }
+
+        $fusionados = $data['fusionados'];
+        $cheques = $data['cheques']['cheques'];  // Lista de cheques
+
+        // 1. Insertar en rendicion_general_banco
+        $stmt_general = $this->db->prepare("
+            INSERT INTO rendicion_general_banco (
+                fecha,
+                total_efectivo,
+                total_cheques,
+                total_general,
+                billetes_20000,
+                billetes_10000,
+                billetes_2000,
+                billetes_1000,
+                billetes_500,
+                billetes_200,
+                billetes_100,
+                billetes_50,
+                billetes_20,
+                billetes_10
+            ) VALUES (
+                :fecha,
+                :total_efectivo,
+                :total_cheques,
+                :total_general,
+                :billetes_20000,
+                :billetes_10000,
+                :billetes_2000,
+                :billetes_1000,
+                :billetes_500,
+                :billetes_200,
+                :billetes_100,
+                :billetes_50,
+                :billetes_20,
+                :billetes_10
+            )
+        ");
+
+        // Ejecutar la inserción
+        $stmt_general->execute([
+            ':fecha' => $fechaHoy,
+            ':total_efectivo' => $fusionados['totalEfectivo'] ?? 0.00,
+            ':total_cheques' => $fusionados['totalCheques'] ?? 0.00,
+            ':total_general' => $fusionados['totalGeneral'] ?? 0.00,
+            ':billetes_20000' => $fusionados['billetes_20000'] ?? 0,
+            ':billetes_10000' => $fusionados['billetes_10000'] ?? 0,
+            ':billetes_2000' => $fusionados['billetes_2000'] ?? 0,
+            ':billetes_1000' => $fusionados['billetes_1000'] ?? 0,
+            ':billetes_500' => $fusionados['billetes_500'] ?? 0,
+            ':billetes_200' => $fusionados['billetes_200'] ?? 0,
+            ':billetes_100' => $fusionados['billetes_100'] ?? 0,
+            ':billetes_50' => $fusionados['billetes_50'] ?? 0,
+            ':billetes_20' => $fusionados['billetes_20'] ?? 0,
+            ':billetes_10' => $fusionados['billetes_10'] ?? 0
+        ]);
+
+        $idRendicionBanco = $this->db->lastInsertId();
+
+        // 2. Insertar cheques vinculados a esta rendición
+        $stmt_cheques = $this->db->prepare("
+            INSERT INTO cheques (id_rendicion_banco, banco, importe)
+            VALUES (:id_rendicion_banco, :banco, :importe)
+        ");
+
+        foreach ($cheques as $cheque) {
+            $stmt_cheques->execute([
+                ':id_rendicion_banco' => $idRendicionBanco,
+                ':banco' => $cheque['banco'],
+                ':importe' => $cheque['importe']
+            ]);
+        }
+
+        // Contar los cheques insertados
+        $chequesInsertados = count($cheques);
+
+        // Confirmar la transacción
+        $this->db->commit();
+
+        // Retornar el mensaje de éxito con el número de cheques insertados
+        return [
+            'success' => true,
+            'message' => "Datos insertados correctamente. ID Rendición: $idRendicionBanco. Total de cheques insertados: $chequesInsertados."
+        ];
+
+    } catch (Exception $e) {
+        if ($this->db->inTransaction()) {
+            $this->db->rollBack();
+        }
+        return ['success' => false, 'error' => $e->getMessage()];
     }
-    
+}
+
 
 
     

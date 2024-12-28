@@ -57,7 +57,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
     <link rel="stylesheet" href="../../assets/vendor/libs/apex-charts/apex-charts.css" />
 
     <style>
-        
+
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -1970,89 +1970,89 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
             }
 
             function ejecutarRecorridoPreventa() {
-    const tablaPrincipal = recorrerTablaPrincipal();
-    const tablaLibre = recorrerTablaLibre();
-    const totalesCombinados = combinarTotales();
+                const tablaPrincipal = recorrerTablaPrincipal();
+                const tablaLibre = recorrerTablaLibre();
+                const totalesCombinados = combinarTotales();
 
-    // Verificar si hay datos para enviar
-    if (Object.keys(tablaPrincipal).length === 0 && Object.keys(tablaLibre).length === 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Sin datos',
-            text: 'No hay datos en las tablas para enviar.'
-        });
-        return;
-    }
+                // Verificar si hay datos para enviar
+                if (Object.keys(tablaPrincipal).length === 0 && Object.keys(tablaLibre).length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sin datos',
+                        text: 'No hay datos en las tablas para enviar.'
+                    });
+                    return;
+                }
 
-    // Crear objeto final para enviar al backend
-    const datosFinales = {
-        tabla_principal: tablaPrincipal,
-        tabla_libre: tablaLibre,
-        totales: totalesCombinados
-    };
+                // Crear objeto final para enviar al backend
+                const datosFinales = {
+                    tabla_principal: tablaPrincipal,
+                    tabla_libre: tablaLibre,
+                    totales: totalesCombinados
+                };
 
-    console.log(datosFinales); // Verificar en consola
+                console.log(datosFinales); // Verificar en consola
 
-    // Confirmación antes de enviar al backend
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Se guardará la rendición de preventa.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, guardar!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            enviarDatosAlBackend(datosFinales); // Enviar datos al servidor si confirma
-        }
-    });
-}
-
-function enviarDatosAlBackend(datos) {
-    const data = {
-        action: 'insertarRendicion',
-        tabla_principal: datos.tabla_principal,
-        tabla_libre: datos.tabla_libre,
-        totales: datos.totales
-    };
-
-    // Enviar la solicitud AJAX
-    $.ajax({
-        url: '../../backend/controller/administracion/Rendiciones.php', // Ruta al backend
-        method: 'POST',
-        contentType: 'application/json', // Indicar que es un JSON
-        data: JSON.stringify(data), // Convertir el objeto a JSON
-        success: function(response) {
-            console.log('Respuesta del servidor:', response);
-
-            // Mostrar solo si la inserción fue exitosa
-            if (response.success) {
-                Swal.fire(
-                    'Guardado!',
-                    'Los datos de preventa se guardaron correctamente.',
-                    'success'
-                );
-            } else {
-                // Mostrar error si la respuesta no tiene éxito
-                Swal.fire(
-                    'Error!',
-                    'No se pudo guardar: ' + response.error,
-                    'error'
-                );
+                // Confirmación antes de enviar al backend
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Se guardará la rendición de preventa.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, guardar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        enviarDatosAlBackend(datosFinales); // Enviar datos al servidor si confirma
+                    }
+                });
             }
-        },
-        error: function(error) {
-            console.error('Error al guardar los datos:', error);
-            Swal.fire(
-                'Error!',
-                'Error en la comunicación con el servidor.',
-                'error'
-            );
-        }
-    });
-}
+
+            function enviarDatosAlBackend(datos) {
+                const data = {
+                    action: 'insertarRendicion',
+                    tabla_principal: datos.tabla_principal,
+                    tabla_libre: datos.tabla_libre,
+                    totales: datos.totales
+                };
+
+                // Enviar la solicitud AJAX
+                $.ajax({
+                    url: '../../backend/controller/administracion/Rendiciones.php', // Ruta al backend
+                    method: 'POST',
+                    contentType: 'application/json', // Indicar que es un JSON
+                    data: JSON.stringify(data), // Convertir el objeto a JSON
+                    success: function(response) {
+                        console.log('Respuesta del servidor:', response);
+
+                        // Mostrar solo si la inserción fue exitosa
+                        if (response.success) {
+                            Swal.fire(
+                                'Guardado!',
+                                'Los datos de preventa se guardaron correctamente.',
+                                'success'
+                            );
+                        } else {
+                            // Mostrar error si la respuesta no tiene éxito
+                            Swal.fire(
+                                'Error!',
+                                'No se pudo guardar: ' + response.error,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error al guardar los datos:', error);
+                        Swal.fire(
+                            'Error!',
+                            'Error en la comunicación con el servidor.',
+                            'error'
+                        );
+                    }
+                });
+            }
             </script>
 
 
@@ -2303,7 +2303,8 @@ function enviarDatosAlBackend(datos) {
                                 if (data.success) {
                                     Swal.fire(
                                         'Guardado!',
-                                        'La rendición bancaria ha sido guardada.',
+                                        data
+                                        .message, // Mostrar el mensaje con el ID y número de cheques insertados
                                         'success'
                                     );
                                 } else {
