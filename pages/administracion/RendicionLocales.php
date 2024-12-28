@@ -24,7 +24,7 @@ $query = "
     SELECT c.*, 
            u.nombre AS nombre_usuario, 
            u.apellido AS apellido_usuario
-    FROM cierrecaja c
+    FROM cierreCaja c
     JOIN usuarios u ON c.idUsuario = u.idUsuario
     WHERE DATE(c.fecha_cierre) = :fecha_actual;
 ";
