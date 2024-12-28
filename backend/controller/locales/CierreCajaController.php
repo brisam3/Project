@@ -8,6 +8,8 @@ if (!isset($_SESSION['idUsuario'])) {
 }
 require_once '../../../database/Database.php';
 
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+
 class CierreCajaController
 {
     private $pdo;
@@ -20,6 +22,9 @@ class CierreCajaController
 
     public function guardarCierreCaja()
     {
+
+        $fecha = date('Y-m-d'); // Solo la fecha en formato YYYY-MM-DD
+
         if (!isset($_SESSION['idUsuario'])) {
             echo json_encode(['error' => 'Usuario no autenticado']);
             exit;
@@ -66,12 +71,14 @@ class CierreCajaController
                  billetes_10000, billetes_2000, billetes_1000, billetes_500, billetes_200, billetes_100, billetes_50, 
                  billetes_20, billetes_10, total_general, total_menos_gastos)
                 VALUES 
-                (:idUsuario, NOW(), :efectivo, :mercadoPago, :payway, :cambios, :cuentaCorriente, :gastos,
+                (:idUsuario, :fechaCierre, :efectivo, :mercadoPago, :payway, :cambios, :cuentaCorriente, :gastos,
                  :billetes_10000, :billetes_2000, :billetes_1000, :billetes_500, :billetes_200, :billetes_100, :billetes_50, 
                  :billetes_20, :billetes_10, :totalGeneral, :totalMenosGastos)
             ");
     
             // Vincular parámetros
+            $stmt->bindParam(':fechaCierre', $fecha);
+
             $stmt->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
             $stmt->bindParam(':efectivo', $efectivo);
             $stmt->bindParam(':mercadoPago', $mercadoPago);
@@ -94,8 +101,13 @@ class CierreCajaController
             $stmt->bindParam(':totalMenosGastos', $totalMenosGastos);
     
             $stmt->execute();
-    
-            echo json_encode(['success' => 'Cierre de caja guardado exitosamente']);
+            $lastInsertId = $this->pdo->lastInsertId();
+            echo json_encode([
+                'success' => true,
+                'message' => 'Cierre de caja guardado exitosamente. ID: ' . $lastInsertId,
+                'idCierreCaja' => $lastInsertId
+            ]);
+            
         } catch (PDOException $e) {
             echo json_encode(['error' => 'Error al guardar el cierre de caja: ' . $e->getMessage()]);
         }

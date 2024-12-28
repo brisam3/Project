@@ -13,6 +13,7 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 class CierreCajaChoferController {
     private $pdo;
     
+    
 
     public function __construct() {
         $database = new Database();

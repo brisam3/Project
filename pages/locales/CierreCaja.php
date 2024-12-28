@@ -246,16 +246,16 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
         type: 'POST',
         data: data,
         success: function(response) {
-          const res = JSON.parse(response);
-          if (res.success) {
-            Swal.fire('Cierre Confirmado', res.success, 'success');
-          } else {
+        const res = JSON.parse(response);
+        if (res.success) {
+            Swal.fire('Cierre Confirmado', res.message, 'success');
+        } else {
             Swal.fire('Error', res.error, 'error');
-          }
-        },
-        error: function() {
-          Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
         }
+    },
+    error: function() {
+        Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
+    }
       });
     }
   </script>
