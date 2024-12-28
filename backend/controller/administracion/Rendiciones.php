@@ -197,7 +197,7 @@ class DetalleRendicionController {
     
             // Insertar en la tabla rendicion_general
             $stmt_general = $this->db->prepare("
-                INSERT INTO rendicion_general (
+                INSERT INTO rendicion_general_choferes (
                     fecha,
                     total_efectivo,
                     total_general_preventa,
@@ -507,6 +507,7 @@ class DetalleRendicionController {
         INSERT INTO rendicion_locales (
             id_rendicion_general,
             id_local,
+            codigo_rendicion,
             payway,
             mercado_pago,
             gastos,
@@ -530,6 +531,7 @@ class DetalleRendicionController {
         ) VALUES (
             :id_rendicion_general,
             :id_local,
+            :codigo_rendicion,
             :payway,
             :mercado_pago,
             :gastos,
@@ -555,19 +557,24 @@ class DetalleRendicionController {
 
                     // Bucle para insertar en rendicion_locales
                     foreach ($principales as $idCierreCaja => $local) {
-                    // Validar que el idCierreCaja tenga datos en cierreCaja
-                    $stmt_cierreCaja = $this->db->prepare("SELECT idUsuario FROM cierreCaja WHERE idCierreCaja = :id");
-                    $stmt_cierreCaja->execute([':id' => $idCierreCaja]);
-                    $idUsuario = $stmt_cierreCaja->fetchColumn();
-
-                    if (!$idUsuario) {
-                        throw new Exception("No se encontró idUsuario para idCierreCaja: $idCierreCaja");
-                    }
+                        // Validar que el idCierreCaja tenga datos en cierreCaja
+                        $stmt_cierreCaja = $this->db->prepare("SELECT idUsuario, codigo_rendicion FROM cierreCaja WHERE idCierreCaja = :id");
+                        $stmt_cierreCaja->execute([':id' => $idCierreCaja]);
+                        $result = $stmt_cierreCaja->fetch(PDO::FETCH_ASSOC);
+                    
+                        if (!$result) {
+                            throw new Exception("No se encontró información para idCierreCaja: $idCierreCaja");
+                        }
+                    
+                        // Obtener valores individuales
+                        $idUsuario = $result['idUsuario'];
+                        $codigoRendicion = $result['codigo_rendicion'];
 
                     // Ejecutar la inserción usando la consulta preparada
                     $stmt_locales->execute([
                         ':id_rendicion_general' => $idRendicionGeneral,
                         ':id_local' => $idUsuario,
+                        ':codigo_rendicion' => $codigoRendicion,
                         ':payway' => $local['Payway'] ?? 0.00,
                         ':mercado_pago' => $local['Mercado_Pago'] ?? 0.00,
                         ':gastos' => $local['Gastos'] ?? 0.00,
