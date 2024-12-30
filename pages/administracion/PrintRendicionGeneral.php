@@ -136,25 +136,47 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
     .page {
         width: 210mm;
         min-height: 297mm;
-        padding: 20mm;
-        margin: 10mm auto;
+        padding: 18mm;
+        margin: 8mm auto;
         background: white;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
+    .table {
+        font-size: 0.7rem;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    /* Adjust padding and font size for table cells */
+    .table th,
+    .table td {
+        padding: 0.4rem;
+        font-size: 0.85rem;
+    }
+
+    /* Reduce the width of the first column in the denomination table */
+    .table-bordered tbody tr td:first-child {
+        width: 30%;
+    }
+
+
+
+
+
     .header {
         text-align: center;
-        margin-bottom: 10mm;
+        margin-bottom: 8mm;
     }
 
     .header h1 {
-        font-size: 24pt;
+        font-size: 20pt;
         color: #333;
         margin: 0;
     }
 
     .header p {
-        font-size: 12pt;
+        font-size: 10pt;
         color: #666;
     }
 
@@ -163,11 +185,11 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
     }
 
     .section {
-        margin-bottom: 10mm;
+        margin-bottom: 2mm;
     }
 
     .section h2 {
-        font-size: 14pt;
+        font-size: 10pt;
         color: #444;
         border-bottom: 1px solid #ddd;
         padding-bottom: 2mm;
@@ -383,65 +405,90 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
 
                                     <?php else: ?>
                                     <?php
-    $row = $results[$selectedIndex];
-    ?>
+                                    $row = $results[$selectedIndex];
+                                    ?>
 
                                     <div class="page">
                                         <div class="header">
+                                            <p style="text-align: right;">Fecha: <?= htmlspecialchars($row['fecha']) ?>
+                                            </p>
                                             <h1>WOLCHUK ROLANDO RAUL</h1>
                                             <p>CUENTA CORRIENTE: 000117633/002 | CUIT: 23-23269848-9</p>
-                                            <p>Fecha: <?= htmlspecialchars($row['fecha']) ?></p>
+
                                         </div>
                                         <div class="section">
                                             <h2>Total Efectivo</h2>
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>20000</th>
-                                                        <th>10000</th>
-                                                        <th>2000</th>
-                                                        <th>1000</th>
-                                                        <th>500</th>
-                                                        <th>200</th>
-                                                        <th>100</th>
-                                                        <th>50</th>
-                                                        <th>20</th>
-                                                        <th>10</th>
+                                                        <th>Denominación</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Total</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <?php
+                                                            $denominaciones = [
+                                                                20000 => $row['billetes_20000'],
+                                                                10000 => $row['billetes_10000'],
+                                                                2000 => $row['billetes_2000'],
+                                                                1000 => $row['billetes_1000'],
+                                                                500 => $row['billetes_500'],
+                                                                200 => $row['billetes_200'],
+                                                                100 => $row['billetes_100'],
+                                                                50 => $row['billetes_50'],
+                                                                20 => $row['billetes_20'],
+                                                                10 => $row['billetes_10'],
+                                                            ];
+                                                            $total_efectivo = 0;
+                                                            foreach ($denominaciones as $denominacion => $cantidad) {
+                                                                $subtotal = $denominacion * $cantidad;
+                                                                $total_efectivo += $subtotal;
+                                                                ?>
                                                     <tr>
-                                                        <td><?= $row['billetes_20000'] ?></td>
-                                                        <td><?= $row['billetes_10000'] ?></td>
-                                                        <td><?= $row['billetes_2000'] ?></td>
-                                                        <td><?= $row['billetes_1000'] ?></td>
-                                                        <td><?= $row['billetes_500'] ?></td>
-                                                        <td><?= $row['billetes_200'] ?></td>
-                                                        <td><?= $row['billetes_100'] ?></td>
-                                                        <td><?= $row['billetes_50'] ?></td>
-                                                        <td><?= $row['billetes_20'] ?></td>
-                                                        <td><?= $row['billetes_10'] ?></td>
+                                                        <td>$<?= number_format($denominacion, 0, ',', '.') ?></td>
+                                                        <td><?= $cantidad ?></td>
+                                                        <td>$<?= number_format($subtotal, 2, ',', '.') ?></td>
+                                                    </tr>
+                                                    <?php } ?>
+                                                    <tr>
+                                                        <td colspan="2" style="font-weight: bold;">Total Efectivo</td>
+                                                        <td style="font-weight: bold;">
+                                                            $<?= number_format($total_efectivo, 2, ',', '.') ?></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="section">
-                                            <h2>Totales</h2>
-                                            <table class="table table-bordered">
-                                                <tr>
-                                                    <td>Total Efectivo</td>
-                                                    <td>$<?= number_format($row['total_efectivo'], 2) ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Total Cheques</td>
-                                                    <td>$<?= number_format($row['total_cheques'], 2) ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Total General</td>
-                                                    <td>$<?= number_format($row['total_general'], 2) ?></td>
-                                                </tr>
-                                            </table>
+
+                                        <div class="section"
+                                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2mm;">
+                                            <!-- Contenedor de la tabla -->
+                                            <div style="width: 50%; margin-left:30px" >
+                                                <h2>Totales</h2>
+                                                <table class="table table-bordered"
+                                                    style="width: 100%; margin: 0 auto;">
+                                                    <tr>
+                                                        <td>Total Efectivo</td>
+                                                        <td>$<?= number_format($row['total_efectivo'], 2) ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Total Cheques</td>
+                                                        <td>$<?= number_format($row['total_cheques'], 2) ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Total General</td>
+                                                        <td>$<?= number_format($row['total_general'], 2) ?></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+
+                                            <!-- Contenedor de la imagen -->
+                                            <div style="width: 50%; text-align: center;">
+                                                <img src="../../assets/img/wol.png" alt="Descripción de la imagen"
+                                                    style="max-width: 50%; height: auto;">
+                                            </div>
                                         </div>
+
                                         <div class="section">
                                             <h2>Cheques</h2>
                                             <table class="table table-bordered">

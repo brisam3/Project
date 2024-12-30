@@ -1128,6 +1128,11 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                         esEditable: true
                                     },
                                     {
+                                        nombre: 'Onda',
+                                        campo: 'onda',
+                                        esEditable: true
+                                    },
+                                    {
                                         nombre: 'Mercado Pago',
                                         campo: 'mercado_pago',
                                         esEditable: true
@@ -1315,18 +1320,21 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                         const payway = parseFloat($(
                                             `#tbodyRendicionesLocales tr:nth-child(1) td:eq(${index + 1}) input`
                                         ).val()) || 0;
-                                        const mercadoPago = parseFloat($(
+                                        const onda = parseFloat($(
                                             `#tbodyRendicionesLocales tr:nth-child(2) td:eq(${index + 1}) input`
                                         ).val()) || 0;
-                                        const gastos = parseFloat($(
+                                        const mercadoPago = parseFloat($(
                                             `#tbodyRendicionesLocales tr:nth-child(3) td:eq(${index + 1}) input`
                                         ).val()) || 0;
-                                        const cuentaCorriente = parseFloat($(
+                                        const gastos = parseFloat($(
                                             `#tbodyRendicionesLocales tr:nth-child(4) td:eq(${index + 1}) input`
+                                        ).val()) || 0;
+                                        const cuentaCorriente = parseFloat($(
+                                            `#tbodyRendicionesLocales tr:nth-child(5) td:eq(${index + 1}) input`
                                         ).val()) || 0;
 
                                         // Calcular totales dinámicamente
-                                        const totalTarjetas = payway + mercadoPago;
+                                        const totalTarjetas = payway + onda + mercadoPago;
                                         const totalGastos = gastos + cuentaCorriente;
 
                                         // Actualizar las filas correspondientes a este local
@@ -1336,6 +1344,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                             totalGastos.toFixed(2));
                                     });
                                 }
+
 
                                 // Detectar cambios en la tabla principal y actualizar las tablas secundarias
                                 $(document).on('input', '.table-input-locales', function() {
@@ -1591,22 +1600,26 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                     const totalEfectivo = parseFloat($('#total-global-locales')
                                         .text()) || 0;
 
-                                    // Total Tarjetas (suma de Payway y Mercado Pago)
+                                    // Total Tarjetas (suma de Payway, Onda y Mercado Pago)
                                     const totalPayway = parseFloat($(
                                         '#tbodyRendicionesLocales tr:nth-child(1) .total-column-locales'
                                     ).text()) || 0;
-                                    const totalMercadoPago = parseFloat($(
+                                    const totalOnda = parseFloat($(
                                         '#tbodyRendicionesLocales tr:nth-child(2) .total-column-locales'
                                     ).text()) || 0;
-                                    const totalTarjetas = totalPayway + totalMercadoPago;
+                                    const totalMercadoPago = parseFloat($(
+                                        '#tbodyRendicionesLocales tr:nth-child(3) .total-column-locales'
+                                    ).text()) || 0;
+                                    const totalTarjetas = totalPayway + totalOnda +
+                                    totalMercadoPago;
 
                                     // Total Gastos (suma de Gastos y Cuenta Corriente)
                                     const totalGastos =
                                         (parseFloat($(
-                                            '#tbodyRendicionesLocales tr:nth-child(3) .total-column-locales'
+                                            '#tbodyRendicionesLocales tr:nth-child(4) .total-column-locales'
                                         ).text()) || 0) +
                                         (parseFloat($(
-                                            '#tbodyRendicionesLocales tr:nth-child(4) .total-column-locales'
+                                            '#tbodyRendicionesLocales tr:nth-child(5) .total-column-locales'
                                         ).text()) || 0);
 
                                     // Calcular Total General Locales (Efectivo + Tarjetas)
@@ -1615,11 +1628,6 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                     // Calcular Total (Efectivo + Tarjetas - Gastos)
                                     const total = totalGeneralLocales + totalGastos;
 
-                                    // Obtener Total Sistema desde el input
-
-
-
-
                                     // Actualizar los valores en la tabla
                                     $('#totalEfectivoGeneral').text(totalEfectivo.toFixed(2));
                                     $('#totalTarjetasGeneral').text(totalTarjetas.toFixed(2));
@@ -1627,11 +1635,11 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                     $('#totalGastosGeneral').text(totalGastos.toFixed(2));
                                     $('#totalSumGeneral').text(total.toFixed(2));
 
-
                                     // Diferencia General (Efectivo + Tarjetas - Gastos)
                                     const diferencia = totalTarjetas + totalEfectivo - totalGastos;
                                     $('#diferenciaTotalGeneral').text(diferencia.toFixed(2));
                                 }
+
 
 
                                 $(document).ready(function() {
