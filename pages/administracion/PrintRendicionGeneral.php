@@ -460,33 +460,40 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                             </table>
                                         </div>
 
-                                        <div class="section"
-                                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2mm;">
+                                        <div class="section">
+                                            <h2>Totales</h2>
                                             <!-- Contenedor de la tabla -->
-                                            <div style="width: 50%; margin-left:30px" >
-                                                <h2>Totales</h2>
-                                                <table class="table table-bordered"
-                                                    style="width: 100%; margin: 0 auto;">
-                                                    <tr>
-                                                        <td>Total Efectivo</td>
-                                                        <td>$<?= number_format($row['total_efectivo'], 2) ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Total Cheques</td>
-                                                        <td>$<?= number_format($row['total_cheques'], 2) ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Total General</td>
-                                                        <td>$<?= number_format($row['total_general'], 2) ?></td>
-                                                    </tr>
-                                                </table>
+
+                                            <div
+                                                style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2mm;">
+                                                <div style="width: 50%; margin-left:30px">
+
+                                                    <table class="table table-bordered"
+                                                        style="width: 100%; margin: 0 auto;">
+                                                        <tr>
+                                                            <td>Total Efectivo</td>
+                                                            <td>$<?= number_format($row['total_efectivo'], 2) ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Total Cheques</td>
+                                                            <td>$<?= number_format($row['total_cheques'], 2) ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Total General</td>
+                                                            <td>$<?= number_format($row['total_general'], 2) ?></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div style="width: 50%; text-align: center;">
+                                                    <img src="../../assets/img/wol.png" alt="Descripción de la imagen"
+                                                        style="max-width: 50%; height: auto;">
+                                                </div>
+
                                             </div>
 
+
                                             <!-- Contenedor de la imagen -->
-                                            <div style="width: 50%; text-align: center;">
-                                                <img src="../../assets/img/wol.png" alt="Descripción de la imagen"
-                                                    style="max-width: 50%; height: auto;">
-                                            </div>
+
                                         </div>
 
                                         <div class="section">
