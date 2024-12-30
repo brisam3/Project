@@ -1,6 +1,14 @@
 <?php
 
+include '../../backend/controller/access/AccessController.php';
 
+$accessController = new AccessController();
+
+// Verificar si el acceso está permitido
+if (!$accessController->checkAccess('/pages/administracion/PrintRendicionGeneral.php')) {
+    $accessController->denyAccess();
+    exit;
+}
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
