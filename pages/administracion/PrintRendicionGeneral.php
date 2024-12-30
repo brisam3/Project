@@ -471,22 +471,26 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                     <table class="table table-bordered"
                                                         style="width: 100%; margin: 0 auto;">
                                                         <tr>
-                                                            <td>Total Efectivo</td>
-                                                            <td>$<?= number_format($row['total_efectivo'], 2) ?></td>
+                                                            <td style="width: 50%;">Total Efectivo</td>
+                                                            <td style="width: 50%;">
+                                                                $<?= number_format($row['total_efectivo'], 2) ?></td>
                                                         </tr>
                                                         <tr>
-                                                            <td>Total Cheques</td>
-                                                            <td>$<?= number_format($row['total_cheques'], 2) ?></td>
+                                                            <td style="width: 50%;">Total Cheques</td>
+                                                            <td style="width: 50%;">
+                                                                $<?= number_format($row['total_cheques'], 2) ?></td>
                                                         </tr>
                                                         <tr>
-                                                            <td>Total General</td>
-                                                            <td>$<?= number_format($row['total_general'], 2) ?></td>
+                                                            <td style="width: 50%;">Total General</td>
+                                                            <td style="width: 50%;">
+                                                                $<?= number_format($row['total_general'], 2) ?></td>
                                                         </tr>
                                                     </table>
+
                                                 </div>
                                                 <div style="width: 50%; text-align: center;">
                                                     <img src="../../assets/img/wol.png" alt="Descripción de la imagen"
-                                                        style="max-width: 50%; height: auto;">
+                                                        style="max-width: 35%; height: auto;">
                                                 </div>
 
                                             </div>
@@ -514,8 +518,8 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                             $importe = $matches[2] ?? '';
                                                         ?>
                                                     <tr>
-                                                        <td><?= htmlspecialchars($banco) ?></td>
-                                                        <td>$<?= number_format((float)$importe, 2) ?></td>
+                                                        <td style="width: 70%;"><?= htmlspecialchars($banco) ?></td>
+                                                        <td style="width: 30%;">$<?= number_format((float)$importe, 2) ?></td>
                                                     </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>

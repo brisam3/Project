@@ -509,6 +509,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Rendiciones Generales">Rendiciones Generales</div>
                                 </a>
                             </li>
+                            <li class="menu-item">
+                                <a href="../administracion/PrintRendicionGeneral.php" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-printer"></i>
+
+                                    <div data-i18n="Rendiciones Generales">Rendiciones Generales</div>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
