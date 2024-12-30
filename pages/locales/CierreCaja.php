@@ -91,10 +91,12 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
                           <tr><td><i class="bx bxl-mercadopago"></i> Mercado Pago</td><td><input type="number" id="total-mercadopago" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
                           <tr><td><i class="bx bx-credit-card"></i>
                           PayWay</td><td><input type="number" id="total-payway" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
+                          <tr><td><i class="bx bx-wallet"></i>
+                          Onda</td><td><input type="number" id="total-onda" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
                           <tr><td><i class="bx bx-transfer"></i>
                           </i>Cambio</td><td><input type="number" id="total-cambios" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
                           <tr><td><i class="bx bx-receipt"></i> Cuenta Corriente</td><td><input type="number" id="total-cuenta-corriente" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
-                          <tr><td><i class="bx bx-wallet"></i> Gastos</td><td><input type="number" id="total-gastos" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
+                          <tr><td><i class="bx bx-money-withdraw"> Gastos</td><td><input type="number" id="total-gastos" class="form-control" placeholder="0" oninput="actualizarTotalAcumulado()" /></td></tr>
                         </tbody>
                       </table>
                     </div>
@@ -192,6 +194,7 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
       const efectivo = parseFloat(document.getElementById('total-efectivo').value) || 0;
       const mercadoPago = parseFloat(document.getElementById('total-mercadopago').value) || 0;
       const payway = parseFloat(document.getElementById('total-payway').value) || 0;
+      const onda = parseFloat(document.getElementById('total-onda').value) || 0;
       const cambios = parseFloat(document.getElementById('total-cambios').value) || 0;
       const cuentaCorriente = parseFloat(document.getElementById('total-cuenta-corriente').value) || 0;
       const gastos = parseFloat(document.getElementById('total-gastos').value) || 0;
@@ -234,6 +237,7 @@ if (!$accessController->checkAccess('/pages/locales/CierreCaja.php')) {
         efectivo: parseFloat(document.getElementById('total-efectivo').value) || 0,
         mercado_pago: parseFloat(document.getElementById('total-mercadopago').value) || 0,
         payway: parseFloat(document.getElementById('total-payway').value) || 0,
+        onda: parseFloat(document.getElementById('total-onda').value) || 0,
         cambios: parseFloat(document.getElementById('total-cambios').value) || 0,
         cuenta_corriente: parseFloat(document.getElementById('total-cuenta-corriente').value) || 0,
         gastos: parseFloat(document.getElementById('total-gastos').value) || 0,
