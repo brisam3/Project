@@ -403,6 +403,8 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                         $<?= number_format($row['mercado_pago'], 2) ?></p>
                                                     <p><strong>Payway:</strong> $<?= number_format($row['payway'], 2) ?>
                                                     </p>
+                                                    <p><strong>Onda:</strong> $<?= number_format($row['onda'], 2) ?>
+                                                    </p>
                                                     <p><strong>Cuenta Corriente:</strong>
                                                         $<?= number_format($row['cuenta_corriente'], 2) ?></p>
                                                     <p><strong>Cambios:</strong>
