@@ -33,6 +33,7 @@ class CierreCajaController
         $idUsuario = $_SESSION['idUsuario'];
     
         // Obtener datos del formulario
+        $billetes_20000 = isset($_POST['billetes_10000']) ? (int)$_POST['billetes_20000'] : 0;
         $billetes_10000 = isset($_POST['billetes_10000']) ? (int)$_POST['billetes_10000'] : 0;
         $billetes_2000 = isset($_POST['billetes_2000']) ? (int)$_POST['billetes_2000'] : 0;
         $billetes_1000 = isset($_POST['billetes_1000']) ? (int)$_POST['billetes_1000'] : 0;
@@ -69,11 +70,11 @@ class CierreCajaController
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO cierreCaja 
-                (idUsuario, fecha_cierre, efectivo, mercado_pago, payway, cambios, cuenta_corriente, gastos, onda,
+                (idUsuario, fecha_cierre, efectivo, mercado_pago, payway, cambios, cuenta_corriente, gastos, onda, billetes_20000,
                  billetes_10000, billetes_2000, billetes_1000, billetes_500, billetes_200, billetes_100, billetes_50, 
                  billetes_20, billetes_10, total_general, total_menos_gastos)
                 VALUES 
-                (:idUsuario, :fechaCierre, :efectivo, :mercadoPago, :payway, :cambios, :cuentaCorriente, :gastos, :onda,
+                (:idUsuario, :fechaCierre, :efectivo, :mercadoPago, :payway, :cambios, :cuentaCorriente, :gastos, :onda, :billetes_20000,
                  :billetes_10000, :billetes_2000, :billetes_1000, :billetes_500, :billetes_200, :billetes_100, :billetes_50, 
                  :billetes_20, :billetes_10, :totalGeneral, :totalMenosGastos)
             ");
@@ -90,7 +91,7 @@ class CierreCajaController
             $stmt->bindParam(':gastos', $gastos);
             $stmt->bindParam(':onda', $onda);
             
-    
+            $stmt->bindParam(':billetes_20000', $billetes_20000);
             $stmt->bindParam(':billetes_10000', $billetes_10000);
             $stmt->bindParam(':billetes_2000', $billetes_2000);
             $stmt->bindParam(':billetes_1000', $billetes_1000);
