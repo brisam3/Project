@@ -66,6 +66,47 @@ $stmt->bindParam(':fecha_actual', $fecha_actual, PDO::PARAM_STR);
 $stmt->execute();
 $results = $stmt->fetchAll();
 
+
+// Segundo, hacer la consulta a la tabla rendicion_general_choferes para obtener el id de la fecha actual
+$query_rendicion_general_choferes = "
+   SELECT 	idRendicionGeneral 
+   FROM rendicion_general_choferes
+   WHERE fecha = :fecha_actual
+";
+
+$stmt_choferes = $pdo->prepare($query_rendicion_general_choferes);
+$stmt_choferes->execute([':fecha_actual' => $fecha_actual]);
+$rendicion_general_choferes = $stmt_choferes->fetch(PDO::FETCH_ASSOC);
+
+// Si obtenemos un id de rendicion_general_choferes, hacemos la consulta en rendicion_libre
+if ($rendicion_general_choferes) {
+   $id_rendicion_choferes = $rendicion_general_choferes['idRendicionGeneral'];
+
+   $query_rendicion_libre = "
+      SELECT 
+         SUM(rl.billetes_20000) AS total_billetes_20000,
+         SUM(rl.billetes_10000) AS total_billetes_10000,
+         SUM(rl.billetes_2000) AS total_billetes_2000,
+         SUM(rl.billetes_1000) AS total_billetes_1000,
+         SUM(rl.billetes_500) AS total_billetes_500,
+         SUM(rl.billetes_200) AS total_billetes_200,
+         SUM(rl.billetes_100) AS total_billetes_100,
+         SUM(rl.billetes_50) AS total_billetes_50,
+         SUM(rl.billetes_20) AS total_billetes_20,
+         SUM(rl.billetes_10) AS total_billetes_10
+      FROM rendicion_libre rl
+      WHERE rl.idRendicionGeneral = :id_rendicion_general
+   ";
+
+   $stmt_libre = $pdo->prepare($query_rendicion_libre);
+   $stmt_libre->execute([':id_rendicion_general' => $id_rendicion_choferes]);
+   $rendicion_libre = $stmt_libre->fetch(PDO::FETCH_ASSOC);
+
+   // Mostrar el resultado en la consola PHP
+   //var_dump($rendicion_libre);
+}
+   // O usar print_r() si prefieres un formato más legible
+   // print_r($rendicion_libre);
 // Verificar si se ha seleccionado un registro para imprimir
 $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
 ?>
@@ -431,39 +472,85 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                     <tr>
                                                         <th>Denominación</th>
                                                         <th>Cantidad</th>
+                                                        <!-- Cambié el nombre de la columna -->
                                                         <th>Total</th>
+                                                        <!-- Cambié el nombre de la columna -->
+                                                        <th>Salidas</th>
+                                                        <!-- Nueva columna para la cantidad de billetes en libres -->
+                                                        <th>Total Salidas</th>
+                                                        <!-- Nueva columna para el total en libres -->
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                            $denominaciones = [
-                                                                20000 => $row['billetes_20000'],
-                                                                10000 => $row['billetes_10000'],
-                                                                2000 => $row['billetes_2000'],
-                                                                1000 => $row['billetes_1000'],
-                                                                500 => $row['billetes_500'],
-                                                                200 => $row['billetes_200'],
-                                                                100 => $row['billetes_100'],
-                                                                50 => $row['billetes_50'],
-                                                                20 => $row['billetes_20'],
-                                                                10 => $row['billetes_10'],
-                                                            ];
-                                                            $total_efectivo = 0;
-                                                            foreach ($denominaciones as $denominacion => $cantidad) {
-                                                                $subtotal = $denominacion * $cantidad;
-                                                                $total_efectivo += $subtotal;
-                                                                ?>
+                // Denominaciones de la rendición general
+                $denominaciones = [
+                    20000 => $row['billetes_20000'],
+                    10000 => $row['billetes_10000'],
+                    2000 => $row['billetes_2000'],
+                    1000 => $row['billetes_1000'],
+                    500 => $row['billetes_500'],
+                    200 => $row['billetes_200'],
+                    100 => $row['billetes_100'],
+                    50 => $row['billetes_50'],
+                    20 => $row['billetes_20'],
+                    10 => $row['billetes_10'],
+                ];
+                
+                // Sumar los totales de efectivo (rendición general)
+                $total_efectivo = 0;
+                // Sumar los totales de libres
+                $total_efectivo_libres = 0;
+                
+                // Recorrer las denominaciones
+                foreach ($denominaciones as $denominacion => $cantidad) {
+                    // Calcular el subtotal para cada denominación
+                    $subtotal = $denominacion * $cantidad;
+                    $total_efectivo += $subtotal;
+                    
+                    // Obtener los valores correspondientes de la consulta 'rendicion_libre'
+                    $cantidad_libres = $rendicion_libre["total_billetes_$denominacion"] ?? 0;
+                    $total_salida = $cantidad_libres * $denominacion;
+                    $total_efectivo_libres += $total_salida;
+            ?>
                                                     <tr>
+                                                        <!-- Mostrar denominación -->
                                                         <td>$<?= number_format($denominacion, 0, ',', '.') ?></td>
+                                                        <!-- Mostrar cantidad de billetes en la rendición general -->
                                                         <td><?= $cantidad ?></td>
+                                                        <!-- Mostrar el total de la rendición general -->
                                                         <td>$<?= number_format($subtotal, 2, ',', '.') ?></td>
+                                                        <!-- Mostrar la cantidad de billetes de la consulta 'rendicion_libre' -->
+                                                        <td><?= $cantidad_libres ?></td>
+                                                        <!-- Mostrar el total de salida de la consulta 'rendicion_libre' -->
+                                                        <td>$<?= number_format($total_salida, 2, ',', '.') ?></td>
                                                     </tr>
                                                     <?php } ?>
+                                                    <!-- Total Efectivo (Rendición General) -->
                                                     <tr>
-                                                        <td colspan="2" style="font-weight: bold;">Total Efectivo</td>
+
+                                                        <td></td>
+                                                        <td></td>
                                                         <td style="font-weight: bold;">
                                                             $<?= number_format($total_efectivo, 2, ',', '.') ?></td>
+
+                                                        <td></td>
+                                                        <td style="font-weight: bold;">
+                                                            $<?= number_format($total_efectivo_libres, 2, ',', '.') ?>
+                                                        </td>
+
                                                     </tr>
+                                                    <tr>
+
+                                                        <?php 
+                                                            $diferencia = $total_efectivo - $total_efectivo_libres;
+                                                            ?>
+
+                                                        <td colspan="2">Diferencia</td>
+                                                        <td colspan="3"
+                                                            style="font-weight: bold; color: <?= $diferencia >= 0 ? 'green' : 'red'; ?>;">
+                                                            $<?= number_format($diferencia, 2, ',', '.') ?>
+                                                        </td>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -481,7 +568,7 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                         <tr>
                                                             <td style="width: 50%;">Total Efectivo</td>
                                                             <td style="width: 50%;">
-                                                                $<?= number_format($row['total_efectivo'], 2) ?></td>
+                                                            <?php echo '$' . number_format($diferencia, 2); ?></td>
                                                         </tr>
                                                         <tr>
                                                             <td style="width: 50%;">Total Cheques</td>
@@ -527,7 +614,8 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                         ?>
                                                     <tr>
                                                         <td style="width: 70%;"><?= htmlspecialchars($banco) ?></td>
-                                                        <td style="width: 30%;">$<?= number_format((float)$importe, 2) ?></td>
+                                                        <td style="width: 30%;">
+                                                            $<?= number_format((float)$importe, 2) ?></td>
                                                     </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>

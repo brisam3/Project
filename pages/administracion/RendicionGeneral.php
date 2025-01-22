@@ -890,15 +890,6 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                     $(document).on('input', '.cantidad-libre', function() {
                                         let totalFila = 0;
 
-                                        $('.cantidad-libre').each(function() {
-                                            const denominacion = parseFloat($(
-                                                    this)
-                                                .data('denominacion'));
-                                            const cantidad = parseFloat($(this)
-                                                .val()) || 0;
-                                            totalFila += denominacion *
-                                                cantidad;
-                                        });
 
                                         // Actualizar el total de la tabla "LIBRE"
                                         $('.total-libre').text(totalFila.toFixed(2));
@@ -1021,7 +1012,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                         let totalCantidad = 0;
 
                                         // Incluir todas las cantidades, incluyendo la tabla LIBRE
-                                        $(`.cantidad-input[data-denominacion="${denominacion}"], .cantidad-libre[data-denominacion="${denominacion}"]`)
+                                        $(`.cantidad-input[data-denominacion="${denominacion}"]`)
                                             .each(function() {
                                                 totalCantidad += parseFloat($(this)
                                                     .val()) || 0;
@@ -1528,7 +1519,7 @@ if (!$accessController->checkAccess('/pages/administracion/RendicionGeneral.php'
                                         let totalCantidad = 0;
 
                                         // Incluir todas las cantidades, incluyendo la tabla LIBRE
-                                        $(`.cantidad-input-locales[data-denominacion="${denominacion}"], .cantidad-libre[data-denominacion="${denominacion}"]`)
+                                        $(`.cantidad-input-locales[data-denominacion="${denominacion}"]`)
                                             .each(function() {
                                                 totalCantidad += parseFloat($(this)
                                                     .val()) || 0;
