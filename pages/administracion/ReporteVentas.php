@@ -239,6 +239,10 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                                                                         <td>Soledad - Movil 9</td>
                                                                         <td id="16">$0</td>
                                                                     </tr>
+                                                                    <tr>
+                                                                        <td>Daniel - Movil 10</td>
+                                                                        <td id="35">$0</td>
+                                                                    </tr>
                                                                 </tbody>
                                                             </table>
                                                         </div>
