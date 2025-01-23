@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
     class AccessController {
         private $permissions = [
             //locales
-            1 => ['/pages/locales/Devoluciones.php', '/pages/locales/CierreCaja.php', '/pages/locales/Transferencias.php'],
+            1 => ['/pages/locales/Devoluciones.php', '/pages/locales/CierreCaja.php', '/pages/locales/Transferencias.php', '/pages/locales/ConteoStock.php'],
             //preventa
             2 => ['/'],
             //deposito

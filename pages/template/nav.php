@@ -417,6 +417,12 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Transferencias">Transferencias</div>
                                 </a>
                             </li>
+                            <li class="menu-item">
+                                <a href="../locales/ConteoStock.php" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-list-check"></i>
+                                    <div data-i18n="Conteo Stock">Conteo Stock</div>
+                                </a>
+                            </li>
 
                         </ul>
                     </li>
@@ -545,6 +551,11 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             <li class="menu-item">
                                 <a href="../sistemas/ImportarReporte.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bxs-download"></i>  <div data-i18n="Importar Reporte Sistema">Importar Reporte</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="../sistemas/StockLocales.php" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-list-check"></i>  <div data-i18n="Stock Locales">Stock Locales</div>
                                 </a>
                             </li>
                         </ul>

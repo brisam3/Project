@@ -469,270 +469,222 @@
 
     <!-- AJAX Script -->
     <script>
-    $(document).ready(function() {
-        // Hacer la solicitud AJAX al backend
-        $.ajax({
-            url: "../../backend/controller/preventa/preventaController.php", // Cambia por tu ruta PHP
-            method: "GET",
-            dataType: "json",
-            success: function(data) {
-                if (data.mostrarMensaje) {
-                    // Mostrar el mensaje de actualización
-                    $("#mensaje-carga").show();
-                    $("#contenido-reportes").hide();
-                } else {
-                    // Mostrar el contenido de los reportes
-                    $("#mensaje-carga").hide();
-                    $("#contenido-reportes").show();
+    $(document).ready(function () {
+        const formatter = new Intl.NumberFormat('es-ES', {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+        });
 
-                    const resumen = data.resumen;
-                    const totalPromedioClientes = resumen.CantidadClientes / 9;
+        // Función genérica para manejar errores
+        function manejarError(xhr, status, error) {
+            console.error("Error al cargar los datos:", error);
+        }
 
-                    // Llenar los valores en las tarjetas
-                    $("#total-vendido").text(
-                        `$${parseFloat(resumen.TotalVenta).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                    );
-                    $("#clientes").text(resumen.CantidadClientes.toLocaleString());
-                    $("#boletas").text(resumen.CantidadBoletas.toLocaleString());
-                    $("#ticket-promedio").text(
-                        `$${parseFloat(resumen.TicketPromedio).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                    );
-                    $("#promedio-clientes").text(
-                        `${parseFloat(totalPromedioClientes).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                    );
-                    $("#total-sin-iva").text(
-                        `$${parseFloat(data.totalVentaMenosIVA).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                    );
-                    $("#total-sin-ponderado").text(
-                        `$${parseFloat(data.totalVentaMenosPonderado).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                    );
-                    $("#total-comisiones").text(
-                        `$${parseFloat(data.totalComisiones).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                    );
-                    $("#total-menos-ponderado-e-iva").text(
-                        `$${parseFloat(data.totalMenosPonderadoIVA).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
-                    );
+        // Función para cargar ventas por preventista
+        function cargarVentasPreventista() {
+            $.ajax({
+                url: "../../backend/controller/preventa/preventaController.php?action=ventasPreventista",
+                method: "GET",
+                dataType: "json",
+                success: function (ventasPreventista) {
+                    const tbody = $("#tabla-reporte");
+                    tbody.empty();
 
-                    console.log(data);
-
-
-                    const formatter = new Intl.NumberFormat('es-ES', {
-                        minimumFractionDigits: 1,
-                        maximumFractionDigits: 1
+                    ventasPreventista.forEach(preventista => {
+                        tbody.append(`
+                            <tr>
+                                <td>${preventista.Preventista}</td>
+                                <td>${preventista.CantidadBoletas}</td>
+                                <td>${preventista.CantidadClientes}</td>
+                                <td>${formatter.format(preventista.TotalVenta)}</td>
+                                <td>${formatter.format(preventista.TicketPromedio)}</td>
+                                <td>${formatter.format(preventista.Comision)}</td>
+                                <td>${preventista.VariedadArticulos}</td>
+                                <td>${preventista.VariedadProveedores}</td>
+                                <td>${formatter.format(preventista.PromedioArticulosPorCliente)}</td>
+                                <td>${formatter.format(preventista.PromedioProveedoresPorCliente)}</td>
+                            </tr>
+                        `);
                     });
 
-                    // Llenar la tabla con datos
-                    const tbodyPreventistas = $("#tabla-reporte");
-                    data.ventasPreventista.forEach(preventista => {
-                        tbodyPreventistas.append(`
-                        <tr>
-                            <td>${preventista.Preventista}</td>
-                            <td>${preventista.CantidadBoletas}</td>
-                            <td>${preventista.CantidadClientes}</td>
-                            <td>${formatter.format(preventista.TotalVenta)}</td>
-                            <td>${formatter.format(preventista.TicketPromedio)}</td>
-                            <td>${formatter.format(preventista.Comision)}</td>
-                            <td>${preventista.VariedadArticulos}</td>
-                            <td>${preventista.VariedadProveedores}</td>
-                            <td>${formatter.format(preventista.PromedioArticulosPorCliente)}</td>
-                            <td>${formatter.format(preventista.PromedioProveedoresPorCliente)}</td>
-                        </tr>
-                    `);
-                    });
-
-                    // Convertir la tabla de preventistas en una DataTable
-                    // Convertir la tabla de preventistas en una DataTable
-                    // Inicializar DataTables con orden en Total Ventas
-                    // Inicializar DataTables
                     $('.datatables-ajax').DataTable({
-                        "order": [
-                            [3, "desc"]
-                        ], // Ordenar inicialmente por la columna 3 (Total Venta)
-                        "columnDefs": [{
-                            "targets": [3, 4, 5, 8,
-                                9
-                            ], // Índices de columnas con datos numéricos
-                            "render": function(data, type, row) {
-                                if (type === 'sort' || type === 'type') {
-                                    // Convertir los valores al formato numérico
-                                    return parseFloat(data.replace(
-                                        /[^\d,-]/g, '').replace(',',
-                                        '.')) || 0;
-                                }
-                                return data; // Mostrar el dato original en la tabla
-                            }
-                        }],
+                        "destroy": true,
+                        "order": [[3, "desc"]],
                         "language": {
-                            "decimal": ",",
-                            "thousands": "."
+                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
                         }
                     });
+                },
+                error: manejarError
+            });
+        }
 
+        // Función para cargar ventas por proveedor
+        function cargarVentasProveedor() {
+            $.ajax({
+                url: "../../backend/controller/preventa/preventaController.php?action=ventasProveedor",
+                method: "GET",
+                dataType: "json",
+                success: function (ventasProveedor) {
+                    const tbody = $("#tabla-proveedores");
+                    tbody.empty();
 
-
-
-                    // Llenar la tabla con datos de proveedores
-                    const tbodyProveedores = $("#tabla-proveedores");
-                    data.ventasProveedor.forEach(proveedor => {
-                        tbodyProveedores.append(`
-                        <tr>
-                            <td>${proveedor.Proveedor}</td>
-                            <td>${formatter.format(proveedor.CantidadArticulos)}</td>
-                            <td>${formatter.format(proveedor.TotalVenta)}</td>
-                        </tr>
-                    `);
+                    ventasProveedor.forEach(proveedor => {
+                        tbody.append(`
+                            <tr>
+                                <td>${proveedor.Proveedor}</td>
+                                <td>${formatter.format(proveedor.CantidadArticulos)}</td>
+                                <td>${formatter.format(proveedor.TotalVenta)}</td>
+                            </tr>
+                        `);
                     });
 
-                    // Convertir la tabla de proveedores en una DataTable
                     $('.datatables-ajax-proveedores').DataTable({
-                        "paging": true,
-                        "searching": true,
-                        "ordering": true,
-                        "info": true,
-                        "order": [
-                            [2, "desc"]
-                        ], // Ordenar inicialmente por la columna 2 (Total Ventas)
-                        "columnDefs": [{
-                            "targets": [2], // Índice de la columna Total Ventas
-                            "render": function(data, type, row) {
-                                if (type === 'sort' || type === 'type') {
-                                    // Limpiar caracteres no numéricos y convertir a número
-                                    return parseFloat(data.replace(
-                                        /[^\d,-]/g, '').replace(',',
-                                        '.')) || 0;
-                                }
-                                return data; // Mostrar los datos originales
-                            }
-                        }],
+                        "destroy": true,
+                        "order": [[2, "desc"]],
                         "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json", // Idioma en español
-                            "decimal": ",",
-                            "thousands": "."
+                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
                         }
                     });
+                },
+                error: manejarError
+            });
+        }
 
+        // Función para cargar ventas por preventista y proveedor
+        function cargarVentasPreProveedor() {
+            $.ajax({
+                url: "../../backend/controller/preventa/preventaController.php?action=ventasPreventistaProveedor",
+                method: "GET",
+                dataType: "json",
+                success: function (ventasPreProveedor) {
+                    const tbody = $("#tabla-pre-proveedores");
+                    tbody.empty();
 
-
-                    const tbodyPreProveedor = $("#tabla-pre-proveedores");
-                    data.ventasPreventistaProveedor.forEach(preProveedor => {
-                        tbodyPreProveedor.append(`
-                        <tr>
-                            <td>${preProveedor.Preventista}</td>
-                            <td>${preProveedor.Proveedor}</td>
-                            <td>${formatter.format(preProveedor.CantidadArticulos)}</td>
-                            <td>${formatter.format(preProveedor.TotalVenta)}</td>
-                        </tr>
-                    `);
+                    ventasPreProveedor.forEach(preProveedor => {
+                        tbody.append(`
+                            <tr>
+                                <td>${preProveedor.Preventista}</td>
+                                <td>${preProveedor.Proveedor}</td>
+                                <td>${formatter.format(preProveedor.CantidadArticulos)}</td>
+                                <td>${formatter.format(preProveedor.TotalVenta)}</td>
+                            </tr>
+                        `);
                     });
 
-                    // Convertir la tabla de preventistas en una DataTable
                     $('.datatables-ajax-pre-proveedores').DataTable({
-                        "order": [
-                            [3, "desc"]
-                        ], // Ordenar inicialmente por la columna 2 (Total Ventas)
-                        "columnDefs": [{
-                            "targets": [3], // Índice de la columna Total Ventas
-                            "render": function(data, type, row) {
-                                if (type === 'sort' || type === 'type') {
-                                    // Limpiar caracteres no numéricos y convertir a número
-                                    return parseFloat(data.replace(
-                                        /[^\d,-]/g, '').replace(',',
-                                        '.')) || 0;
-                                }
-                                return data; // Mostrar los datos originales
-                            }
-                        }],
+                        "destroy": true,
+                        "order": [[3, "desc"]],
                         "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json", // Idioma en español
-                            "decimal": ",",
-                            "thousands": "."
+                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
                         }
                     });
+                },
+                error: manejarError
+            });
+        }
 
-                    const tbodyArticulos = $("#tabla-articulos");
-                    data.articulosMasVendidos.forEach(articulos => {
-                        tbodyArticulos.append(`
-                        <tr>
-                            <td>${articulos.CodigoArticulo}</td>
-                            <td>${articulos.Descripcion}</td>
-                            <td>${articulos.Proveedor}</td>
-                            <td>${formatter.format(articulos.Cantidad)}</td>
-                            <td>${formatter.format(articulos.MontoTotal)}</td>
-                        </tr>
-                    `);
+        // Función para cargar artículos más vendidos
+        function cargarArticulosMasVendidos() {
+            $.ajax({
+                url: "../../backend/controller/preventa/preventaController.php?action=articulosMasVendidos",
+                method: "GET",
+                dataType: "json",
+                success: function (articulos) {
+                    const tbody = $("#tabla-articulos");
+                    tbody.empty();
+
+                    articulos.forEach(articulo => {
+                        tbody.append(`
+                            <tr>
+                                <td>${articulo.CodigoArticulo}</td>
+                                <td>${articulo.Descripcion}</td>
+                                <td>${articulo.Proveedor}</td>
+                                <td>${formatter.format(articulo.Cantidad)}</td>
+                                <td>${formatter.format(articulo.MontoTotal)}</td>
+                            </tr>
+                        `);
                     });
 
-                    // Convertir la tabla de preventistas en una DataTable
                     $('.datatables-ajax-articulos').DataTable({
-                        "order": [
-                            [3, "desc"]
-                        ], // Ordenar inicialmente por la columna 2 (Total Ventas)
-                        "columnDefs": [{
-                            "targets": [3], // Índice de la columna Total Ventas
-                            "render": function(data, type, row) {
-                                if (type === 'sort' || type === 'type') {
-                                    // Limpiar caracteres no numéricos y convertir a número
-                                    return parseFloat(data.replace(
-                                        /[^\d,-]/g, '').replace(',',
-                                        '.')) || 0;
-                                }
-                                return data; // Mostrar los datos originales
-                            }
-                        }],
+                        "destroy": true,
+                        "order": [[3, "desc"]],
                         "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json", // Idioma en español
-                            "decimal": ",",
-                            "thousands": "."
+                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
                         }
                     });
+                },
+                error: manejarError
+            });
+        }
 
-                    const tbodyArticuloPreventistas = $("#tabla-art-preventista");
-                    data.articulosMasVendidosPreventista.forEach(artpreventista => {
-                        tbodyArticuloPreventistas.append(`
-                        <tr>
-                            <td>${artpreventista.Preventista}</td>
-                            <td>${artpreventista.CodigoArticulo}</td>
-                            <td>${artpreventista.Descripcion}</td>
-                            <td>${artpreventista.Proveedor}</td>
-                            <td>${formatter.format(artpreventista.Cantidad)}</td>
-                            <td>${formatter.format(artpreventista.MontoTotal)}</td>
-                        </tr>
-                    `);
+        // Función para cargar artículos por preventista
+        function cargarArticulosPorPreventista() {
+            $.ajax({
+                url: "../../backend/controller/preventa/preventaController.php?action=articulosPorPreventista",
+                method: "GET",
+                dataType: "json",
+                success: function (articulosPreventista) {
+                    const tbody = $("#tabla-art-preventista");
+                    tbody.empty();
+
+                    articulosPreventista.forEach(art => {
+                        tbody.append(`
+                            <tr>
+                                <td>${art.Preventista}</td>
+                                <td>${art.CodigoArticulo}</td>
+                                <td>${art.Descripcion}</td>
+                                <td>${art.Proveedor}</td>
+                                <td>${formatter.format(art.Cantidad)}</td>
+                                <td>${formatter.format(art.MontoTotal)}</td>
+                            </tr>
+                        `);
                     });
 
-                    // Convertir la tabla de preventistas en una DataTable
                     $('.datatables-ajax-art-preventista').DataTable({
-                        "order": [
-                            [4, "desc"]
-                        ], // Ordenar inicialmente por la columna 2 (Total Ventas)
-                        "columnDefs": [{
-                            "targets": [4], // Índice de la columna Total Ventas
-                            "render": function(data, type, row) {
-                                if (type === 'sort' || type === 'type') {
-                                    // Limpiar caracteres no numéricos y convertir a número
-                                    return parseFloat(data.replace(
-                                        /[^\d,-]/g, '').replace(',',
-                                        '.'));
-                                }
-                                return data; // Mostrar los datos originales
-                            }
-                        }],
+                        "destroy": true,
+                        "order": [[4, "desc"]],
                         "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json", // Idioma en español
-                            "decimal": ",",
-                            "thousands": "."
+                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
                         }
                     });
+                },
+                error: manejarError
+            });
+        }
 
+        // Escuchar los eventos de cambio de pestaña
+        $('#ventas-tabs button').on('shown.bs.tab', function (event) {
+            const targetId = $(event.target).attr('id');
 
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error al cargar los datos:", error);
+            // Llamar a las funciones de carga según el tab seleccionado
+            switch (targetId) {
+                case 'tab-preventistas':
+                    cargarVentasPreventista();
+                    break;
+                case 'tab-proveedores':
+                    cargarVentasProveedor();
+                    break;
+                case 'tab-pre-proveedores':
+                    cargarVentasPreProveedor();
+                    break;
+                case 'tab-articulos':
+                    cargarArticulosMasVendidos();
+                    break;
+                case 'tab-art-preventista':
+                    cargarArticulosPorPreventista();
+                    break;
+                default:
+                    console.warn('No se encontró una acción asociada al tab:', targetId);
             }
         });
+
+        // Cargar el contenido del tab inicial (preventistas)
+        cargarVentasPreventista();
     });
-    </script>
+</script>
+
+
 </body>
 
 </html>
