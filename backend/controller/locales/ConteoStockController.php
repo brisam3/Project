@@ -67,7 +67,7 @@ class DevolucionesController {
         $idTipoUsuario = $_SESSION['idTipoUsuario'];
 
         // Insertar un nuevo registro en la tabla `detalleDevoluciones` con la fecha y hora actual
-        $detalleQuery = "INSERT INTO detalleConteoStock (fechaHora, idUsuario) VALUES (NOW(), ?)";
+        $detalleQuery = "INSERT INTO detalleconteostock (fechaHora, idUsuario) VALUES (NOW(), ?)";
         $detalleStmt = $this->db->prepare($detalleQuery);
         $detalleStmt->execute([$idUsuario]);
         $idDetalleConteo= $this->db->lastInsertId();
