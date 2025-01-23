@@ -37,6 +37,9 @@ class DevolucionesController {
             return "descripcion LIKE ?";
         }, $keywords);
     
+        // Añade una condición para excluir 'oferta'
+        $conditions[] = "descripcion NOT LIKE '%oferta%'";
+    
         // Une las condiciones con AND
         $query = "SELECT codBarras, descripcion, codBejerman 
                   FROM articulos 
