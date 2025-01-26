@@ -47,7 +47,54 @@
     <script src="../../assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
+    <style>
+    .inline-form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Centra el contenido horizontalmente */
+        gap: 10px;
+        /* Incrementé el espacio entre los elementos */
+        padding: 5px;
+        background-color: rgb(255, 250, 251);
 
+
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        white-space: nowrap;
+        /* Esto previene saltos de línea */
+    }
+
+    .inline-form label {
+        display: inline-flex;
+        /* Asegura que los labels no generen saltos */
+        align-items: center;
+        font-size: 12px;
+        color: rgb(0, 0, 0);
+    }
+
+    .inline-form input[type="date"] {
+        padding: 2px 4px;
+        border: 1px solidrgb(0, 1, 2);
+        border-radius: 3px;
+        font-size: 12px;
+        width: 120px;
+    }
+
+    .inline-form button {
+        background-color: rgb(182, 0, 0);
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    .inline-form button:hover {
+        background-color: rgb(24, 3, 0);
+    }
+    </style>
 
 
 </head>
@@ -62,7 +109,16 @@
             <div class="layout-page">
                 <div class="content-wrapper">
                     <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="inline-form">
+                            <form action="../../backend/controller/preventa/reporteHistoricoPrevente.php" method="GET">
+                                <label for="startDate"><strong>DESDE EL DÍA: ‎ ‎ </strong> <input type="date"
+                                        id="startDate" name="startDate" required></label>
+                                <label for="endDate"><strong>HASTA EL DÍA: ‎ ‎ </strong> <input type="date" id="endDate"
+                                        name="endDate" required></label>
+                                <button type="submit"><strong>Generar Reporte</strong></button>
+                            </form>
 
+                        </div>
                         <!-- Nav Tabs -->
                         <ul class="nav nav-tabs" id="ventas-tabs" role="tablist">
                             <li class="nav-item" role="presentation">

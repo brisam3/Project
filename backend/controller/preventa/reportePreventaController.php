@@ -10,10 +10,81 @@ ini_set('display_errors', 1);
 // Configurar el encabezado para devolver JSON
 header('Content-Type: application/json');
 
-date_default_timezone_set('America/Argentina/Buenos_Aires'); // Ajusta según tu zona horaria
-$today = date('Y-m-d');
+// Configurar la zona horaria
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-// Función para ejecutar una consulta preparada y devolver los resultados
+// Capturar las fechas enviadas por el formulario
+$fechaInicio = isset($_GET['startDate']) ? $_GET['startDate'] : null;
+$fechaFin = isset($_GET['endDate']) ? $_GET['endDate'] : null;
+
+// Validar que ambas fechas estén presentes
+if (!$fechaInicio || !$fechaFin) {
+    echo json_encode(["error" => "Debe proporcionar ambas fechas (startDate y endDate)."]);
+    exit;
+}
+
+// Validar formato de las fechas (opcional)
+if (!validarFormatoFecha($fechaInicio) || !validarFormatoFecha($fechaFin)) {
+    echo json_encode(["error" => "El formato de las fechas debe ser AAAA-MM-DD."]);
+    exit;
+}
+
+// Función principal para manejar las peticiones
+function manejarPeticionAjax($fechaInicio, $fechaFin)
+{
+    try {
+        // Conectar a la base de datos
+        $database = new Database();
+        $pdo = $database->getConnection();
+
+        // Obtener la acción desde la URL
+        $action = isset($_GET['action']) ? $_GET['action'] : null;
+
+        if (!$action) {
+            echo json_encode(["error" => "Acción no especificada."]);
+            return;
+        }
+
+        $respuesta = [];
+        switch ($action) {
+            case 'resumen':
+                // Obtener el resumen para el rango de fechas
+                $respuesta = obtenerResumen($pdo, $fechaInicio, $fechaFin);
+                break;
+
+            case 'verificar':
+                // Verificar si existen registros en el rango de fechas
+                if (existeDetalleReporte($pdo, $fechaInicio, $fechaFin)) {
+                    $respuesta = ["success" => true, "message" => "Existen registros en el rango de fechas."];
+                } else {
+                    $respuesta = ["success" => false, "message" => "No se encontraron registros en el rango de fechas."];
+                }
+                break;
+
+            default:
+                echo json_encode(["error" => "Acción no válida: $action"]);
+                return;
+        }
+
+        // Responder con los datos procesados
+        echo json_encode($respuesta);
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(["error" => "Error en el servidor: " . $e->getMessage()]);
+    }
+}
+
+/**
+ * Validar formato de fecha (AAAA-MM-DD)
+ */
+function validarFormatoFecha($fecha)
+{
+    return preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha);
+}
+
+/**
+ * Ejecutar una consulta preparada y devolver los resultados
+ */
 function ejecutarConsulta($pdo, $sql, $params = [])
 {
     try {
@@ -25,28 +96,41 @@ function ejecutarConsulta($pdo, $sql, $params = [])
     }
 }
 
-// Función para verificar si existen registros en detallereporte con la fecha actual
-function existeDetalleReporte($pdo, $today)
+/**
+ * Verificar si existen registros en detallereporte en un rango de fechas
+ */
+function existeDetalleReporte($pdo, $fechaInicio, $fechaFin)
 {
-    $sql = "SELECT COUNT(*) as total FROM detallereporte WHERE fecha = :today";
-    $resultado = ejecutarConsulta($pdo, $sql, [':today' => $today]);
+    $sql = "SELECT COUNT(*) as total FROM detallereporte WHERE fecha BETWEEN :startDate AND :endDate";
+    $resultado = ejecutarConsulta($pdo, $sql, [
+        ':startDate' => $fechaInicio,
+        ':endDate' => $fechaFin
+    ]);
     return isset($resultado[0]['total']) && $resultado[0]['total'] > 0;
 }
 
-// Función para obtener el resumen
-function obtenerResumen($pdo, $today)
+/**
+ * Obtener el resumen de ventas en un rango de fechas
+ */
+function obtenerResumen($pdo, $fechaInicio, $fechaFin)
 {
-    $sql = "SELECT
-        COUNT(DISTINCT c.Comp_Ppal) AS CantidadBoletas,
-        COUNT(DISTINCT c.Comp_Cliente_Cod) AS CantidadClientes,
-        SUM(c.Item_Impte_Total_mon_Emision) AS TotalVenta
-    FROM comprobantes c
-    JOIN detallereporte d ON c.detalleReporte_id = d.id
-    WHERE d.fecha = :today";
+    $sql = "
+        SELECT
+            COUNT(DISTINCT c.Comp_Ppal) AS CantidadBoletas,
+            COUNT(DISTINCT c.Comp_Cliente_Cod) AS CantidadClientes,
+            SUM(c.Item_Impte_Total_mon_Emision) AS TotalVenta
+        FROM comprobantes c
+        JOIN detallereporte d ON c.detalleReporte_id = d.id
+        WHERE d.fecha BETWEEN :startDate AND :endDate
+    ";
 
-    $resultado = ejecutarConsulta($pdo, $sql, [':today' => $today]);
+    $resultado = ejecutarConsulta($pdo, $sql, [
+        ':startDate' => $fechaInicio,
+        ':endDate' => $fechaFin
+    ]);
 
-    if (!$resultado || $resultado[0]['TotalVenta'] == 0) {
+    // Validar si hay datos en el resultado
+    if (!$resultado || empty($resultado[0]['TotalVenta'])) {
         return [
             'TotalVenta' => 0,
             'CantidadClientes' => 0,
@@ -55,6 +139,7 @@ function obtenerResumen($pdo, $today)
         ];
     }
 
+    // Calcular el ticket promedio
     $resumen = $resultado[0];
     $resumen['TicketPromedio'] = $resumen['CantidadBoletas'] > 0
         ? $resumen['TotalVenta'] / $resumen['CantidadBoletas']
@@ -63,118 +148,7 @@ function obtenerResumen($pdo, $today)
     return $resumen;
 }
 
-// Función para obtener ventas por preventista
-function obtenerVentasPreventista($pdo, $today)
-{
-    $sql = "SELECT
-        u.nombre AS Preventista,
-        COUNT(DISTINCT c.Comp_Ppal) AS CantidadBoletas,
-        COUNT(DISTINCT c.Comp_Cliente_Cod) AS CantidadClientes,
-        SUM(c.Item_Impte_Total_mon_Emision) AS TotalVenta,
-        (SUM(c.Item_Impte_Total_mon_Emision) / COUNT(DISTINCT c.Comp_Ppal)) AS TicketPromedio,
-        COUNT(DISTINCT c.Item_Articulo_Cod_Gen) AS VariedadArticulos,
-        COUNT(DISTINCT c.Articulo_Prov_Habitual_Cod) AS VariedadProveedores,
-        (COUNT(DISTINCT c.Item_Articulo_Cod_Gen) / COUNT(DISTINCT c.Comp_Cliente_Cod)) AS PromedioArticulosPorCliente,
-        (COUNT(DISTINCT c.Articulo_Prov_Habitual_Cod) / COUNT(DISTINCT c.Comp_Cliente_Cod)) AS PromedioProveedoresPorCliente,
-        (SUM(c.Item_Impte_Total_mon_Emision) * 0.04) AS Comision
-    FROM comprobantes c
-    JOIN detallereporte d ON c.detalleReporte_id = d.id
-    JOIN usuarios u ON TRIM(c.Comp_Vendedor_Cod) = TRIM(u.usuario)
-    WHERE d.fecha = :today
-    GROUP BY u.nombre
-    ORDER BY TotalVenta DESC";
-
-    return ejecutarConsulta($pdo, $sql, [':today' => $today]);
-}
-
-// Función para agregar coronitas a los valores máximos
-function agregarCoronitas(&$ventasPreventista)
-{
-    if (empty($ventasPreventista)) {
-        return;
-    }
-
-    $fields = ['CantidadBoletas', 'CantidadClientes'];
-    $maxValues = [];
-
-    foreach ($fields as $field) {
-        $maxValues[$field] = max(array_column($ventasPreventista, $field));
-    }
-
-    foreach ($ventasPreventista as &$venta) {
-        foreach ($fields as $field) {
-            if ($venta[$field] == $maxValues[$field]) {
-                $venta[$field] .= ' 👑';
-            }
-        }
-    }
-}
-
-// Función para obtener ventas por proveedor
-function obtenerVentasProveedor($pdo, $today)
-{
-    $sql = "SELECT
-        p.descripcion AS Proveedor,
-        SUM(c.Item_Cant_UM1) AS CantidadArticulos,
-        SUM(c.Item_Impte_Total_mon_Emision) AS TotalVenta
-    FROM comprobantes c
-    JOIN detallereporte d ON c.detalleReporte_id = d.id
-    JOIN proveedores p ON c.Articulo_Prov_Habitual_Cod = p.cod_proveedor
-    WHERE d.fecha = :today
-    GROUP BY p.descripcion
-    ORDER BY TotalVenta DESC";
-
-    return ejecutarConsulta($pdo, $sql, [':today' => $today]);
-}
-
-// Función para manejar peticiones AJAX
-function manejarPeticionAjax()
-{
-    global $today;
-
-    try {
-        $database = new Database();
-        $pdo = $database->getConnection();
-
-        // Obtener el parámetro "action" de la URL
-        $action = isset($_GET['action']) ? $_GET['action'] : null;
-
-        if (!existeDetalleReporte($pdo, $today)) {
-            echo json_encode([
-                "error" => "No se encontraron registros para la fecha actual.",
-                "mostrarMensaje" => true
-            ]);
-            return;
-        }
-
-        switch ($action) {
-            case 'resumen':
-                $resumen = obtenerResumen($pdo, $today);
-                echo json_encode($resumen);
-                break;
-
-            case 'ventasPreventista':
-                $ventasPreventista = obtenerVentasPreventista($pdo, $today);
-                agregarCoronitas($ventasPreventista);
-                echo json_encode($ventasPreventista);
-                break;
-
-            case 'ventasProveedor':
-                $ventasProveedor = obtenerVentasProveedor($pdo, $today);
-                echo json_encode($ventasProveedor);
-                break;
-
-            default:
-                echo json_encode(["error" => "Acción no válida."]);
-                break;
-        }
-    } catch (Exception $e) {
-        http_response_code(500);
-        echo json_encode(["error" => "Error en el servidor: " . $e->getMessage()]);
-    }
-}
-
 // Ejecutar la función principal
-manejarPeticionAjax();
+manejarPeticionAjax($fechaInicio, $fechaFin);
 
 ?>
