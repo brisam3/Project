@@ -525,8 +525,8 @@ if (!$devolucionesGeneralesPorCausa) {
 
 
 
-
 // Consultar devoluciones por preventista y causa de emisión
+/*
 $sqlDevolucionesPorCausa = "
 SELECT
     CASE 
@@ -555,7 +555,7 @@ ORDER BY Preventista, CantidadDevoluciones DESC";
 $stmt = $pdo->prepare($sqlDevolucionesPorCausa);
 $stmt->execute([':startDate' => $startDate, ':endDate' => $endDate]);
 $devolucionesPorCausa = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+*/
 
 // Función para encontrar los valores máximos y agregar coronitas
 function addCrown(&$ventasPreventista)

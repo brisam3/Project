@@ -1,3 +1,21 @@
+<?php
+
+
+// Incluir el controlador de acceso
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include '../../backend/controller/access/AccessController.php';
+
+$accessController = new AccessController();
+
+// Verificar si el acceso está permitido
+/* if (!$accessController->checkAccess('/pages/preventa/reporteHistoricoPreventa.php')) {
+    $accessController->denyAccess();
+    exit;
+} */
+
+?>
 <!DOCTYPE html>
 <html lang="es" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
     data-assets-path="../../assets/" data-template="horizontal-menu-template">
@@ -48,51 +66,86 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../../assets/js/config.js"></script>
     <style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
     .inline-form {
         display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        display: flex;
         align-items: center;
-        justify-content: center;
-        /* Centra el contenido horizontalmente */
-        gap: 10px;
-        /* Incrementé el espacio entre los elementos */
-        padding: 5px;
-        background-color: rgb(255, 250, 251);
+    }
 
+    label {
+        margin-right: 10px;
+        font-weight: bold;
+    }
 
+    input[type="date"] {
+        padding: 8px;
+        border: 1px solid #ddd;
         border-radius: 4px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        white-space: nowrap;
-        /* Esto previene saltos de línea */
     }
 
-    .inline-form label {
-        display: inline-flex;
-        /* Asegura que los labels no generen saltos */
-        align-items: center;
-        font-size: 12px;
-        color: rgb(0, 0, 0);
-    }
-
-    .inline-form input[type="date"] {
-        padding: 2px 4px;
-        border: 1px solidrgb(0, 1, 2);
-        border-radius: 3px;
-        font-size: 12px;
-        width: 120px;
-    }
-
-    .inline-form button {
-        background-color: rgb(182, 0, 0);
-        color: white;
+    button {
+        padding: 10px 15px;
+        background-color: #3498db;
+        color: #fff;
         border: none;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 12px;
+        border-radius: 4px;
         cursor: pointer;
+        transition: background-color 0.3s;
     }
 
-    .inline-form button:hover {
-        background-color: rgb(24, 3, 0);
+    button:hover {
+        background-color: #2980b9;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    thead {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    @media (max-width: 768px) {
+        .inline-form {
+            flex-direction: column;
+        }
+
+        .form-group {
+            width: 100%;
+        }
     }
     </style>
 
@@ -108,385 +161,62 @@
 
             <div class="layout-page">
                 <div class="content-wrapper">
+
                     <div class="container-xxl flex-grow-1 container-p-y">
-                        <div class="inline-form">
-                            <form action="../../backend/controller/preventa/reporteHistoricoPrevente.php" method="GET">
-                                <label for="startDate"><strong>DESDE EL DÍA: ‎ ‎ </strong> <input type="date"
-                                        id="startDate" name="startDate" required></label>
-                                <label for="endDate"><strong>HASTA EL DÍA: ‎ ‎ </strong> <input type="date" id="endDate"
-                                        name="endDate" required></label>
-                                <button type="submit"><strong>Generar Reporte</strong></button>
-                            </form>
+
+                        <div class="container mt-3 mb-3">
+                            <!-- Formulario -->
+                           
+                                <form id="form-fechas" onsubmit="return false;">
+                                    <label for="startDate">DESDE EL DÍA:</label>
+                                    <input type="date" id="startDate" name="startDate" required />
+                                    <label for="endDate">HASTA EL DÍA:</label>
+                                    <input type="date" id="endDate" name="endDate" required />
+                                    <button type="submit">Generar Reporte</button>
+                                </form>
+                            
+                        </div>
+                        <div class="container">
+
+
+                            <!-- Tabla Artículos Más Vendidos -->
+
+                            <h2>Artículos Más Vendidos</h2>
+                            <table id="tabla-articulos" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Código Artículo</th>
+                                        <th>Descripción</th>
+                                        <th>Proveedor</th>
+                                        <th>Cantidad</th>
+                                        <th>Total Ventas</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+
+                            <h2>Artículos con Precio 0</h2>
+
+                            <!-- Tabla Artículos con Precio 0 -->
+                            <table id="tabla-articulos-cero" class="table table-bordered table-hover">
+                                <thead class="bg-light text-dark">
+                                    <tr>
+                                        <th>Código Artículo</th>
+                                        <th>Descripción</th>
+                                        <th>Proveedor</th>
+                                        <th>Total General</th>
+                                        <th>Articulos de Kits</th>
+                                        <th>Diferencia</th>
+                                        <th>%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los datos se llenarán dinámicamente -->
+                                </tbody>
+                            </table>
 
                         </div>
-                        <!-- Nav Tabs -->
-                        <ul class="nav nav-tabs" id="ventas-tabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tab-preventistas" data-bs-toggle="tab"
-                                    data-bs-target="#content-preventistas" type="button" role="tab"
-                                    aria-controls="content-preventistas" aria-selected="true">
-                                    Ventas por Preventista
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-proveedores" data-bs-toggle="tab"
-                                    data-bs-target="#content-proveedores" type="button" role="tab"
-                                    aria-controls="content-proveedores" aria-selected="false">
-                                    Ventas por Proveedor
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-pre-proveedores" data-bs-toggle="tab"
-                                    data-bs-target="#content-pre-proveedores" type="button" role="tab"
-                                    aria-controls="content-pre-proveedores" aria-selected="false">
-                                    Ventas por Preventista y Proveedor
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-articulos" data-bs-toggle="tab"
-                                    data-bs-target="#content-articulos" type="button" role="tab"
-                                    aria-controls="content-articulos" aria-selected="false">
-                                    Artículos Más Vendidos
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-art-preventista" data-bs-toggle="tab"
-                                    data-bs-target="#content-art-preventista" type="button" role="tab"
-                                    aria-controls="content-art-preventista" aria-selected="false">
-                                    Artículos por Preventista
-                                </button>
-                            </li>
-                        </ul>
 
-                        <!-- Tab Content -->
-                        <div class="tab-content" id="ventas-tabs-content">
-                            <!-- Tab Preventistas -->
-                            <div class="tab-pane fade show active" id="content-preventistas" role="tabpanel"
-                                aria-labelledby="tab-preventistas">
-                                <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">RESUMEN DEL DÍA /</span>
-                                    VENTAS</h4>
-                                <div id="mensaje-carga" style="display: none;">
-                                    <p>Los datos de hoy serán actualizados antes de las 16:30 hs.</p>
-                                </div>
-                                <div id="contenido-reportes">
-                                    <div class="row">
-                                        <!-- Total Vendido -->
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-success rounded">
-                                                            <i class="bx bx-credit-card fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Total Vendido</span>
-                                                            <h4 class="card-title mb-1" id="total-vendido">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Clientes -->
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-primary rounded">
-                                                            <i class="bx bx-user fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Clientes</span>
-                                                            <h4 class="card-title mb-1" id="clientes">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Boletas -->
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-warning rounded">
-                                                            <i class="bx bx-receipt fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Boletas</span>
-                                                            <h4 class="card-title mb-1" id="boletas">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Ticket Promedio -->
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-info rounded">
-                                                            <i class="bx bx-bar-chart-alt fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Ticket Promedio</span>
-                                                            <h4 class="card-title mb-1" id="ticket-promedio">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Promedio Clientes -->
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-secondary rounded">
-                                                            <i class="bx bx-group fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Promedio Clientes</span>
-                                                            <h4 class="card-title mb-1" id="promedio-clientes">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Total Vendido menos IVA -->
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-danger rounded">
-                                                            <i class="bx bx-calculator fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Total sin IVA</span>
-                                                            <h4 class="card-title mb-1" id="total-sin-iva">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Total Vendido menos Ponderado -->
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-dark rounded">
-                                                            <i class="bx bx-coin-stack fs-2 text-white"></i>
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Total sin Ponderado</span>
-                                                            <h4 class="card-title mb-1" id="total-sin-ponderado">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Total Comisiones -->
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-light rounded">
-                                                            <i class="bx bx-dollar-circle fs-2 text-dark"></i>
-
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Total Comisiones</span>
-                                                            <h4 class="card-title mb-1" id="total-comisiones">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-lg-2,4 col-sm-6 mb-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="avatar flex-shrink-0 d-flex align-items-center justify-content-center bg-light rounded">
-                                                            <i class="bx bx-calculator fs-2 text-dark"></i>
-
-                                                        </div>
-                                                        <div class="ms-3">
-                                                            <span class="fw-semibold d-block">Total Menos Ponderado e
-                                                                IVA</span>
-                                                            <h4 class="card-title mb-1"
-                                                                id="total-menos-ponderado-e-iva">$</h4>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="container-xxl flex-grow-1 container-p-y">
-                                            <h2 class="fw-bold py-3 mb-4">Ventas por preventista</h2>
-                                            <div class="table-responsive-xl mb-6 mb-lg-0">
-                                                <div class="dataTables_wrapper no-footer"
-                                                    style="width: 100% !important;">
-                                                    <table class="datatables-ajax table table-bordered m-3 table-hover"
-                                                        style="border: 1px solid #dee2e6 !important;">
-                                                        <thead class="bg-light text-dark border-top-class m-1">
-                                                            <tr>
-                                                                <th>Preventista</th>
-                                                                <th>Boletas</th>
-                                                                <th>Clientes</th>
-                                                                <th>Total Venta</th>
-                                                                <th>Ticket Promedio</th>
-                                                                <th>Comisión</th>
-                                                                <th>Variedad Artículos</th>
-                                                                <th>Variedad Proveedores</th>
-                                                                <th>Promedio Artículos/Cliente</th>
-                                                                <th>Promedio Proveedores/Cliente</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tabla-reporte">
-                                                            <!-- Los datos se llenarán dinámicamente -->
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <!--/ Preventa Report Table -->
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-
-                            <div class="tab-pane fade" id="content-proveedores" role="tabpanel"
-                                aria-labelledby="tab-proveedores">
-                                <div class="row">
-                                    <div class="container-xxl flex-grow-1 container-p-y">
-                                        <h2 class="fw-bold py-3 mb-4">Ventas por Proveedor</h2>
-                                        <div class="table-responsive-xl mb-6 mb-lg-0">
-                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                <table
-                                                    class="datatables-ajax-proveedores table table-bordered m-3 table-hover">
-                                                    <thead class="bg-light text-dark border-top-class m-1">
-                                                        <tr>
-                                                            <th>Proveedor</th>
-                                                            <th>Cantidad Articulos</th>
-                                                            <th>Total de Ventas</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tabla-proveedores">
-                                                        <!-- Los datos se llenarán dinámicamente -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="content-pre-proveedores" role="tabpanel"
-                                aria-labelledby="tab-pre-proveedores">
-                                <div class="row">
-                                    <div class="container-xxl flex-grow-1 container-p-y">
-                                        <h2 class="fw-bold py-3 mb-4">Ventas por Preventista y Proveedor</h2>
-                                        <div class="table-responsive-xl mb-6 mb-lg-0">
-                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                <table
-                                                    class="datatables-ajax-pre-proveedores table table-bordered m-3 table-hover">
-                                                    <thead class="bg-light text-dark border-top-class m-1">
-                                                        <tr>
-                                                            <th>Preventista</th>
-                                                            <th>Proveedor</th>
-                                                            <th>Cantidad Articulos</th>
-                                                            <th>Total de Ventas</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tabla-pre-proveedores">
-                                                        <!-- Los datos se llenarán dinámicamente -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <!--/ Preventa Report Table -->
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <div class="tab-pane fade" id="content-articulos" role="tabpanel"
-                                aria-labelledby="tab-articulos">
-                                <div class="row">
-                                    <div class="container-xxl flex-grow-1 container-p-y">
-                                        <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos</h2>
-                                        <div class="table-responsive-xl mb-6 mb-lg-0">
-                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                <table
-                                                    class="datatables-ajax-articulos table table-bordered m-3 table-hover">
-                                                    <thead class="bg-light text-dark border-top-class m-1">
-                                                        <tr>
-                                                            <th>CodigoArticulo</th>
-                                                            <th>Descripcion</th>
-                                                            <th>Proveedor</th>
-                                                            <th>Cantidad</th>
-                                                            <th>Total Ventas</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tabla-articulos">
-                                                        <!-- Los datos se llenarán dinámicamente -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <!--/ Preventa Report Table -->
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <div class="tab-pane fade" id="content-art-preventista" role="tabpanel"
-                                aria-labelledby="tab-art-preventista">
-                                <div class="row">
-                                    <div class="container-xxl flex-grow-1 container-p-y">
-                                        <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos por Preventista</h2>
-                                        <div class="table-responsive-xl mb-6 mb-lg-0">
-                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                                <table
-                                                    class="datatables-ajax-art-preventista table table-bordered m-3 table-hover">
-                                                    <thead class="bg-light text-dark border-top-class m-1">
-                                                        <tr>
-                                                            <th>Preventista</th>
-                                                            <th>Codigo Articulo</th>
-                                                            <th>Descripcion</th>
-                                                            <th>Proveedor</th>
-                                                            <th>Cantidad</th>
-                                                            <th>Monto Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tabla-art-preventista">
-                                                        <!-- Los datos se llenarán dinámicamente -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <!--/ Preventa Report Table -->
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
                 </div>
             </div>
@@ -536,240 +266,150 @@
     <!-- AJAX Script -->
     <script>
     $(document).ready(function() {
+        // Formateador de números
         const formatter = new Intl.NumberFormat('es-ES', {
             minimumFractionDigits: 1,
             maximumFractionDigits: 1
         });
 
-        // Función genérica para manejar errores
-        function manejarError(xhr, status, error) {
-            console.error("Error al cargar los datos:", error);
-        }
-
-        // Función para cargar ventas por preventista
-        function cargarVentasPreventista() {
-            $.ajax({
-                url: "../../backend/controller/preventa/reportePreventaController.php?action=ventasPreventista",
-                method: "GET",
-                dataType: "json",
-                success: function(ventasPreventista) {
-                    console.log(ventasPreventista); // Ver qué datos se están recibiendo
-                    if (ventasPreventista.length === 0) {
-                        console.log('No hay datos disponibles.');
-                    }
-                    const tbody = $("#tabla-reporte");
-                    tbody.empty();
-
-                    ventasPreventista.forEach(preventista => {
-                        tbody.append(`
-            <tr>
-                <td>${preventista.Preventista}</td>
-                <td>${preventista.CantidadBoletas}</td>
-                <td>${preventista.CantidadClientes}</td>
-                <td>${formatter.format(preventista.TotalVenta)}</td>
-                <td>${formatter.format(preventista.TicketPromedio)}</td>
-                <td>${formatter.format(preventista.Comision)}</td>
-                <td>${preventista.VariedadArticulos}</td>
-                <td>${preventista.VariedadProveedores}</td>
-                <td>${formatter.format(preventista.PromedioArticulosPorCliente)}</td>
-                <td>${formatter.format(preventista.PromedioProveedoresPorCliente)}</td>
-            </tr>
-        `);
-                    });
-
-                    $('.datatables-ajax').DataTable({
-                        "destroy": true,
-                        "order": [
-                            [3, "desc"]
-                        ],
-                        "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
-                        }
-                    });
-                },
-
-
-                error: manejarError
-            });
-        }
-
-        // Función para cargar ventas por proveedor
-        function cargarVentasProveedor() {
-            $.ajax({
-                url: "../../backend/controller/preventa/reportePreventaController.php?action=ventasProveedor",
-                method: "GET",
-                dataType: "json",
-                success: function(ventasProveedor) {
-                    const tbody = $("#tabla-proveedores");
-                    tbody.empty();
-
-                    ventasProveedor.forEach(proveedor => {
-                        tbody.append(`
-                            <tr>
-                                <td>${proveedor.Proveedor}</td>
-                                <td>${formatter.format(proveedor.CantidadArticulos)}</td>
-                                <td>${formatter.format(proveedor.TotalVenta)}</td>
-                            </tr>
-                        `);
-                    });
-
-                    $('.datatables-ajax-proveedores').DataTable({
-                        "destroy": true,
-                        "order": [
-                            [2, "desc"]
-                        ],
-                        "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
-                        }
-                    });
-                },
-                error: manejarError
-            });
-        }
-
-        // Función para cargar ventas por preventista y proveedor
-        function cargarVentasPreProveedor() {
-            $.ajax({
-                url: "../../backend/controller/preventa/reportePreventaController.php?action=ventasPreventistaProveedor",
-                method: "GET",
-                dataType: "json",
-                success: function(ventasPreProveedor) {
-                    const tbody = $("#tabla-pre-proveedores");
-                    tbody.empty();
-
-                    ventasPreProveedor.forEach(preProveedor => {
-                        tbody.append(`
-                            <tr>
-                                <td>${preProveedor.Preventista}</td>
-                                <td>${preProveedor.Proveedor}</td>
-                                <td>${formatter.format(preProveedor.CantidadArticulos)}</td>
-                                <td>${formatter.format(preProveedor.TotalVenta)}</td>
-                            </tr>
-                        `);
-                    });
-
-                    $('.datatables-ajax-pre-proveedores').DataTable({
-                        "destroy": true,
-                        "order": [
-                            [3, "desc"]
-                        ],
-                        "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
-                        }
-                    });
-                },
-                error: manejarError
-            });
-        }
-
-        // Función para cargar artículos más vendidos
-        function cargarArticulosMasVendidos() {
-            $.ajax({
-                url: "../../backend/controller/preventa/reportePreventaController.php?action=articulosMasVendidos",
-                method: "GET",
-                dataType: "json",
-                success: function(articulos) {
-                    const tbody = $("#tabla-articulos");
-                    tbody.empty();
-
-                    articulos.forEach(articulo => {
-                        tbody.append(`
-                            <tr>
-                                <td>${articulo.CodigoArticulo}</td>
-                                <td>${articulo.Descripcion}</td>
-                                <td>${articulo.Proveedor}</td>
-                                <td>${formatter.format(articulo.Cantidad)}</td>
-                                <td>${formatter.format(articulo.MontoTotal)}</td>
-                            </tr>
-                        `);
-                    });
-
-                    $('.datatables-ajax-articulos').DataTable({
-                        "destroy": true,
-                        "order": [
-                            [3, "desc"]
-                        ],
-                        "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
-                        }
-                    });
-                },
-                error: manejarError
-            });
-        }
-
-        // Función para cargar artículos por preventista
-        function cargarArticulosPorPreventista() {
-            $.ajax({
-                url: "../../backend/controller/preventa/reportePreventaController.php?action=articulosPorPreventista",
-                method: "GET",
-                dataType: "json",
-                success: function(articulosPreventista) {
-                    const tbody = $("#tabla-art-preventista");
-                    tbody.empty();
-
-                    articulosPreventista.forEach(art => {
-                        tbody.append(`
-                            <tr>
-                                <td>${art.Preventista}</td>
-                                <td>${art.CodigoArticulo}</td>
-                                <td>${art.Descripcion}</td>
-                                <td>${art.Proveedor}</td>
-                                <td>${formatter.format(art.Cantidad)}</td>
-                                <td>${formatter.format(art.MontoTotal)}</td>
-                            </tr>
-                        `);
-                    });
-
-                    $('.datatables-ajax-art-preventista').DataTable({
-                        "destroy": true,
-                        "order": [
-                            [4, "desc"]
-                        ],
-                        "language": {
-                            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
-                        }
-                    });
-                },
-                error: manejarError
-            });
-        }
-
-        // Escuchar los eventos de cambio de pestaña
-        $('#ventas-tabs button').on('shown.bs.tab', function(event) {
-            const targetId = $(event.target).attr('id'); // ID del tab activo
-
-            // Primero, desactiva todas las pestañas
-            $('#ventas-tabs .nav-link').removeClass('active');
-
-            // Luego, activa solo el tab correspondiente
-            $(event.target).addClass('active');
-
-            // Llamar a las funciones de carga según el tab seleccionado
-            switch (targetId) {
-                case 'tab-preventistas':
-                    cargarVentasPreventista();
-                    break;
-                case 'tab-proveedores':
-                    cargarVentasProveedor();
-                    break;
-                case 'tab-pre-proveedores':
-                    cargarVentasPreProveedor();
-                    break;
-                case 'tab-articulos':
-                    cargarArticulosMasVendidos();
-                    break;
-                case 'tab-art-preventista':
-                    cargarArticulosPorPreventista();
-                    break;
-                default:
-                    console.warn('No se encontró una acción asociada al tab:', targetId);
-            }
+        // Inicializar DataTable para la tabla de artículos más vendidos
+        const $tablaArticulos = $('#tabla-articulos').DataTable({
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
+            },
+            destroy: true,
+            order: [
+                [3, "desc"]
+            ] // Ordenar por Cantidad de forma descendente
         });
 
+        // Inicializar DataTable para la tabla de artículos con precio 0
+        const $tablaArticulosCero = $('#tabla-articulos-cero').DataTable({
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.11.3/i18n/Spanish.json"
+            },
+            destroy: true,
+            order: [
+                [3, "desc"]
+            ] // Ordenar por TotalGeneral de forma descendente
+        });
 
-        // Cargar el contenido del tab inicial (preventistas)
-        cargarVentasPreventista();
+        // Función para cargar artículos más vendidos
+        function cargarArticulosMasVendidos(startDate, endDate) {
+            // Solicitud AJAX al backend
+            $.ajax({
+                url: "../../backend/controller/preventa/reporteHistoricoPreventa.php", // Cambia la URL si es necesario
+                method: "POST",
+                data: {
+                    accion: "consultarArticulosMasVendidos", // Acción específica para artículos más vendidos
+                    startDate: startDate, // Fecha de inicio
+                    endDate: endDate // Fecha de fin
+                },
+                dataType: "json",
+                success: function(articulos) {
+                    // Verificar si hay errores en la respuesta
+                    if (articulos.error) {
+                        alert(articulos.error);
+                        return;
+                    }
+
+                    // Limpiar los datos previos en la tabla
+                    $tablaArticulos.clear();
+
+                    // Recorrer cada artículo y agregarlo a la tabla
+                    articulos.forEach(articulo => {
+                        $tablaArticulos.row.add([
+                            articulo.CodigoArticulo, // Código del artículo
+                            articulo.Descripcion, // Descripción
+                            articulo.Proveedor, // Proveedor
+                            formatter.format(articulo.Cantidad), // Cantidad
+                            formatter.format(articulo.MontoTotal) // Monto total
+                        ]);
+                    });
+
+                    // Redibujar la tabla con los nuevos datos
+                    $tablaArticulos.draw();
+                },
+                error: function(xhr, status, error) {
+                    // Manejo de errores en la solicitud AJAX
+                    console.error("Error al cargar artículos más vendidos:", error);
+                    alert("Hubo un problema al cargar los datos. Intente nuevamente.");
+                }
+            });
+        }
+
+        // Función para cargar artículos con precio 0
+        function cargarArticulosConPrecioCero(startDate, endDate) {
+            // Solicitud AJAX al backend
+            $.ajax({
+                url: "../../backend/controller/preventa/reporteHistoricoPreventa.php", // Cambia la URL si es necesario
+                method: "POST",
+                data: {
+                    accion: "consultarArticulosConPrecioCero", // Acción específica para artículos con precio 0
+                    startDate: startDate, // Fecha de inicio
+                    endDate: endDate // Fecha de fin
+                },
+                dataType: "json",
+                success: function(articulos) {
+                    // Verificar si hay errores en la respuesta
+                    if (articulos.error) {
+                        alert(articulos.error);
+                        return;
+                    }
+
+                    // Limpiar los datos previos en la tabla
+                    $tablaArticulosCero.clear();
+
+                    // Recorrer cada artículo y agregarlo a la tabla
+                    articulos.forEach(articulo => {
+                        // Calcular el porcentaje de artículos con precio 0 respecto al total general
+                        const porcentajeCero = (articulo.CantidadCero / articulo
+                            .TotalGeneral) * 100 || 0;
+
+                        // Agregar fila a la tabla con los datos formateados
+                        $tablaArticulosCero.row.add([
+                            articulo.CodigoArticulo, // Código del artículo
+                            articulo.Descripcion, // Descripción
+                            articulo.Proveedor, // Proveedor
+                            formatter.format(articulo
+                                .TotalGeneral), // Total general
+                            formatter.format(articulo
+                                .CantidadCero), // Cantidad con precio 0
+                            formatter.format(articulo.Diferencia), // Diferencia
+                            formatter.format(porcentajeCero) +
+                            "%" // Porcentaje de precio 0
+                        ]);
+                    });
+
+                    // Redibujar la tabla con los nuevos datos
+                    $tablaArticulosCero.draw();
+                },
+                error: function(xhr, status, error) {
+                    // Manejo de errores en la solicitud AJAX
+                    console.error("Error al cargar artículos con precio 0:", error);
+                    alert("Hubo un problema al cargar los datos. Intente nuevamente.");
+                }
+            });
+        }
+
+        // Manejo del formulario para cargar ambas tablas
+        $('#form-fechas').on('submit', function(e) {
+            e.preventDefault(); // Prevenir el envío por defecto del formulario
+
+            // Obtener las fechas ingresadas
+            const startDate = $('#startDate').val();
+            const endDate = $('#endDate').val();
+
+            // Validar que ambas fechas estén seleccionadas
+            if (!startDate || !endDate) {
+                alert("Por favor, seleccione ambas fechas.");
+                return;
+            }
+
+            // Llamar a las funciones para cargar los datos en ambas tablas
+            cargarArticulosMasVendidos(startDate, endDate);
+            cargarArticulosConPrecioCero(startDate, endDate);
+        });
     });
     </script>
 

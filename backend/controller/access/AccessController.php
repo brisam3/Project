@@ -8,7 +8,7 @@ if (session_status() === PHP_SESSION_NONE) {
             //locales
             1 => ['/pages/locales/Devoluciones.php', '/pages/locales/CierreCaja.php', '/pages/locales/Transferencias.php', '/pages/locales/ConteoStock.php'],
             //preventa
-            2 => ['/'],
+            2 => ['/pages/preventa/reporteHistoricoPreventa.php'],
             //deposito
             3 => ['/pages/deposito/Devoluciones.php','/pages/deposito/Transferencias.php'],
             //administracion

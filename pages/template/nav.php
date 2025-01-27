@@ -444,6 +444,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                 </a>
                             </li>
                             <li class="menu-item">
+                                <a href="../preventa/reporteHistoricoPreventa.php" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-chart"></i>
+
+                                    <div data-i18n="Reporte Historico">Reporte Historico</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
                                 <a href="../preventa/reporteAsistencia.php" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-user-check"></i>
 
