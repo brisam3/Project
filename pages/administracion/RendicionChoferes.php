@@ -413,6 +413,8 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                                                         $<?= number_format($row['pago_secretario'], 2) ?></p>
                                                     <p><strong>Total MEC Faltante:</strong>
                                                         $<?= number_format($row['total_mec_faltante'], 2) ?></p>
+                                                        <p><strong>Retenciones:</strong>
+                                                        $<?= number_format($row['retenciones'], 2) ?></p>
                                                 </div>
                                             </div>
 
