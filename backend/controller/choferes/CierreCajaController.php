@@ -23,41 +23,57 @@ class CierreCajaChoferController {
     public function guardarCierreCajaChofer() {
         $idUsuarioChofer = $_SESSION['idUsuario'] ?? null;
         $fecha = date('Y-m-d'); // Solo la fecha en formato YYYY-MM-DD
-
+    
         if (!$idUsuarioChofer) {
             echo json_encode(['error' => 'Usuario no autenticado']);
             exit;
         }
-        $contrareembolso = (float)$_POST['contrareembolso']; // Nuevo campo
-        $retenciones = (float)$_POST['total_retenciones']; // Nuevo campo
-        $total_efectivo = (float)$_POST['total_efectivo'];
-        $total_transferencia = (float)$_POST['total_transferencia'];
-        $total_mercadopago = (float)$_POST['total_mercadopago'];
-        $total_cheques = (float)$_POST['total_cheques'];
-        $total_fiados = (float)$_POST['total_fiados'];
-        $total_gastos = (float)$_POST['total_gastos'];
-        $pago_secretario = (float)$_POST['pago_secretario'];
-        $total_mec_faltante = (float)$_POST['total_mec_faltante'];
-        $total_rechazos = (float)$_POST['total_rechazos'];
+    
         $idUsuarioPreventista = (int)$_POST['idUsuarioPreventista'];
-        $total_general = (float)$_POST['total_general'];
-        $total_menos_gastos = (float)$_POST['total_menos_gastos'];
-        
-
-        $billetes_20000 = (float)$_POST['billetes_20000'];
-        $billetes_10000 = (float)$_POST['billetes_10000'];
-        $billetes_2000 = (float)$_POST['billetes_2000'];
-        $billetes_1000 = (float)$_POST['billetes_1000'];
-        $billetes_500 = (float)$_POST['billetes_500'];
-        $billetes_200 = (float)$_POST['billetes_200'];
-        $billetes_100 = (float)$_POST['billetes_100'];
-        $billetes_50 = (float)$_POST['billetes_50'];
-        $billetes_20 = (float)$_POST['billetes_20'];
-        $billetes_10 = (int)$_POST['billetes_10'];
-
-       
-      
+    
         try {
+            // Verificar si ya existe un registro con la misma fecha, idUsuarioChofer y idUsuarioPreventista
+            $stmt = $this->pdo->prepare("
+                SELECT COUNT(*) as total FROM rendicion_choferes 
+                WHERE fecha = :fecha AND idUsuarioChofer = :idUsuarioChofer AND idUsuarioPreventista = :idUsuarioPreventista
+            ");
+            $stmt->bindParam(':fecha', $fecha);
+            $stmt->bindParam(':idUsuarioChofer', $idUsuarioChofer);
+            $stmt->bindParam(':idUsuarioPreventista', $idUsuarioPreventista);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($result['total'] > 0) {
+                echo json_encode(['error' => 'Ya realizaste una rendición para este preventista']);
+                exit;
+            }
+    
+            // Si no existe un registro previo, proceder con la inserción
+            $contrareembolso = (float)$_POST['contrareembolso'];
+            $retenciones = (float)$_POST['total_retenciones'];
+            $total_efectivo = (float)$_POST['total_efectivo'];
+            $total_transferencia = (float)$_POST['total_transferencia'];
+            $total_mercadopago = (float)$_POST['total_mercadopago'];
+            $total_cheques = (float)$_POST['total_cheques'];
+            $total_fiados = (float)$_POST['total_fiados'];
+            $total_gastos = (float)$_POST['total_gastos'];
+            $pago_secretario = (float)$_POST['pago_secretario'];
+            $total_mec_faltante = (float)$_POST['total_mec_faltante'];
+            $total_rechazos = (float)$_POST['total_rechazos'];
+            $total_general = (float)$_POST['total_general'];
+            $total_menos_gastos = (float)$_POST['total_menos_gastos'];
+    
+            $billetes_20000 = (float)$_POST['billetes_20000'];
+            $billetes_10000 = (float)$_POST['billetes_10000'];
+            $billetes_2000 = (float)$_POST['billetes_2000'];
+            $billetes_1000 = (float)$_POST['billetes_1000'];
+            $billetes_500 = (float)$_POST['billetes_500'];
+            $billetes_200 = (float)$_POST['billetes_200'];
+            $billetes_100 = (float)$_POST['billetes_100'];
+            $billetes_50 = (float)$_POST['billetes_50'];
+            $billetes_20 = (float)$_POST['billetes_20'];
+            $billetes_10 = (int)$_POST['billetes_10'];
+    
             $stmt = $this->pdo->prepare("
                 INSERT INTO rendicion_choferes
                 (idUsuarioChofer, fecha, total_efectivo, total_transferencia, total_mercadopago, total_cheques, 
@@ -71,7 +87,7 @@ class CierreCajaChoferController {
                 :billetes_20000, :billetes_10000, :billetes_2000, :billetes_1000, :billetes_500, 
                 :billetes_200, :billetes_100, :billetes_50, :billetes_20, :billetes_10, :contrareembolso)
             ");
-
+    
             $stmt->bindParam(':fecha', $fecha);
             $stmt->bindParam(':idUsuarioChofer', $idUsuarioChofer);
             $stmt->bindParam(':total_efectivo', $total_efectivo);
@@ -86,7 +102,7 @@ class CierreCajaChoferController {
             $stmt->bindParam(':idUsuarioPreventista', $idUsuarioPreventista);
             $stmt->bindParam(':total_general', $total_general);
             $stmt->bindParam(':total_menos_gastos', $total_menos_gastos);
-
+    
             $stmt->bindParam(':billetes_20000', $billetes_20000);
             $stmt->bindParam(':billetes_10000', $billetes_10000);
             $stmt->bindParam(':billetes_2000', $billetes_2000);
@@ -97,11 +113,11 @@ class CierreCajaChoferController {
             $stmt->bindParam(':billetes_50', $billetes_50);
             $stmt->bindParam(':billetes_20', $billetes_20);
             $stmt->bindParam(':billetes_10', $billetes_10);
-            $stmt->bindParam(':retenciones', $retenciones); // Nuevo campo
-            $stmt->bindParam(':contrareembolso', $contrareembolso); // Nuevo campo
-
+            $stmt->bindParam(':retenciones', $retenciones);
+            $stmt->bindParam(':contrareembolso', $contrareembolso);
+    
             $stmt->execute();
-
+    
             // Verificar el ID generado
             $lastId = $this->pdo->lastInsertId();
             if ($lastId) {
@@ -113,6 +129,7 @@ class CierreCajaChoferController {
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
+    
 
      
     public function obtenerContrareembolso() {

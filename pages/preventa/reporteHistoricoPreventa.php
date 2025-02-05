@@ -168,9 +168,9 @@ $accessController = new AccessController();
                             <!-- Formulario -->
                            
                                 <form id="form-fechas" onsubmit="return false;">
-                                    <label for="startDate">DESDE EL DÍA:</label>
+                                    <label for="startDate">DESDE EL DÍA: </label>
                                     <input type="date" id="startDate" name="startDate" required />
-                                    <label for="endDate">HASTA EL DÍA:</label>
+                                    <label for="endDate">HASTA EL DÍA: </label>
                                     <input type="date" id="endDate" name="endDate" required />
                                     <button type="submit">Generar Reporte</button>
                                 </form>
