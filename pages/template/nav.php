@@ -503,6 +503,12 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                 </a>
                             </li>
                             <li class="menu-item">
+                                <a href="../administracion/ReporteVentasHistorico.php" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-store"></i>
+                                    <div data-i18n="Reporte ventas Historico">Reporte Ventas Historico</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
                                 <a href="../administracion/RendicionChoferes.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-printer"></i>
                                     <div data-i18n="Rendiciones Choferes">Imprimir Rendiciones Choferes</div>
