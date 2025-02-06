@@ -130,11 +130,12 @@ foreach ($mediosPago as $medio) {
     $totalesMediosPago['total_fiados'] += (float) $medio['total_fiados'];
 }
 
-// Consulta para "Ventas por Locales"
+// Consulta para "Ventas por Locales", agrupando por idUsuario
 $ventasLocalesQuery = "
-    SELECT idUsuario, total_menos_gastos 
+    SELECT idUsuario, SUM(total_menos_gastos) AS total_menos_gastos
     FROM cierreCaja 
     WHERE fecha_cierre BETWEEN :fecha_inicio AND :fecha_fin
+    GROUP BY idUsuario
 ";
 $stmtVentasLocales = $pdo->prepare($ventasLocalesQuery);
 $stmtVentasLocales->execute([
@@ -144,7 +145,7 @@ $stmtVentasLocales->execute([
 $ventasLocales = $stmtVentasLocales->fetchAll(PDO::FETCH_ASSOC);
 
 // Registro de depuración
-error_log("Ventas por móvil en rango de fechas: " . print_r($ventasLocales, true));
+error_log("Ventas por locales en rango de fechas agrupadas: " . print_r($ventasLocales, true));
 
 
 // Sumar todos los valores de "total_menos_gastos"
