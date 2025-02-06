@@ -27,7 +27,7 @@ try {
 
    
     // Consulta para "Ventas por Móvil" dentro del rango de fechas
-    $$ventasQuery = "
+    $ventasQuery = "
     SELECT idUsuarioPreventista, SUM(total_menos_gastos) AS total_menos_gastos
     FROM rendicion_choferes 
     WHERE fecha BETWEEN :fecha_inicio AND :fecha_fin
