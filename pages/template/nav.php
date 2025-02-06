@@ -508,6 +508,28 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Reporte ventas Historico">Reporte Ventas Historico</div>
                                 </a>
                             </li>
+                        
+                            
+                            <li class="menu-item">
+                                <a href="../administracion/RendicionGeneral.php" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-money"></i>
+
+                                    <div data-i18n="Rendiciones Generales">Rendiciones Generales</div>
+                                </a>
+                            </li>
+                          
+                        </ul>
+                    </li>
+
+                    
+                    <!-- IMPRIMIR -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                        <i class="menu-icon tf-icons bx bx-printer"></i>
+                            <div data-i18n="Imprimir">Imprimir</div>
+                        </a>
+                        <ul class="menu-sub">
+                           
                             <li class="menu-item">
                                 <a href="../administracion/RendicionChoferes.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-printer"></i>
@@ -522,13 +544,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             </li>
                             
                             <li class="menu-item">
-                                <a href="../administracion/RendicionGeneral.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-money"></i>
-
-                                    <div data-i18n="Rendiciones Generales">Rendiciones Generales</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
                                 <a href="../administracion/PrintRendicionGeneral.php" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-printer"></i>
 
@@ -537,7 +552,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             </li>
                         </ul>
                     </li>
-
                     <!-- Gerencia -->
                     <li class="menu-item">
                         <a href="javascript:void(0)" class="menu-link">
