@@ -372,6 +372,10 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                                                                         <td id="payway">$0</td>
                                                                     </tr>
                                                                     <tr>
+                                                                        <td>Onda</td>
+                                                                        <td id="onda">$0</td>
+                                                                    </tr>
+                                                                    <tr>
                                                                         <td>Cambios</td>
                                                                         <td id="cambios">$0</td>
                                                                     </tr>
@@ -529,6 +533,7 @@ function fetchData() {
             document.getElementById('payway').innerText = '$' + parseFloat(totalesMediosPagoLocales.payway || 0).toFixed(2);
             document.getElementById('cambios').innerText = '$' + parseFloat(totalesMediosPagoLocales.cambios || 0).toFixed(2);
             document.getElementById('cuenta_corriente').innerText = '$' + parseFloat(totalesMediosPagoLocales.cuenta_corriente || 0).toFixed(2);
+            document.getElementById('onda').innerText = '$' + parseFloat(totalesMediosPagoLocales.onda || 0).toFixed(2);
 
             // Sumar todos los "total_menos_gastos" para el total de ventas
             var totalVentas = data.ventas.reduce((acc, venta) => acc + parseFloat(venta.total_menos_gastos || 0), 0);

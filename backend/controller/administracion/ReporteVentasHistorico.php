@@ -53,6 +53,7 @@ SELECT
     efectivo,		
     mercado_pago,		
     payway,	
+    onda,
     cambios,	
     cuenta_corriente
 FROM cierreCaja
@@ -73,6 +74,7 @@ $totalesMediosPagoLocales = [
 "efectivo" => 0,
 "mercado_pago" => 0,
 "payway" => 0,
+"onda" => 0,
 "cambios" => 0,
 "cuenta_corriente" => 0
 ];
@@ -82,6 +84,7 @@ foreach ($mediosPagoLocales as $medio) {
     $totalesMediosPagoLocales['efectivo'] += (float) $medio['efectivo'];
     $totalesMediosPagoLocales['mercado_pago'] += (float) $medio['mercado_pago'];
     $totalesMediosPagoLocales['payway'] += (float) $medio['payway'];
+    $totalesMediosPagoLocales['onda'] += (float) $medio['onda'];
     $totalesMediosPagoLocales['cambios'] += (float) $medio['cambios'];
     $totalesMediosPagoLocales['cuenta_corriente'] += (float) $medio['cuenta_corriente'];
 }
