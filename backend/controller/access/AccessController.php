@@ -12,7 +12,7 @@ if (session_status() === PHP_SESSION_NONE) {
             //deposito
             3 => ['/pages/deposito/Devoluciones.php','/pages/deposito/Transferencias.php'],
             //administracion
-            4 => ['/pages/administracion/ImportarReporte.php', '/pages/administracion/ReporteVentas.php','/pages/administracion/RendicionGeneral.php', '/pages/administracion/PrintRendicionGeneral.php'],
+            4 => ['/pages/administracion/ImportarReporte.php', '/pages/administracion/ReporteVentas.php','/pages/administracion/RendicionGeneral.php', '/pages/administracion/PrintRendicionGeneral.php', '/pages/administracion/camiones.php'],
             //gerencia
             5 => ['/'],
             //contaduria
