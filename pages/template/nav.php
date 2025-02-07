@@ -419,7 +419,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             </li>
                             <li class="menu-item">
                                 <a href="../locales/ConteoStock.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-list-check"></i>
+                                    <i class="menu-icon tf-icons bx bx-list-check"></i>
                                     <div data-i18n="Conteo Stock">Conteo Stock</div>
                                 </a>
                             </li>
@@ -452,7 +452,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             </li>
                             <li class="menu-item">
                                 <a href="../preventa/reporteAsistencia.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-user-check"></i>
+                                    <i class="menu-icon tf-icons bx bx-user-check"></i>
 
 
                                     <div data-i18n="Reporte Asistencia">Reporte Asistencia</div>
@@ -508,28 +508,28 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Reporte ventas Historico">Reporte Ventas Historico</div>
                                 </a>
                             </li>
-                        
-                            
+
+
                             <li class="menu-item">
                                 <a href="../administracion/RendicionGeneral.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-money"></i>
+                                    <i class="menu-icon tf-icons bx bx-money"></i>
 
                                     <div data-i18n="Rendiciones Generales">Rendiciones Generales</div>
                                 </a>
                             </li>
-                          
+
                         </ul>
                     </li>
 
-                    
+
                     <!-- IMPRIMIR -->
                     <li class="menu-item">
                         <a href="javascript:void(0)" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-printer"></i>
+                            <i class="menu-icon tf-icons bx bx-printer"></i>
                             <div data-i18n="Imprimir">Imprimir</div>
                         </a>
                         <ul class="menu-sub">
-                           
+
                             <li class="menu-item">
                                 <a href="../administracion/RendicionChoferes.php" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-printer"></i>
@@ -542,31 +542,31 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                                     <div data-i18n="Rendiciones Locales">Imprimir Rendiciones Locales</div>
                                 </a>
                             </li>
-                            
+
                             <li class="menu-item">
                                 <a href="../administracion/PrintRendicionGeneral.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-printer"></i>
+                                    <i class="menu-icon tf-icons bx bx-printer"></i>
 
                                     <div data-i18n="Rendiciones Generales">Rendiciones Generales</div>
                                 </a>
                             </li>
                         </ul>
                     </li>
-                    <!-- Gerencia -->
+                    <!-- Gerencia 
                     <li class="menu-item">
                         <a href="javascript:void(0)" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-briefcase"></i>
                             <div data-i18n="Gerencia">Gerencia</div>
                         </a>
-                    </li>
+                    </li>-->
 
-                    <!-- Contaduría -->
+                    <!-- Contaduría
                     <li class="menu-item">
                         <a href="javascript:void(0)" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-calculator"></i>
                             <div data-i18n="Contaduría">Contaduría</div>
                         </a>
-                    </li>
+                    </li> -->
 
                     <!-- Sistemas -->
                     <li class="menu-item">
@@ -577,17 +577,19 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                         <ul class="menu-sub">
                             <li class="menu-item">
                                 <a href="../sistemas/ImportarReporte.php" class="menu-link">
-                                    <i class="menu-icon tf-icons bx bxs-download"></i>  <div data-i18n="Importar Reporte Sistema">Importar Reporte</div>
+                                    <i class="menu-icon tf-icons bx bxs-download"></i>
+                                    <div data-i18n="Importar Reporte Sistema">Importar Reporte</div>
                                 </a>
                             </li>
                             <li class="menu-item">
                                 <a href="../sistemas/StockLocales.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-list-check"></i>  <div data-i18n="Stock Locales">Stock Locales</div>
+                                    <i class="menu-icon tf-icons bx bx-list-check"></i>
+                                    <div data-i18n="Stock Locales">Stock Locales</div>
                                 </a>
                             </li>
                         </ul>
                     </li>
-
+                    <!-- Choferes -->
                     <li class="menu-item">
                         <a href="javascript:void(0)" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-bus"></i>
@@ -612,13 +614,40 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/Project/backend/controller/session/ch
                             </li>
                             <li class="menu-item">
                                 <a href="../choferes/VerRendiciones.php" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-notepad"></i>
+                                    <i class="menu-icon tf-icons bx bx-notepad"></i>
 
                                     <div data-i18n="Ver Rendiciones">Ver Rendiciones</div>
                                 </a>
                             </li>
 
                         </ul>
+                    </li>
+
+                    <!-- Mecánicos -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-wrench"></i> 
+
+                            <div data-i18n="Mecánicos">Mecánicos</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="../mecanicos/camiones.php" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-cog"></i> 
+
+                                    <div data-i18n="Reparaciones de Camiones">Reparaciones de Camiones</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="../mecanicos/PrintReparaciones.php" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-printer"></i>
+
+                                    <div data-i18n="Imprimir Reparaciones">Imprimir Reparaciones</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
             </div>
 
         </aside>
