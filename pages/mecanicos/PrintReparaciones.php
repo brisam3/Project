@@ -26,19 +26,23 @@ $fecha_actual = isset($_GET['fecha']) ? $_GET['fecha'] : date('Y-m-d');
 $comprobantes = [];
 
 $query = "
-    SELECT 
-        m.id AS mecanico_id,
-        m.nombre AS mecanico,
-        DATE(a.fecha) AS fecha,
-        SUM(a.total) AS total_reparaciones,
-        GROUP_CONCAT(DISTINCT c.nombre ORDER BY c.nombre SEPARATOR ' | ') AS camiones,
-        GROUP_CONCAT(d.descripcion ORDER BY d.descripcion SEPARATOR ' | ') AS detalles
-    FROM arreglos a
-    JOIN mecanicos m ON a.mecanico_id = m.id
-    JOIN camiones c ON a.camion_id = c.id
-    LEFT JOIN detalle_arreglos d ON a.id = d.arreglo_id
-    WHERE DATE(a.fecha) = :fecha_actual
-    GROUP BY m.id, m.nombre, DATE(a.fecha);
+SELECT 
+    m.id AS mecanico_id,
+    m.nombre AS mecanico,
+    DATE(a.fecha) AS fecha,
+    a.codigo_arreglo,  -- Agregado aquí
+    SUM(a.total) AS total_reparaciones,
+    GROUP_CONCAT(DISTINCT c.nombre ORDER BY c.nombre SEPARATOR ' | ') AS camiones,
+    (SELECT GROUP_CONCAT(DISTINCT d.descripcion ORDER BY d.descripcion SEPARATOR ' | ')
+     FROM detalle_arreglos d
+     WHERE d.arreglo_id = a.id) AS detalles
+FROM arreglos a
+JOIN mecanicos m ON a.mecanico_id = m.id
+JOIN camiones c ON a.camion_id = c.id
+WHERE DATE(a.fecha) = :fecha_actual
+GROUP BY m.id, m.nombre, DATE(a.fecha), a.codigo_arreglo; -- Agregado en GROUP BY
+
+
 ";
 
 $stmt = $pdo->prepare($query);
@@ -122,6 +126,7 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
         background-color: #f0f0f0;
     }
 
+
     .page {
         width: 210mm;
         min-height: 297mm;
@@ -149,7 +154,38 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
         width: 30%;
     }
 
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
 
+    .page {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        /* Asegura que ocupe toda la pantalla */
+    }
+
+    .section {
+        flex: 1;
+        /* Hace que esta sección crezca para llenar el espacio disponible */
+    }
+
+    .footer {
+        background-color: #f8f9fa;
+        padding: 10px;
+        text-align: center;
+        border-top: 1px solid #ccc;
+    }
+
+    .firmas {
+        display: flex;
+        justify-content: space-between;
+        /* Distribuye las firmas en los extremos */
+        margin-top: 10px;
+    }
 
 
 
@@ -177,6 +213,8 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
         margin-bottom: 2mm;
     }
 
+
+
     .section h2 {
         font-size: 10pt;
         color: #444;
@@ -198,6 +236,37 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
         font-weight: bold;
         margin-top: 5mm;
     }
+
+    .header {
+        text-align: center;
+        /* Centra el título */
+    }
+
+    .fecha {
+        text-align: right;
+        /* Fecha alineada a la derecha */
+    }
+
+    .info {
+        display: flex;
+        justify-content: space-between;
+        /* Espaciado entre mecánico y código */
+        align-items: center;
+        /* Alinea verticalmente */
+        width: 100%;
+    }
+
+    .mecanico {
+        flex: 1;
+        /* Permite que quede centrado */
+        text-align: center;
+    }
+
+    .codigo {
+        text-align: right;
+        /* Código de arreglo a la derecha */
+    }
+
 
     .date-form-container {
         display: flex;
@@ -355,101 +424,129 @@ $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
                     <div class="layout-page">
                         <div class="content-wrapper">
                             <div class="container-fluid">
-                            <div class="row">
-    <?php if ($selectedIndex === -1): ?>
-    <div class="date-form-container">
-        <form method="GET" action="" style="margin-bottom: 20px;" class="date-form">
-            <label for="fecha">Seleccione la fecha:</label>
-            <input type="date" id="fecha" name="fecha" value="<?= htmlspecialchars($fecha_actual) ?>">
-            <button type="submit" class="button button-primary">Buscar</button>
-        </form>
-    </div>
+                                <div class="row">
+                                    <?php if ($selectedIndex === -1): ?>
+                                    <div class="date-form-container">
+                                        <form method="GET" action="" style="margin-bottom: 20px;" class="date-form">
+                                            <label for="fecha">Seleccione la fecha:</label>
+                                            <input type="date" id="fecha" name="fecha"
+                                                value="<?= htmlspecialchars($fecha_actual) ?>">
+                                            <button type="submit" class="button button-primary">Buscar</button>
+                                        </form>
+                                    </div>
 
-    <div class="records-list">
-        <h1>Comprobantes de Reparaciones</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Mecánico</th>
-                    <th>Fecha</th>
-                    <th>Total Reparaciones</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($comprobantes as $index => $comprobante): ?>
-                <tr>
-                    <td><?= htmlspecialchars($comprobante['mecanico']) ?></td>
-                    <td><?= htmlspecialchars($comprobante['fecha']) ?></td>
-                    <td>$<?= number_format($comprobante['total_reparaciones'], 2, ',', '.') ?></td>
-                    <td>
-                        <a href="?fecha=<?= htmlspecialchars($fecha_actual) ?>&print=<?= $index ?>"
-                            class="button button-primary">Imprimir</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                                    <div class="records-list">
+                                        <h1>Comprobantes de Reparaciones</h1>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Mecánico</th>
+                                                    <th>Fecha</th>
+                                                    <th>Total Reparaciones</th>
+                                                    <th>Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($comprobantes as $index => $comprobante): ?>
+                                                <tr>
+                                                    <td><?= htmlspecialchars($comprobante['mecanico']) ?></td>
+                                                    <td><?= htmlspecialchars($comprobante['fecha']) ?></td>
+                                                    <td>$<?= number_format($comprobante['total_reparaciones'], 2, ',', '.') ?>
+                                                    </td>
+                                                    <td>
+                                                        <a href="?fecha=<?= htmlspecialchars($fecha_actual) ?>&print=<?= $index ?>"
+                                                            class="button button-primary">Imprimir</a>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-    <?php else: ?>
-    <?php 
-        $comprobante = $comprobantes[$selectedIndex]; 
-    ?>
+                                    <?php else: ?>
+                                    <?php 
+                                            $comprobante = $comprobantes[$selectedIndex]; 
+                                        ?>
 
-    <div class="page">
-        <div class="header">
-            <p style="text-align: right;">Fecha: <?= htmlspecialchars($comprobante['fecha']) ?></p>
-           
-            <h2>Comprobante de Reparaciones</h2>
-            <p><strong>Mecánico:</strong> <?= htmlspecialchars($comprobante['mecanico']) ?></p>
-        </div>
+                                    <div class="page">
+                                        <div class="header">
+                                            <div class="fecha">
+                                                <p>Fecha:
+                                                    <?= strftime('%d de %B de %Y', strtotime($comprobante['fecha'])) ?>
+                                                </p>
+                                            </div>
 
-        <div class="section">
-            <h3>Detalle de Reparaciones</h3>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Camión</th>
-                        <th>Descripción</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $reparaciones = $pdo->prepare("
-                        SELECT c.nombre AS camion, d.descripcion, a.total
-                        FROM arreglos a
-                        JOIN camiones c ON a.camion_id = c.id
-                        LEFT JOIN detalle_arreglos d ON a.id = d.arreglo_id
-                        WHERE a.mecanico_id = :mecanico_id AND DATE(a.fecha) = :fecha
-                    ");
-                    $reparaciones->execute([
-                        ':mecanico_id' => $comprobante['mecanico_id'],
-                        ':fecha' => $comprobante['fecha']
-                    ]);
-                    $resultados = $reparaciones->fetchAll(PDO::FETCH_ASSOC);
+                                            <h2>Comprobante de Reparaciones</h2>
+                                            <hr>
 
-                    foreach ($resultados as $reparacion) :
-                    ?>
-                    <tr>
-                        <td><?= htmlspecialchars($reparacion['camion']) ?></td>
-                        <td><?= htmlspecialchars($reparacion['descripcion']) ?></td>
-                        <td>$<?= number_format($reparacion['total'], 2, ',', '.') ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                                            <div class="info">
+                                                <p class="mecanico"><strong>Mecánico:</strong>
+                                                    <?= htmlspecialchars($comprobante['mecanico']) ?></p>
+                                                <p class="codigo">Código arreglo:
+                                                    <?= htmlspecialchars($comprobante['codigo_arreglo']) ?></p>
+                                            </div>
+                                        </div>
 
-        <div class="footer">
-            <h3>Total General: $<?= number_format($comprobante['total_reparaciones'], 2, ',', '.') ?></h3>
-            <p>Firma del Mecánico: ________________________</p>
-        </div>
-    </div>
 
-    <?php endif; ?>
-</div>
+                                        <div class="section">
+
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Camión</th>
+                                                        <th>Descripción</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                            $reparaciones = $pdo->prepare("
+                                                           SELECT 
+                                                        c.nombre AS camion, 
+                                                        (SELECT GROUP_CONCAT(DISTINCT d.descripcion ORDER BY d.descripcion SEPARATOR ' | ')
+                                                        FROM detalle_arreglos d
+                                                        WHERE d.arreglo_id = a.id) AS descripcion,
+                                                        SUM(a.total) AS total
+                                                    FROM arreglos a
+                                                    JOIN camiones c ON a.camion_id = c.id
+                                                    WHERE a.mecanico_id = :mecanico_id AND DATE(a.fecha) = :fecha
+                                                    GROUP BY c.id
+
+                                                        ");
+                                                        $reparaciones->execute([
+                                                            ':mecanico_id' => $comprobante['mecanico_id'],
+                                                            ':fecha' => $comprobante['fecha']
+                                                        ]);
+                                                        $resultados = $reparaciones->fetchAll(PDO::FETCH_ASSOC);
+                                                        
+
+                                                            foreach ($resultados as $reparacion) :
+                                                            ?>
+                                                    <tr>
+                                                        <td><?= htmlspecialchars($reparacion['camion']) ?></td>
+                                                        <td><?= htmlspecialchars($reparacion['descripcion']) ?></td>
+                                                        <td>$<?= number_format($reparacion['total'], 2, ',', '.') ?>
+                                                        </td>
+                                                    </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="footer">
+                                            <h3>Total General:
+                                                $<?= number_format($comprobante['total_reparaciones'], 2, ',', '.') ?>
+                                            </h3>
+                                            <div class="firmas">
+                                                <p>Firma y aclaración mecánico: ________________________</p>
+                                                <p>Firma y aclaración responsable: ________________________</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <?php endif; ?>
+                                </div>
 
 
                             </div>
