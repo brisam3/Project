@@ -45,7 +45,7 @@ $stmt = $pdo->prepare($query);
 $stmt->bindParam(':fecha_actual', $fecha_actual, PDO::PARAM_STR);
 $stmt->execute();
 $comprobantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+                    
 
 // Verificar si se ha seleccionado un registro para imprimir
 $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
