@@ -30,7 +30,7 @@ SELECT
     m.id AS mecanico_id,
     m.nombre AS mecanico,
     DATE(a.fecha) AS fecha,
-    a.codigo_arreglo,  -- Agregado aquí
+    a.codigo_arreglo,  -- Mostramos el código de arreglo sin agrupar por él
     SUM(a.total) AS total_reparaciones,
     GROUP_CONCAT(DISTINCT c.nombre ORDER BY c.nombre SEPARATOR ' | ') AS camiones,
     (SELECT GROUP_CONCAT(DISTINCT d.descripcion ORDER BY d.descripcion SEPARATOR ' | ')
@@ -40,7 +40,8 @@ FROM arreglos a
 JOIN mecanicos m ON a.mecanico_id = m.id
 JOIN camiones c ON a.camion_id = c.id
 WHERE DATE(a.fecha) = :fecha_actual
-GROUP BY m.id, m.nombre, DATE(a.fecha), a.codigo_arreglo; -- Agregado en GROUP BY
+GROUP BY m.id, m.nombre, DATE(a.fecha);
+
 
 
 ";
@@ -50,7 +51,17 @@ $stmt->bindParam(':fecha_actual', $fecha_actual, PDO::PARAM_STR);
 $stmt->execute();
 $comprobantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     
+// Segunda consulta para obtener 'codigo_arreglo'
+$query_codigo = "
+SELECT id, codigo_arreglo 
+FROM arreglos
+WHERE DATE(fecha) = :fecha_actual;
+";
 
+$stmt_codigo = $pdo->prepare($query_codigo);
+$stmt_codigo->bindParam(':fecha_actual', $fecha_actual, PDO::PARAM_STR);
+$stmt_codigo->execute();
+$codigos_arreglo = $stmt_codigo->fetchAll(PDO::FETCH_ASSOC);
 // Verificar si se ha seleccionado un registro para imprimir
 $selectedIndex = isset($_GET['print']) ? intval($_GET['print']) : -1;
 ?>
