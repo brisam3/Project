@@ -392,7 +392,8 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                                                     <div class="card">
                                                         <div
                                                             class="card-header d-flex justify-content-between align-items-center">
-                                                            <h5 class="card-title mb-0">Totales por Medios de Pago Locales y Moviles</h5>
+                                                            <h5 class="card-title mb-0">Totales por Medios de Pago
+                                                                Locales y Moviles</h5>
                                                         </div>
                                                         <div class="card-body">
                                                             <table class="table table-striped table-bordered">
@@ -405,27 +406,11 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                                                                 <tbody id="totales-medios-pago-locales">
                                                                     <tr>
                                                                         <td>Efectivo</td>
-                                                                        <td id="efectivo">$0</td>
+                                                                        <td id="efectivo_total">$0</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Mercado Pago</td>
-                                                                        <td id="mercado_pago">$0</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>PayWay</td>
-                                                                        <td id="payway">$0</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Onda</td>
-                                                                        <td id="onda">$0</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Cambios</td>
-                                                                        <td id="cambios">$0</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Cuenta Corriente</td>
-                                                                        <td id="cuenta_corriente">$0</td>
+                                                                        <td id="mercado_pago_total">$0</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -433,7 +418,7 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
 
 
                                         </div>
@@ -502,105 +487,137 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
 
 
     <script>
-   document.addEventListener('DOMContentLoaded', () => {
-    // Evento para actualizar los datos cuando cambian las fechas
-    document.getElementById('fecha_inicio').addEventListener('change', fetchData);
-    document.getElementById('fecha_fin').addEventListener('change', fetchData);
-});
+    document.addEventListener('DOMContentLoaded', () => {
+        // Evento para actualizar los datos cuando cambian las fechas
+        document.getElementById('fecha_inicio').addEventListener('change', fetchData);
+        document.getElementById('fecha_fin').addEventListener('change', fetchData);
+    });
 
-function fetchData() {
-    let fechaInicio = document.getElementById('fecha_inicio').value;
-    let fechaFin = document.getElementById('fecha_fin').value;
+    function fetchData() {
+        let fechaInicio = document.getElementById('fecha_inicio').value;
+        let fechaFin = document.getElementById('fecha_fin').value;
 
-    if (!fechaInicio || !fechaFin) {
-        console.warn("Debe seleccionar ambas fechas.");
-        return;
+        if (!fechaInicio || !fechaFin) {
+            console.warn("Debe seleccionar ambas fechas.");
+            return;
+        }
+
+        // Realizar la solicitud al backend con el rango de fechas
+        fetch(
+                `../../backend/controller/administracion/ReporteVentasHistorico.php?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Datos recibidos del backend:", data); // Imprimir los datos en consola
+                console.log("Totales locales:", data.totalesMediosPagoLocales);
+
+                if (data.error) {
+                    console.error(data.error); // Manejo de errores
+                    return;
+                }
+
+                // Limpiar los datos antiguos de la tabla "Ventas por móvil"
+                document.querySelectorAll('.preventista').forEach(celda => {
+                    celda.innerText = '$0.00'; // Reseteamos las celdas a $0.00
+                });
+
+                // Actualizar la tabla de ventas por móvil con los datos recibidos
+                data.ventas.forEach(venta => {
+                    var preventistaId = venta.idUsuarioPreventista;
+                    var totalVentas = parseFloat(venta.total_menos_gastos) ||
+                    0; // Convertir a número flotante
+
+                    // Buscar la celda correspondiente por id del preventista
+                    var celda = document.getElementById(preventistaId);
+                    if (celda) {
+                        celda.innerText = '$' + totalVentas.toFixed(2);
+                    } else {
+                        console.warn(`No se encontró una celda para el id ${preventistaId}`);
+                    }
+                });
+
+                // Actualizar la tabla de ventas por local con los datos recibidos
+                data.ventasLocales.forEach(venta => {
+                    var localId = venta.idUsuario;
+                    var totalVentasLocales = parseFloat(venta.total_menos_gastos) || 0;
+
+                    var celda = document.getElementById(localId);
+                    if (celda) {
+                        celda.innerText = '$' + totalVentasLocales.toFixed(2);
+                    } else {
+                        console.warn(`No se encontró una celda para el id ${localId}`);
+                    }
+                });
+
+                // Sumar los valores de cada medio de pago y actualizar las celdas correspondientes
+                // Guardar los totales de cada medio de pago en variables
+                var totalesMediosPago = data.totalesMediosPago || {};
+                var totalEfectivo = parseFloat(totalesMediosPago.total_efectivo || 0).toFixed(2);
+                var totalMercadoPago = parseFloat(totalesMediosPago.total_mercadopago || 0).toFixed(2);
+                var totalTransferencia = parseFloat(totalesMediosPago.total_transferencia || 0).toFixed(2);
+                var totalCheques = parseFloat(totalesMediosPago.total_cheques || 0).toFixed(2);
+                var totalFiados = parseFloat(totalesMediosPago.total_fiados || 0).toFixed(2);
+
+                // Actualizar las celdas con los valores guardados en las variables
+                document.getElementById('total_efectivo').innerText = '$' + totalEfectivo;
+                document.getElementById('total_mercadopago').innerText = '$' + totalMercadoPago;
+                document.getElementById('total_transferencia').innerText = '$' + totalTransferencia;
+                document.getElementById('total_cheques').innerText = '$' + totalCheques;
+                document.getElementById('total_fiados').innerText = '$' + totalFiados;
+
+                // Guardar los totales de los medios de pago locales en variables
+                var totalesMediosPagoLocales = data.totalesMediosPagoLocales || {};
+                var efectivo = parseFloat(totalesMediosPagoLocales.efectivo || 0).toFixed(2);
+                var mercadoPagoLocal = parseFloat(totalesMediosPagoLocales.mercado_pago || 0).toFixed(2);
+                var payway = parseFloat(totalesMediosPagoLocales.payway || 0).toFixed(2);
+                var cambios = parseFloat(totalesMediosPagoLocales.cambios || 0).toFixed(2);
+                var cuentaCorriente = parseFloat(totalesMediosPagoLocales.cuenta_corriente || 0).toFixed(2);
+                var onda = parseFloat(totalesMediosPagoLocales.onda || 0).toFixed(2);
+
+                // Actualizar las celdas con los valores guardados en las variables
+                document.getElementById('efectivo').innerText = '$' + efectivo;
+                document.getElementById('mercado_pago').innerText = '$' + mercadoPagoLocal;
+                document.getElementById('payway').innerText = '$' + payway;
+                document.getElementById('cambios').innerText = '$' + cambios;
+                document.getElementById('cuenta_corriente').innerText = '$' + cuentaCorriente;
+                document.getElementById('onda').innerText = '$' + onda;
+
+
+                // Sumar los totales de 'efectivo' de móviles y locales
+                var totalEfectivoMovilesLocales = parseFloat(totalEfectivo) + parseFloat(efectivo);
+                var totalMercadoPagoMovilesLocales = parseFloat(totalMercadoPago) + parseFloat(mercadoPagoLocal);
+
+                // Actualizar la tabla con los totales sumados
+                document.getElementById('efectivo_total').innerText = '$' + totalEfectivoMovilesLocales.toFixed(2);
+                document.getElementById('mercado_pago_total').innerText = '$' + totalMercadoPagoMovilesLocales
+                    .toFixed(2);
+
+
+
+
+
+
+                // Sumar todos los "total_menos_gastos" para el total de ventas
+                var totalVentas = data.ventas.reduce((acc, venta) => acc + parseFloat(venta.total_menos_gastos ||
+                    0), 0);
+                var totalVentasLocales = data.ventasLocales.reduce((acc, venta) => acc + parseFloat(venta
+                    .total_menos_gastos || 0), 0);
+
+                // Asegurar el formato de dos decimales
+                totalVentas = parseFloat(totalVentas.toFixed(2));
+                totalVentasLocales = parseFloat(totalVentasLocales.toFixed(2));
+
+                // Actualizar el card de "Total Ventas"
+                document.getElementById('total-ventas-choferes').innerText = '$' + totalVentas.toFixed(2);
+                document.getElementById('total-ventas-locales').innerText = '$' + totalVentasLocales.toFixed(2);
+
+                // Calcular la suma total de ventas + cierre de caja
+                var sumaTotal = totalVentas + totalVentasLocales;
+                document.getElementById('total-ventas').innerText = '$' + sumaTotal.toFixed(2);
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
     }
-
-    // Realizar la solicitud al backend con el rango de fechas
-    fetch(`../../backend/controller/administracion/ReporteVentasHistorico.php?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log("Datos recibidos del backend:", data); // Imprimir los datos en consola
-            console.log("Totales locales:", data.totalesMediosPagoLocales);
-
-            if (data.error) {
-                console.error(data.error); // Manejo de errores
-                return;
-            }
-
-            // Limpiar los datos antiguos de la tabla "Ventas por móvil"
-            document.querySelectorAll('.preventista').forEach(celda => {
-                celda.innerText = '$0.00'; // Reseteamos las celdas a $0.00
-            });
-
-            // Actualizar la tabla de ventas por móvil con los datos recibidos
-            data.ventas.forEach(venta => {
-                var preventistaId = venta.idUsuarioPreventista;
-                var totalVentas = parseFloat(venta.total_menos_gastos) || 0; // Convertir a número flotante
-
-                // Buscar la celda correspondiente por id del preventista
-                var celda = document.getElementById(preventistaId);
-                if (celda) {
-                    celda.innerText = '$' + totalVentas.toFixed(2);
-                } else {
-                    console.warn(`No se encontró una celda para el id ${preventistaId}`);
-                }
-            });
-
-            // Actualizar la tabla de ventas por local con los datos recibidos
-            data.ventasLocales.forEach(venta => {
-                var localId = venta.idUsuario;
-                var totalVentasLocales = parseFloat(venta.total_menos_gastos) || 0;
-
-                var celda = document.getElementById(localId);
-                if (celda) {
-                    celda.innerText = '$' + totalVentasLocales.toFixed(2);
-                } else {
-                    console.warn(`No se encontró una celda para el id ${localId}`);
-                }
-            });
-
-            // Sumar los valores de cada medio de pago y actualizar las celdas correspondientes
-            var totalesMediosPago = data.totalesMediosPago || {};
-
-            document.getElementById('total_efectivo').innerText = '$' + parseFloat(totalesMediosPago.total_efectivo || 0).toFixed(2);
-            document.getElementById('total_mercadopago').innerText = '$' + parseFloat(totalesMediosPago.total_mercadopago || 0).toFixed(2);
-            document.getElementById('total_transferencia').innerText = '$' + parseFloat(totalesMediosPago.total_transferencia || 0).toFixed(2);
-            document.getElementById('total_cheques').innerText = '$' + parseFloat(totalesMediosPago.total_cheques || 0).toFixed(2);
-            document.getElementById('total_fiados').innerText = '$' + parseFloat(totalesMediosPago.total_fiados || 0).toFixed(2);
-
-            // Sumar los valores de cada medio de pago y actualizar las celdas correspondientes
-            var totalesMediosPagoLocales = data.totalesMediosPagoLocales || {};
-
-            document.getElementById('efectivo').innerText = '$' + parseFloat(totalesMediosPagoLocales.efectivo || 0).toFixed(2);
-            document.getElementById('mercado_pago').innerText = '$' + parseFloat(totalesMediosPagoLocales.mercado_pago || 0).toFixed(2);
-            document.getElementById('payway').innerText = '$' + parseFloat(totalesMediosPagoLocales.payway || 0).toFixed(2);
-            document.getElementById('cambios').innerText = '$' + parseFloat(totalesMediosPagoLocales.cambios || 0).toFixed(2);
-            document.getElementById('cuenta_corriente').innerText = '$' + parseFloat(totalesMediosPagoLocales.cuenta_corriente || 0).toFixed(2);
-            document.getElementById('onda').innerText = '$' + parseFloat(totalesMediosPagoLocales.onda || 0).toFixed(2);
-
-            // Sumar todos los "total_menos_gastos" para el total de ventas
-            var totalVentas = data.ventas.reduce((acc, venta) => acc + parseFloat(venta.total_menos_gastos || 0), 0);
-            var totalVentasLocales = data.ventasLocales.reduce((acc, venta) => acc + parseFloat(venta.total_menos_gastos || 0), 0);
-
-            // Asegurar el formato de dos decimales
-            totalVentas = parseFloat(totalVentas.toFixed(2));
-            totalVentasLocales = parseFloat(totalVentasLocales.toFixed(2));
-
-            // Actualizar el card de "Total Ventas"
-            document.getElementById('total-ventas-choferes').innerText = '$' + totalVentas.toFixed(2);
-            document.getElementById('total-ventas-locales').innerText = '$' + totalVentasLocales.toFixed(2);
-
-            // Calcular la suma total de ventas + cierre de caja
-            var sumaTotal = totalVentas + totalVentasLocales;
-            document.getElementById('total-ventas').innerText = '$' + sumaTotal.toFixed(2);
-        })
-        .catch(error => {
-            console.error('Error al obtener los datos:', error);
-        });
-}
-
     </script>
 
 

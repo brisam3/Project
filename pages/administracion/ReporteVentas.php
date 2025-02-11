@@ -366,12 +366,46 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                                                                         <td id="payway">$0</td>
                                                                     </tr>
                                                                     <tr>
+                                                                        <td>Onda</td>
+                                                                        <td id="onda">$0</td>
+                                                                    </tr>
+                                                                    <tr>
                                                                         <td>Cambios</td>
                                                                         <td id="cambios">$0</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>Cuenta Corriente</td>
                                                                         <td id="cuenta_corriente">$0</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12 mb-4">
+                                                    <div class="card">
+                                                        <div
+                                                            class="card-header d-flex justify-content-between align-items-center">
+                                                            <h5 class="card-title mb-0">Totales por Medios de Pago
+                                                                Locales y Moviles</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table table-striped table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Medio de Pago</th>
+                                                                        <th>Total Ventas</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="totales-medios-pago-locales">
+                                                                    <tr>
+                                                                        <td>Efectivo</td>
+                                                                        <td id="efectivo_total">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Mercado Pago</td>
+                                                                        <td id="mercado_pago_total">$0</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -508,40 +542,47 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                     }
                 });
 
-                // Sumar los valores de cada medio de pago y actualizar las celdas correspondientes
-                var totalesMediosPago = data.totalesMediosPago || {}; // Asignar un objeto vacío si no hay datos
+// Guardar los totales de cada medio de pago en variables
+var totalesMediosPago = data.totalesMediosPago || {};
+var totalEfectivo = parseFloat(totalesMediosPago.total_efectivo || 0).toFixed(2);
+var totalMercadoPago = parseFloat(totalesMediosPago.total_mercadopago || 0).toFixed(2);
+var totalTransferencia = parseFloat(totalesMediosPago.total_transferencia || 0).toFixed(2);
+var totalCheques = parseFloat(totalesMediosPago.total_cheques || 0).toFixed(2);
+var totalFiados = parseFloat(totalesMediosPago.total_fiados || 0).toFixed(2);
 
-                document.getElementById('total_efectivo').innerText = '$' + parseFloat(totalesMediosPago
-                    .total_efectivo ||
-                    0).toFixed(2);
-                document.getElementById('total_mercadopago').innerText = '$' + parseFloat(totalesMediosPago
-                    .total_mercadopago || 0).toFixed(2);
-                document.getElementById('total_transferencia').innerText = '$' + parseFloat(totalesMediosPago
-                    .total_transferencia || 0).toFixed(2);
-                document.getElementById('total_cheques').innerText = '$' + parseFloat(totalesMediosPago
-                        .total_cheques || 0)
-                    .toFixed(2);
-                document.getElementById('total_fiados').innerText = '$' + parseFloat(totalesMediosPago
-                        .total_fiados || 0)
-                    .toFixed(2);
+// Actualizar las celdas con los valores guardados en las variables
+document.getElementById('total_efectivo').innerText = '$' + totalEfectivo;
+document.getElementById('total_mercadopago').innerText = '$' + totalMercadoPago;
+document.getElementById('total_transferencia').innerText = '$' + totalTransferencia;
+document.getElementById('total_cheques').innerText = '$' + totalCheques;
+document.getElementById('total_fiados').innerText = '$' + totalFiados;
 
+// Guardar los totales de los medios de pago locales en variables
+var totalesMediosPagoLocales = data.totalesMediosPagoLocales || {};
+var efectivo = parseFloat(totalesMediosPagoLocales.efectivo || 0).toFixed(2);
+var mercadoPagoLocal = parseFloat(totalesMediosPagoLocales.mercado_pago || 0).toFixed(2);
+var payway = parseFloat(totalesMediosPagoLocales.payway || 0).toFixed(2);
+var cambios = parseFloat(totalesMediosPagoLocales.cambios || 0).toFixed(2);
+var cuentaCorriente = parseFloat(totalesMediosPagoLocales.cuenta_corriente || 0).toFixed(2);
+var onda = parseFloat(totalesMediosPagoLocales.onda || 0).toFixed(2);
 
-                // Sumar los valores de cada medio de pago y actualizar las celdas correspondientes
-                var totalesMediosPagoLocales = data.totalesMediosPagoLocales ||
-                {}; // Asignar un objeto vacío si no hay datos
+// Actualizar las celdas con los valores guardados en las variables
+document.getElementById('efectivo').innerText = '$' + efectivo;
+document.getElementById('mercado_pago').innerText = '$' + mercadoPagoLocal;
+document.getElementById('payway').innerText = '$' + payway;
+document.getElementById('cambios').innerText = '$' + cambios;
+document.getElementById('cuenta_corriente').innerText = '$' + cuentaCorriente;
+document.getElementById('onda').innerText = '$' + onda;
 
-                document.getElementById('efectivo').innerText = '$' + parseFloat(totalesMediosPagoLocales
-                    .efectivo || 0).toFixed(2);
-                document.getElementById('mercado_pago').innerText = '$' + parseFloat(totalesMediosPagoLocales
-                    .mercado_pago || 0).toFixed(2);
-                document.getElementById('payway').innerText = '$' + parseFloat(totalesMediosPagoLocales.payway || 0)
-                    .toFixed(2);
-                document.getElementById('cambios').innerText = '$' + parseFloat(totalesMediosPagoLocales.cambios ||
-                    0).toFixed(2);
-                document.getElementById('cuenta_corriente').innerText = '$' + parseFloat(totalesMediosPagoLocales
-                    .cuenta_corriente || 0).toFixed(2);
+// Sumar los totales de 'efectivo' de móviles y locales
+var totalEfectivoMovilesLocales = parseFloat(totalEfectivo) + parseFloat(efectivo);
 
+// Sumar los totales de 'mercado pago' de móviles y locales
+var totalMercadoPagoMovilesLocales = parseFloat(totalMercadoPago) + parseFloat(mercadoPagoLocal);
 
+// Actualizar la tabla con los totales sumados
+document.getElementById('efectivo_total').innerText = '$' + totalEfectivoMovilesLocales.toFixed(2);
+document.getElementById('mercado_pago_total').innerText = '$' + totalMercadoPagoMovilesLocales.toFixed(2);
 
 
                 // Sumar todos los "total_menos_gastos" para el total de ventas
