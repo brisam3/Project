@@ -388,7 +388,52 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-12 mb-4">
+                                                    <div class="card">
+                                                        <div
+                                                            class="card-header d-flex justify-content-between align-items-center">
+                                                            <h5 class="card-title mb-0">Totales por Medios de Pago Locales y Moviles</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table table-striped table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Medio de Pago</th>
+                                                                        <th>Total Ventas</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="totales-medios-pago-locales">
+                                                                    <tr>
+                                                                        <td>Efectivo</td>
+                                                                        <td id="efectivo">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Mercado Pago</td>
+                                                                        <td id="mercado_pago">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>PayWay</td>
+                                                                        <td id="payway">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Onda</td>
+                                                                        <td id="onda">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Cambios</td>
+                                                                        <td id="cambios">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Cuenta Corriente</td>
+                                                                        <td id="cuenta_corriente">$0</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            
 
 
                                         </div>
