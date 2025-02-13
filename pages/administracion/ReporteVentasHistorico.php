@@ -412,6 +412,34 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                                                                         <td>Mercado Pago</td>
                                                                         <td id="mercado_pago_total">$0</td>
                                                                     </tr>
+                                                                    <tr>
+                                                                        <td>Transferencias</td>
+                                                                        <td id="transferencias_total">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Cheques</td>
+                                                                        <td id="cheques_total">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Fiados</td>
+                                                                        <td id="fiados_total">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>PayWay</td>
+                                                                        <td id="payway_total">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Onda</td>
+                                                                        <td id="onda_total">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Cambios</td>
+                                                                        <td id="cambios_total">$0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Cuenta Corriente</td>
+                                                                        <td id="cuentacorriente_total">$0</td>
+                                                                    </tr>
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -590,7 +618,14 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                 document.getElementById('efectivo_total').innerText = '$' + totalEfectivoMovilesLocales.toFixed(2);
                 document.getElementById('mercado_pago_total').innerText = '$' + totalMercadoPagoMovilesLocales
                     .toFixed(2);
-
+                    document.getElementById('transferencias_total').innerText = '$' + totalTransferencia;
+                    document.getElementById('cheques_total').innerText = '$' + totalCheques;
+                    document.getElementById('fiados_total').innerText = '$' + totalFiados;
+                    document.getElementById('payway_total').innerText = '$' + payway;
+                    document.getElementById('onda_total').innerText = '$' + onda;
+                    document.getElementById('cambios_total').innerText = '$' + cambios;
+                    document.getElementById('cuentacorriente_total').innerText = '$' + cuentaCorriente;
+                                                             
 
 
 
@@ -609,6 +644,7 @@ if (!$accessController->checkAccess('/pages/administracion/ReporteVentas.php')) 
                 // Actualizar el card de "Total Ventas"
                 document.getElementById('total-ventas-choferes').innerText = '$' + totalVentas.toFixed(2);
                 document.getElementById('total-ventas-locales').innerText = '$' + totalVentasLocales.toFixed(2);
+                
 
                 // Calcular la suma total de ventas + cierre de caja
                 var sumaTotal = totalVentas + totalVentasLocales;
