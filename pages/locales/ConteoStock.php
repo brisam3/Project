@@ -255,63 +255,67 @@ if (!$accessController->checkAccess('/pages/locales/ConteoStock.php')) {
                 });
 
                 // Mostrar detalles al seleccionar un artículo del select
-                $('#description-results').on('change', function() {
-                    const selectedOption = $(this).find(':selected');
-                    const codBarras = selectedOption.val();
-                    const description = selectedOption.data('desc');
-                    const codBejerman = selectedOption.data('codbejerman');
+               // Evento para seleccionar un producto del listado
+$('#description-results').on('focus click change', function() {
+    const selectedOption = $(this).find(':selected');
+    const codBarras = selectedOption.val();
+    const description = selectedOption.data('desc');
+    const codBejerman = selectedOption.data('codbejerman');
 
-                    if (codBarras) {
-                        $('#desc-description').val(description);
-                        $('#desc-codBejerman').val(codBejerman);
-                        $('#desc-codBarras').val(
-                            codBarras
-                        ); // Almacena el código de barras en un campo oculto
-                        $('#description-product-details').show();
-                    } else {
-                        $('#description-product-details').hide();
-                    }
-                });
+    if (codBarras) {
+        $('#desc-description').val(description);
+        $('#desc-codBejerman').val(codBejerman);
+        $('#desc-codBarras').val(codBarras);
+        $('#description-product-details').show();
+    } else {
+        $('#description-product-details').hide();
+    }
+});
+
             });
 
-            // Función para buscar artículos por descripción
-            function searchByDescription() {
-                const description = $('#search-description').val();
-                if (description.length >= 3) { // Inicia la búsqueda después de 3 caracteres
-                    $.ajax({
-                        url: '../../backend/controller/locales/ConteoStockController.php',
-                        type: 'POST',
-                        data: {
-                            action: 'buscarPorDescripcion',
-                            descripcion: description
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            if (data.length > 0) {
-                                const options = data.map(item =>
-                                    `<option value="${item.codBarras}" data-desc="${item.descripcion}" data-codbejerman="${item.codBejerman}">
+      // Función para buscar artículos por descripción
+function searchByDescription() {
+    const description = $('#search-description').val().trim();
+    
+    if (description.length >= 3) { // Inicia la búsqueda después de 3 caracteres
+        $.ajax({
+            url: '../../backend/controller/locales/ConteoStockController.php',
+            type: 'POST',
+            data: {
+                action: 'buscarPorDescripcion',
+                descripcion: description
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.length > 0) {
+                    let options = data.map(item =>
+                        `<option value="${item.codBarras}" data-desc="${item.descripcion}" data-codbejerman="${item.codBejerman}">
                             ${item.descripcion} - ${item.codBejerman}
                         </option>`
-                                );
-                                $('#description-results').html(options.join(''));
-                                $('#search-results').show();
-                            } else {
-                                $('#description-results').html(
-                                    '<option value="">No se encontraron resultados</option>'
-                                );
-                                $('#search-results').show();
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error:', error);
-                            console.error('Detalles:', xhr.responseText);
-                            alert('Error al buscar los productos.');
-                        }
-                    });
+                    );
+
+                    $('#description-results').html(options.join(''));
+                    $('#search-results').show();
+
+                    // Asegurar que el select tenga el tamaño correcto y pueda desplegarse
+                    $('#description-results').prop('size', 1).prop('disabled', false);
                 } else {
-                    $('#search-results').hide();
+                    $('#description-results').html('<option value="">No se encontraron resultados</option>');
+                    $('#search-results').show();
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.error('Detalles:', xhr.responseText);
+                alert('Error al buscar los productos.');
             }
+        });
+    } else {
+        $('#search-results').hide();
+    }
+}
+
 
             // Función para agregar producto desde el formulario de código de barras
             function addProduct() {

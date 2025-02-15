@@ -66,31 +66,32 @@ class DevolucionesController {
             ]);
             exit;
         }
-
+    
         $idUsuario = $_SESSION['idUsuario'];
-        $idTipoUsuario = $_SESSION['idTipoUsuario'];
-
-        // Insertar un nuevo registro en la tabla `detalleDevoluciones` con la fecha y hora actual
+    
+        // Insertar un nuevo registro en la tabla `detalleConteoStock`
         $detalleQuery = "INSERT INTO detalleconteostock (fechaHora, idUsuario) VALUES (NOW(), ?)";
         $detalleStmt = $this->db->prepare($detalleQuery);
         $detalleStmt->execute([$idUsuario]);
-        $idDetalleConteo= $this->db->lastInsertId();
-
-        // Consulta para insertar en la tabla `devoluciones` usando `codBejerman`
+        $idDetalleConteo = $this->db->lastInsertId();
+    
+        // Consulta para insertar en la tabla `conteo_stock`
         $query = "INSERT INTO conteo_stock (codBejerman, partida, cantidad, descripcion, idDetalleConteo, codBarras) 
                   VALUES (?, ?, ?, ?, ?, ?)";
-
         $stmt = $this->db->prepare($query);
-
+    
         foreach ($articulos as $articulo) {
-            // Obtener el `codBejerman` del artículo basado en `codBarras`
             $codigoBarras = $articulo['codBarras'];
-            $articuloData = $this->buscarArticulo($codigoBarras);
-
-            if ($articuloData && isset($articuloData['codBejerman'])) {
-                $codBejerman = $articuloData['codBejerman'];
-
-                // Insertar en la tabla `devoluciones`
+    
+            // **Verificar si `codBejerman` ya está presente en `$articulo` y solo buscar si no existe**
+            if (!isset($articulo['codBejerman']) || empty($articulo['codBejerman'])) {
+                $articuloData = $this->buscarArticulo($codigoBarras);
+                $codBejerman = $articuloData['codBejerman'] ?? null;
+            } else {
+                $codBejerman = $articulo['codBejerman'];
+            }
+    
+            if ($codBejerman) {
                 $stmt->execute([
                     $codBejerman,
                     $articulo['partida'],
@@ -100,14 +101,13 @@ class DevolucionesController {
                     $codigoBarras
                 ]);
             } else {
-                // Log de error si no se encuentra el `codBejerman`
                 error_log("No se encontró el `codBejerman` para el artículo con código de barras $codigoBarras.");
             }
         }
-
+    
         return true;
     }
-
+    
     public function buscarDetalleDevoluciones() {
         // Establecer la zona horaria de Buenos Aires, Argentina
         date_default_timezone_set('America/Argentina/Buenos_Aires');
