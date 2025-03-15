@@ -509,10 +509,13 @@ $accessController = new AccessController();
 
         // Variables para almacenar las fechas seleccionadas
         // Variables para almacenar las fechas seleccionadas
-    let startDate = "";
-    let endDate = "";
-    let ultimaFechaCargada = { start: "", end: "" }; // Guardamos la última fecha consultada
-        
+        let startDate = "";
+        let endDate = "";
+        let ultimaFechaCargada = {
+            start: "",
+            end: ""
+        }; // Guardamos la última fecha consultada
+
 
         // 🔹 Función para cargar artículos más vendidos
         function cargarArticulosMasVendidos() {
@@ -555,49 +558,58 @@ $accessController = new AccessController();
         }
 
         // 🔹 Función para cargar artículos con precio 0
-        function cargarArticulosConPrecioCero() {
-            $.ajax({
-                url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
-                method: "POST",
-                data: {
-                    accion: "consultarArticulosConPrecioCero",
-                    startDate,
-                    endDate
-                },
-                dataType: "json",
-                success: function(articulos) {
-                    if (articulos.error) {
-                        alert(articulos.error);
-                        return;
-                    }
+       // 🔹 Función para cargar artículos con precio 0
+function cargarArticulosConPrecioCero() {
+    $.ajax({
+        url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
+        method: "POST",
+        data: {
+            accion: "consultarArticulosConPrecioCero",
+            startDate,
+            endDate
+        },
+        dataType: "json",
+        success: function(articulos) {
+            if (articulos.error) {
+                alert(articulos.error);
+                return;
+            }
 
-                    if (!$.fn.DataTable.isDataTable('#tabla-articulos-cero')) {
-                        $('#tabla-articulos-cero').DataTable();
-                    }
-                    const $tablaArticulosCero = $('#tabla-articulos-cero').DataTable();
-                    $tablaArticulosCero.clear();
-                    articulos.forEach(articulo => {
-                        const porcentajeCero = (articulo.CantidadCero / articulo
-                            .TotalGeneral) * 100 || 0;
-                        $tablaArticulosCero.row.add([
-                            articulo.CodigoArticulo,
-                            articulo.Descripcion,
-                            articulo.Proveedor,
-                            formatter.format(articulo.TotalGeneral),
-                            formatter.format(articulo.CantidadCero),
-                            formatter.format(articulo.Diferencia),
-                            formatter.format(porcentajeCero) + "%"
-                        ]);
-                    });
-                    $tablaArticulosCero.draw();
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error al cargar artículos con precio 0:", error);
-                    alert("Hubo un problema al cargar los datos.");
-                }
+            // ✅ Verificar si la tabla ya está inicializada
+            if (!$.fn.DataTable.isDataTable('#tabla-articulos-cero')) {
+                $('#tabla-articulos-cero').DataTable();
+            }
+
+            const $tablaArticulosCero = $('#tabla-articulos-cero').DataTable();
+            
+            // ✅ Limpiar datos previos antes de agregar nuevos
+            $tablaArticulosCero.clear();
+
+            articulos.forEach(articulo => {
+                const porcentajeCero = (articulo.CantidadCero / articulo.TotalGeneral) * 100 || 0;
+                $tablaArticulosCero.row.add([
+                    articulo.CodigoArticulo,
+                    articulo.Descripcion,
+                    articulo.Proveedor,
+                    formatter.format(articulo.TotalGeneral),
+                    formatter.format(articulo.CantidadCero),
+                    formatter.format(articulo.Diferencia),
+                    formatter.format(porcentajeCero) + "%"
+                ]);
             });
-        }
 
+            // ✅ Refrescar la tabla después de agregar nuevos datos
+            $tablaArticulosCero.draw();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error al cargar artículos con precio 0:", error);
+            alert("Hubo un problema al cargar los datos.");
+        }
+    });
+}
+
+
+        // 🔹 Función para cargar el resumen de ventas
         // 🔹 Función para cargar el resumen de ventas
         function cargarResumenVentas() {
             $.ajax({
@@ -637,25 +649,27 @@ $accessController = new AccessController();
                     $("#total-menos-ponderado-e-iva").text(
                         `$${formatter.format(data.totalMenosPonderadoIVA)}`);
 
-                    // Llenar la tabla con datos
+                    // ✅ LIMPIAR la tabla antes de agregar nuevas filas
                     const tbodyPreventistas = $("#tabla-reporte");
+                    tbodyPreventistas.empty(); // 🔥 Esto evita la duplicación
+
+                    // Llenar la tabla con nuevos datos
                     data.ventasPreventista.forEach(preventista => {
                         tbodyPreventistas.append(`
-                        <tr>
-                            <td>${preventista.Preventista}</td>
-                            <td>${preventista.CantidadBoletas}</td>
-                            <td>${preventista.CantidadClientes}</td>
-                            <td>${formatter.format(preventista.TotalVenta)}</td>
-                            <td>${formatter.format(preventista.TicketPromedio)}</td>
-                            <td>${formatter.format(preventista.Comision)}</td>
-                            <td>${preventista.VariedadArticulos}</td>
-                            <td>${preventista.VariedadProveedores}</td>
-                            <td>${formatter.format(preventista.PromedioArticulosPorCliente)}</td>
-                            <td>${formatter.format(preventista.PromedioProveedoresPorCliente)}</td>
-                        </tr>
-                    `);
+                <tr>
+                    <td>${preventista.Preventista}</td>
+                    <td>${preventista.CantidadBoletas}</td>
+                    <td>${preventista.CantidadClientes}</td>
+                    <td>${formatter.format(preventista.TotalVenta)}</td>
+                    <td>${formatter.format(preventista.TicketPromedio)}</td>
+                    <td>${formatter.format(preventista.Comision)}</td>
+                    <td>${preventista.VariedadArticulos}</td>
+                    <td>${preventista.VariedadProveedores}</td>
+                    <td>${formatter.format(preventista.PromedioArticulosPorCliente)}</td>
+                    <td>${formatter.format(preventista.PromedioProveedoresPorCliente)}</td>
+                </tr>
+                `);
                     });
-
                 },
                 error: function(xhr, status, error) {
                     console.error("Error al cargar resumen de ventas:", error);
@@ -663,6 +677,7 @@ $accessController = new AccessController();
                 }
             });
         }
+
 
         // 🔹 Capturar envío del formulario para establecer fechas
         $('#form-fechas').on('submit', function(e) {
@@ -682,8 +697,9 @@ $accessController = new AccessController();
                 cargarResumenVentas();
             } else if (activeTab === "#kits") {
                 cargarArticulosMasVendidos();
-            } else if (activeTab === "#locales") {
                 cargarArticulosConPrecioCero();
+            } else if (activeTab === "#locales") {
+                return;
             }
         });
 
@@ -700,8 +716,9 @@ $accessController = new AccessController();
                 cargarResumenVentas();
             } else if (targetTab === "#kits") {
                 cargarArticulosMasVendidos();
-            } else if (targetTab === "#locales") {
                 cargarArticulosConPrecioCero();
+            } else if (targetTab === "#locales") {
+               return;
             }
         });
     });
