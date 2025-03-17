@@ -184,12 +184,26 @@ $accessController = new AccessController();
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="kits-tab" data-bs-toggle="tab" data-bs-target="#kits"
                                         type="button" role="tab" aria-controls="preventa"
-                                        aria-selected="false">Kits</button>
+                                        aria-selected="false">Articulos/Kits</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="locales-tab" data-bs-toggle="tab"
-                                        data-bs-target="#locales" type="button" role="tab" aria-controls="locales"
-                                        aria-selected="false">Locales</button>
+                                    <button class="nav-link" id="proveedor-tab" data-bs-toggle="tab"
+                                        data-bs-target="#proveedor" type="button" role="tab" aria-controls="proveedor"
+                                        aria-selected="false">Proveedor</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tab-pre-proveedores" data-bs-toggle="tab"
+                                        data-bs-target="#content-pre-proveedores" type="button" role="tab"
+                                        aria-controls="content-pre-proveedores" aria-selected="false">
+                                        Preventista-Proveedor
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tab-art-preventista" data-bs-toggle="tab"
+                                        data-bs-target="#content-art-preventista" type="button" role="tab"
+                                        aria-controls="content-art-preventista" aria-selected="false">
+                                        Artículos por Preventista
+                                    </button>
                                 </li>
                             </ul>
 
@@ -428,7 +442,7 @@ $accessController = new AccessController();
                                         <tbody></tbody>
                                     </table>
 
-                                    <h2>Artículos con Precio 0</h2>
+                                    <h2>Artículos que forman parte de KITS</h2>
 
                                     <!-- Tabla Artículos con Precio 0 -->
                                     <table id="tabla-articulos-cero" class="table table-bordered table-hover">
@@ -448,6 +462,95 @@ $accessController = new AccessController();
                                         </tbody>
                                     </table>
 
+                                </div>
+
+
+                                <div class="tab-pane fade" id="proveedor" role="tabpanel"
+                                    aria-labelledby="proveedor-tab">
+                                    <div class="row">
+                                        <div class="container-xxl flex-grow-1 container-p-y">
+                                            <h2 class="fw-bold py-3 mb-4">Ventas por Proveedor</h2>
+                                            <div class="table-responsive-xl mb-6 mb-lg-0">
+                                                <div class="dataTables_wrapper no-footer"
+                                                    style="width: 100% !important;">
+                                                    <table
+                                                        class="datatables-ajax-proveedores table table-bordered m-3 table-hover">
+                                                        <thead class="bg-light text-dark border-top-class m-1">
+                                                            <tr>
+                                                                <th>Proveedor</th>
+                                                                <th>Cantidad Articulos</th>
+                                                                <th>Total de Ventas</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tabla-proveedores">
+                                                            <!-- Los datos se llenarán dinámicamente -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="content-pre-proveedores" role="tabpanel"
+                                    aria-labelledby="tab-pre-proveedores">
+                                    <div class="row">
+                                        <div class="container-xxl flex-grow-1 container-p-y">
+                                            <h2 class="fw-bold py-3 mb-4">Ventas por Preventista y Proveedor</h2>
+                                            <div class="table-responsive-xl mb-6 mb-lg-0">
+                                                <div class="dataTables_wrapper no-footer"
+                                                    style="width: 100% !important;">
+                                                    <table id="tabla-pre-proveedores"
+                                                        class="datatables-ajax-pre-proveedores table table-bordered m-3 table-hover">
+                                                        <thead class="bg-light text-dark border-top-class m-1">
+                                                            <tr>
+                                                                <th>Preventista</th>
+                                                                <th>Proveedor</th>
+                                                                <th>Cantidad Articulos</th>
+                                                                <th>Total de Ventas</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Los datos se llenarán dinámicamente -->
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                            <!--/ Preventa Report Table -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="content-art-preventista" role="tabpanel"
+                                    aria-labelledby="tab-art-preventista">
+                                    <div class="row">
+                                        <div class="container-xxl flex-grow-1 container-p-y">
+                                            <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos por Preventista</h2>
+                                            <div class="table-responsive-xl mb-6 mb-lg-0">
+                                                <div class="dataTables_wrapper no-footer"
+                                                    style="width: 100% !important;">
+                                                    <table
+                                                        class="datatables-ajax-art-preventista table table-bordered m-3 table-hover">
+                                                        <thead class="bg-light text-dark border-top-class m-1">
+                                                            <tr>
+                                                                <th>Preventista</th>
+                                                                <th>Codigo Articulo</th>
+                                                                <th>Descripcion</th>
+                                                                <th>Proveedor</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Monto Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tabla-art-preventista">
+                                                            <!-- Los datos se llenarán dinámicamente -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!--/ Preventa Report Table -->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -558,55 +661,56 @@ $accessController = new AccessController();
         }
 
         // 🔹 Función para cargar artículos con precio 0
-       // 🔹 Función para cargar artículos con precio 0
-function cargarArticulosConPrecioCero() {
-    $.ajax({
-        url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
-        method: "POST",
-        data: {
-            accion: "consultarArticulosConPrecioCero",
-            startDate,
-            endDate
-        },
-        dataType: "json",
-        success: function(articulos) {
-            if (articulos.error) {
-                alert(articulos.error);
-                return;
-            }
+        // 🔹 Función para cargar artículos con precio 0
+        function cargarArticulosConPrecioCero() {
+            $.ajax({
+                url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
+                method: "POST",
+                data: {
+                    accion: "consultarArticulosConPrecioCero",
+                    startDate,
+                    endDate
+                },
+                dataType: "json",
+                success: function(articulos) {
+                    if (articulos.error) {
+                        alert(articulos.error);
+                        return;
+                    }
 
-            // ✅ Verificar si la tabla ya está inicializada
-            if (!$.fn.DataTable.isDataTable('#tabla-articulos-cero')) {
-                $('#tabla-articulos-cero').DataTable();
-            }
+                    // ✅ Verificar si la tabla ya está inicializada
+                    if (!$.fn.DataTable.isDataTable('#tabla-articulos-cero')) {
+                        $('#tabla-articulos-cero').DataTable();
+                    }
 
-            const $tablaArticulosCero = $('#tabla-articulos-cero').DataTable();
-            
-            // ✅ Limpiar datos previos antes de agregar nuevos
-            $tablaArticulosCero.clear();
+                    const $tablaArticulosCero = $('#tabla-articulos-cero').DataTable();
 
-            articulos.forEach(articulo => {
-                const porcentajeCero = (articulo.CantidadCero / articulo.TotalGeneral) * 100 || 0;
-                $tablaArticulosCero.row.add([
-                    articulo.CodigoArticulo,
-                    articulo.Descripcion,
-                    articulo.Proveedor,
-                    formatter.format(articulo.TotalGeneral),
-                    formatter.format(articulo.CantidadCero),
-                    formatter.format(articulo.Diferencia),
-                    formatter.format(porcentajeCero) + "%"
-                ]);
+                    // ✅ Limpiar datos previos antes de agregar nuevos
+                    $tablaArticulosCero.clear();
+
+                    articulos.forEach(articulo => {
+                        const porcentajeCero = (articulo.CantidadCero / articulo
+                            .TotalGeneral) * 100 || 0;
+                        $tablaArticulosCero.row.add([
+                            articulo.CodigoArticulo,
+                            articulo.Descripcion,
+                            articulo.Proveedor,
+                            formatter.format(articulo.TotalGeneral),
+                            formatter.format(articulo.CantidadCero),
+                            formatter.format(articulo.Diferencia),
+                            formatter.format(porcentajeCero) + "%"
+                        ]);
+                    });
+
+                    // ✅ Refrescar la tabla después de agregar nuevos datos
+                    $tablaArticulosCero.draw();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al cargar artículos con precio 0:", error);
+                    alert("Hubo un problema al cargar los datos.");
+                }
             });
-
-            // ✅ Refrescar la tabla después de agregar nuevos datos
-            $tablaArticulosCero.draw();
-        },
-        error: function(xhr, status, error) {
-            console.error("Error al cargar artículos con precio 0:", error);
-            alert("Hubo un problema al cargar los datos.");
         }
-    });
-}
 
 
         // 🔹 Función para cargar el resumen de ventas
@@ -677,6 +781,148 @@ function cargarArticulosConPrecioCero() {
                 }
             });
         }
+        // 🔹 Función para cargar ventas por proveedor
+        function cargarVentasPorProveedor() {
+            $.ajax({
+                url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
+                method: "POST",
+                data: {
+                    accion: "consultarVentasPorProveedor",
+                    startDate,
+                    endDate
+                },
+                dataType: "json",
+                success: function(proveedores) {
+                    if (proveedores.error) {
+                        alert(proveedores.error);
+                        return;
+                    }
+
+                    // ✅ Limpiar la tabla antes de agregar nuevas filas
+                    const tbodyProveedores = $("#tabla-proveedores");
+                    tbodyProveedores.empty();
+
+                    // ✅ Llenar la tabla con los datos recibidos
+                    proveedores.forEach(proveedor => {
+                        tbodyProveedores.append(`
+                    <tr>
+                        <td>${proveedor.Proveedor}</td>
+                        <td>${formatter.format(proveedor.CantidadArticulos)}</td>
+                        <td>${formatter.format(proveedor.TotalVenta)}</td>
+                    </tr>
+                `);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al cargar ventas por proveedor:", error);
+                    alert("Hubo un problema al obtener los datos.");
+                }
+            });
+        }
+
+
+        // 🔹 Función para cargar ventas por preventista y proveedor
+        function cargarVentasPreventistaProveedor() {
+            $.ajax({
+                url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
+                method: "POST",
+                data: {
+                    accion: "consultarVentasPreventistaProveedor",
+                    startDate,
+                    endDate
+                },
+                dataType: "json",
+                success: function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // ✅ Verificar si la tabla ya está inicializada con DataTables
+                    if (!$.fn.DataTable.isDataTable('#tabla-pre-proveedores')) {
+                        $('#tabla-pre-proveedores').DataTable();
+                    }
+
+                    // ✅ Obtener referencia a la tabla con DataTables
+                    const $tablaPreProveedores = $('#tabla-pre-proveedores').DataTable();
+
+                    // ✅ Limpiar datos previos antes de agregar nuevos
+                    $tablaPreProveedores.clear();
+
+                    // ✅ Llenar la tabla con los datos recibidos
+                    data.forEach(row => {
+                        $tablaPreProveedores.row.add([
+                            row.Preventista,
+                            row.Proveedor,
+                            formatter.format(row.CantidadArticulos),
+                            formatter.format(row.TotalVenta)
+                        ]);
+                    });
+
+                    // ✅ Refrescar la tabla después de agregar los nuevos datos
+                    $tablaPreProveedores.draw();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al cargar ventas por preventista y proveedor:", error);
+                    alert("Hubo un problema al obtener los datos.");
+                }
+            });
+        }
+
+
+        // 🔹 Función para cargar artículos más vendidos por preventista
+        // 🔹 Función para cargar artículos más vendidos por preventista
+        function cargarArticulosMasVendidosPorPreventista() {
+    $.ajax({
+        url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
+        method: "POST",
+        data: {
+            accion: "consultarArticulosMasVendidosPorPreventista",
+            startDate,
+            endDate
+        },
+        dataType: "json",
+        success: function(data) {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // ✅ Inicializar DataTables en la tabla completa
+            if (!$.fn.DataTable.isDataTable('.datatables-ajax-art-preventista')) {
+                $('.datatables-ajax-art-preventista').DataTable();
+            }
+
+            // ✅ Obtener la referencia a la tabla correctamente
+            const $tabla = $('.datatables-ajax-art-preventista').DataTable();
+
+            // ✅ Limpiar datos previos antes de agregar nuevos
+            $tabla.clear();
+
+            // ✅ Llenar la tabla con los datos recibidos
+            data.forEach(row => {
+                $tabla.row.add([
+                    row.Preventista,
+                    row.CodigoArticulo,
+                    row.Descripcion,
+                    row.Proveedor,
+                    formatter.format(row.Cantidad),
+                    formatter.format(row.MontoTotal)
+                ]);
+            });
+
+            // ✅ Refrescar la tabla para mostrar los nuevos datos
+            $tabla.draw();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error al cargar artículos más vendidos por preventista:", error);
+            alert("Hubo un problema al obtener los datos.");
+        }
+    });
+}
+
+
+
 
 
         // 🔹 Capturar envío del formulario para establecer fechas
@@ -698,8 +944,12 @@ function cargarArticulosConPrecioCero() {
             } else if (activeTab === "#kits") {
                 cargarArticulosMasVendidos();
                 cargarArticulosConPrecioCero();
-            } else if (activeTab === "#locales") {
-                return;
+            } else if (activeTab === "#proveedor") {
+                cargarVentasPorProveedor();
+            } else if (activeTab === "#content-pre-proveedores") {
+                cargarVentasPreventistaProveedor(); // ✅ Cargar la tabla cuando se selecciona la pestaña
+            } else if (activeTab === "#content-art-preventista") {
+                cargarArticulosMasVendidosPorPreventista(); // ✅ Se llama a la función aquí
             }
         });
 
@@ -717,8 +967,12 @@ function cargarArticulosConPrecioCero() {
             } else if (targetTab === "#kits") {
                 cargarArticulosMasVendidos();
                 cargarArticulosConPrecioCero();
-            } else if (targetTab === "#locales") {
-               return;
+            } else if (targetTab === "#proveedor") {
+                cargarVentasPorProveedor();
+            } else if (targetTab === "#content-pre-proveedores") {
+                cargarVentasPreventistaProveedor(); // ✅ Llamamos la función aquí
+            } else if (targetTab === "#content-art-preventista") {
+                cargarArticulosMasVendidosPorPreventista(); // ✅ Llamamos la función aquí
             }
         });
     });

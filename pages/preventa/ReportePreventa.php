@@ -277,154 +277,164 @@
                                             </div>
                                         </div>
                                         <div class="container-xxl flex-grow-1 container-p-y">
-                                    <h2 class="fw-bold py-3 mb-4">Ventas por preventista</h2>
-                                    <div class="table-responsive-xl mb-6 mb-lg-0">
-                                        <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                            <table class="datatables-ajax table table-bordered m-3 table-hover"
-                                                style="border: 1px solid #dee2e6 !important;">
-                                                <thead class="bg-light text-dark border-top-class m-1">
-                                                    <tr>
-                                                        <th>Preventista</th>
-                                                        <th>Boletas</th>
-                                                        <th>Clientes</th>
-                                                        <th>Total Venta</th>
-                                                        <th>Ticket Promedio</th>
-                                                        <th>Comisión</th>
-                                                        <th>Variedad Artículos</th>
-                                                        <th>Variedad Proveedores</th>
-                                                        <th>Promedio Artículos/Cliente</th>
-                                                        <th>Promedio Proveedores/Cliente</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tabla-reporte">
-                                                    <!-- Los datos se llenarán dinámicamente -->
-                                                </tbody>
-                                            </table>
+                                            <h2 class="fw-bold py-3 mb-4">Ventas por preventista</h2>
+                                            <div class="table-responsive-xl mb-6 mb-lg-0">
+                                                <div class="dataTables_wrapper no-footer"
+                                                    style="width: 100% !important;">
+                                                    <table class="datatables-ajax table table-bordered m-3 table-hover"
+                                                        style="border: 1px solid #dee2e6 !important;">
+                                                        <thead class="bg-light text-dark border-top-class m-1">
+                                                            <tr>
+                                                                <th>Preventista</th>
+                                                                <th>Boletas</th>
+                                                                <th>Clientes</th>
+                                                                <th>Total Venta</th>
+                                                                <th>Ticket Promedio</th>
+                                                                <th>Comisión</th>
+                                                                <th>Variedad Artículos</th>
+                                                                <th>Variedad Proveedores</th>
+                                                                <th>Promedio Artículos/Cliente</th>
+                                                                <th>Promedio Proveedores/Cliente</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tabla-reporte">
+                                                            <!-- Los datos se llenarán dinámicamente -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!--/ Preventa Report Table -->
                                         </div>
-                                    </div>
-                                    <!--/ Preventa Report Table -->
-                                </div>
 
                                     </div>
                                 </div>
                             </div>
-                        
 
 
 
-                        <div class="tab-pane fade" id="content-proveedores" role="tabpanel"
-                            aria-labelledby="tab-proveedores">
-                            <div class="row">
-                                <div class="container-xxl flex-grow-1 container-p-y">
-                                    <h2 class="fw-bold py-3 mb-4">Ventas por Proveedor</h2>
-                                    <div class="table-responsive-xl mb-6 mb-lg-0">
-                                        <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                            <table
-                                                class="datatables-ajax-proveedores table table-bordered m-3 table-hover">
-                                                <thead class="bg-light text-dark border-top-class m-1">
-                                                    <tr>
-                                                        <th>Proveedor</th>
-                                                        <th>Cantidad Articulos</th>
-                                                        <th>Total de Ventas</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tabla-proveedores">
-                                                    <!-- Los datos se llenarán dinámicamente -->
-                                                </tbody>
-                                            </table>
+
+                            <div class="tab-pane fade" id="content-proveedores" role="tabpanel"
+                                aria-labelledby="tab-proveedores">
+                                <div class="row">
+                                    <div class="container-xxl flex-grow-1 container-p-y">
+                                        <h2 class="fw-bold py-3 mb-4">Ventas por Proveedor</h2>
+                                        <div class="table-responsive-xl mb-6 mb-lg-0">
+                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                <table
+                                                    class="datatables-ajax-proveedores table table-bordered m-3 table-hover">
+                                                    <thead class="bg-light text-dark border-top-class m-1">
+                                                        <tr>
+                                                            <th>Proveedor</th>
+                                                            <th>Cantidad Articulos</th>
+                                                            <th>Total de Ventas</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tabla-proveedores">
+                                                        <!-- Los datos se llenarán dinámicamente -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="tab-pane fade" id="content-pre-proveedores" role="tabpanel"
+                                aria-labelledby="tab-pre-proveedores">
+                                <div class="row">
+                                    <div class="container-xxl flex-grow-1 container-p-y">
+                                        <h2 class="fw-bold py-3 mb-4">Ventas por Preventista y Proveedor</h2>
+                                        <div class="table-responsive-xl mb-6 mb-lg-0">
+                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                <table
+                                                    class="datatables-ajax-pre-proveedores table table-bordered m-3 table-hover">
+                                                    <thead class="bg-light text-dark border-top-class m-1">
+                                                        <tr>
+                                                            <th>Preventista</th>
+                                                            <th>Proveedor</th>
+                                                            <th>Cantidad Articulos</th>
+                                                            <th>Total de Ventas</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tabla-pre-proveedores">
+                                                        <!-- Los datos se llenarán dinámicamente -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!--/ Preventa Report Table -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="tab-pane fade" id="content-articulos" role="tabpanel"
+                                aria-labelledby="tab-articulos">
+                                <div class="row">
+                                    <div class="container-xxl flex-grow-1 container-p-y">
+                                        <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos</h2>
+                                        <div class="table-responsive-xl mb-6 mb-lg-0">
+                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                <table
+                                                    class="datatables-ajax-articulos table table-bordered m-3 table-hover">
+                                                    <thead class="bg-light text-dark border-top-class m-1">
+                                                        <tr>
+                                                            <th>CodigoArticulo</th>
+                                                            <th>Descripcion</th>
+                                                            <th>Proveedor</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Total Ventas</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tabla-articulos">
+                                                        <!-- Los datos se llenarán dinámicamente -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!--/ Preventa Report Table -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="tab-pane fade" id="content-art-preventista" role="tabpanel"
+                                aria-labelledby="tab-art-preventista">
+                                <div class="row">
+                                    <div class="container-xxl flex-grow-1 container-p-y">
+                                        <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos por Preventista</h2>
+                                        <div class="table-responsive-xl mb-6 mb-lg-0">
+                                            <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
+                                                <table
+                                                    class="datatables-ajax-art-preventista table table-bordered m-3 table-hover">
+                                                    <thead class="bg-light text-dark border-top-class m-1">
+                                                        <tr>
+                                                            <th>Preventista</th>
+                                                            <th>Codigo Articulo</th>
+                                                            <th>Descripcion</th>
+                                                            <th>Proveedor</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Monto Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tabla-art-preventista">
+                                                        <!-- Los datos se llenarán dinámicamente -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!--/ Preventa Report Table -->
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-
-                        <div class="tab-pane fade" id="content-pre-proveedores" role="tabpanel"
-                            aria-labelledby="tab-pre-proveedores">
-                            <div class="row">
-                        <div class="container-xxl flex-grow-1 container-p-y">
-                            <h2 class="fw-bold py-3 mb-4">Ventas por Preventista y Proveedor</h2>
-                            <div class="table-responsive-xl mb-6 mb-lg-0">
-                                <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                    <table class="datatables-ajax-pre-proveedores table table-bordered m-3 table-hover">
-                                        <thead class="bg-light text-dark border-top-class m-1">
-                                            <tr>
-                                                <th>Preventista</th>
-                                                <th>Proveedor</th>
-                                                <th>Cantidad Articulos</th>
-                                                <th>Total de Ventas</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tabla-pre-proveedores">
-                                            <!-- Los datos se llenarán dinámicamente -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!--/ Preventa Report Table -->
-                        </div> </div>  </div>
-
-
-
-                        <div class="tab-pane fade" id="content-articulos" role="tabpanel"
-                            aria-labelledby="tab-articulos">
-                            <div class="row">
-                        <div class="container-xxl flex-grow-1 container-p-y">
-                            <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos</h2>
-                            <div class="table-responsive-xl mb-6 mb-lg-0">
-                                <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                    <table class="datatables-ajax-articulos table table-bordered m-3 table-hover">
-                                        <thead class="bg-light text-dark border-top-class m-1">
-                                            <tr>
-                                                <th>CodigoArticulo</th>
-                                                <th>Descripcion</th>
-                                                <th>Proveedor</th>
-                                                <th>Cantidad</th>
-                                                <th>Total Ventas</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tabla-articulos">
-                                            <!-- Los datos se llenarán dinámicamente -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!--/ Preventa Report Table -->
-                        </div> </div>  </div>
-
-
-
-                        <div class="tab-pane fade" id="content-art-preventista" role="tabpanel"
-                            aria-labelledby="tab-art-preventista">
-                            <div class="row">
-                        <div class="container-xxl flex-grow-1 container-p-y">
-                            <h2 class="fw-bold py-3 mb-4">Articulos mas vendidos por Preventista</h2>
-                            <div class="table-responsive-xl mb-6 mb-lg-0">
-                                <div class="dataTables_wrapper no-footer" style="width: 100% !important;">
-                                    <table class="datatables-ajax-art-preventista table table-bordered m-3 table-hover">
-                                        <thead class="bg-light text-dark border-top-class m-1">
-                                            <tr>
-                                                <th>Preventista</th>
-                                                <th>Codigo Articulo</th>
-                                                <th>Descripcion</th>
-                                                <th>Proveedor</th>
-                                                <th>Cantidad</th>
-                                                <th>Monto Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tabla-art-preventista">
-                                            <!-- Los datos se llenarán dinámicamente -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!--/ Preventa Report Table -->
-                        </div>  </div>  </div>
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
     </div>
     </div>
