@@ -741,14 +741,22 @@ $accessController = new AccessController();
                     const resumen = data.resumen;
                     const totalPromedioClientes = resumen.CantidadClientes / 9;
 
+                    // Asegurar que los valores sean numéricos antes de formatear
+                    const totalSinIVA = parseFloat(data.resumen.TotalVentaMenosIVA) || 0;
+                    const totalSinPonderado = parseFloat(data.resumen.TotalVentaMenosPonderado) ||
+                    0;
+
+
+
+
                     $("#total-vendido").text(`$${formatter.format(resumen.TotalVenta)}`);
                     $("#clientes").text(resumen.CantidadClientes.toLocaleString());
                     $("#boletas").text(resumen.CantidadBoletas.toLocaleString());
                     $("#ticket-promedio").text(`$${formatter.format(resumen.TicketPromedio)}`);
                     $("#promedio-clientes").text(formatter.format(totalPromedioClientes));
-                    $("#total-sin-iva").text(`$${formatter.format(data.totalVentaMenosIVA)}`);
-                    $("#total-sin-ponderado").text(
-                        `$${formatter.format(data.totalVentaMenosPonderado)}`);
+                    $("#total-sin-iva").text(`$${formatter.format(totalSinIVA)}`);
+                    $("#total-sin-ponderado").text(`$${formatter.format(totalSinPonderado)}`);
+
                     $("#total-comisiones").text(`$${formatter.format(data.totalComisiones)}`);
                     $("#total-menos-ponderado-e-iva").text(
                         `$${formatter.format(data.totalMenosPonderadoIVA)}`);
@@ -873,53 +881,53 @@ $accessController = new AccessController();
         // 🔹 Función para cargar artículos más vendidos por preventista
         // 🔹 Función para cargar artículos más vendidos por preventista
         function cargarArticulosMasVendidosPorPreventista() {
-    $.ajax({
-        url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
-        method: "POST",
-        data: {
-            accion: "consultarArticulosMasVendidosPorPreventista",
-            startDate,
-            endDate
-        },
-        dataType: "json",
-        success: function(data) {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
+            $.ajax({
+                url: "../../backend/controller/preventa/reporteHistoricoPreventa.php",
+                method: "POST",
+                data: {
+                    accion: "consultarArticulosMasVendidosPorPreventista",
+                    startDate,
+                    endDate
+                },
+                dataType: "json",
+                success: function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
 
-            // ✅ Inicializar DataTables en la tabla completa
-            if (!$.fn.DataTable.isDataTable('.datatables-ajax-art-preventista')) {
-                $('.datatables-ajax-art-preventista').DataTable();
-            }
+                    // ✅ Inicializar DataTables en la tabla completa
+                    if (!$.fn.DataTable.isDataTable('.datatables-ajax-art-preventista')) {
+                        $('.datatables-ajax-art-preventista').DataTable();
+                    }
 
-            // ✅ Obtener la referencia a la tabla correctamente
-            const $tabla = $('.datatables-ajax-art-preventista').DataTable();
+                    // ✅ Obtener la referencia a la tabla correctamente
+                    const $tabla = $('.datatables-ajax-art-preventista').DataTable();
 
-            // ✅ Limpiar datos previos antes de agregar nuevos
-            $tabla.clear();
+                    // ✅ Limpiar datos previos antes de agregar nuevos
+                    $tabla.clear();
 
-            // ✅ Llenar la tabla con los datos recibidos
-            data.forEach(row => {
-                $tabla.row.add([
-                    row.Preventista,
-                    row.CodigoArticulo,
-                    row.Descripcion,
-                    row.Proveedor,
-                    formatter.format(row.Cantidad),
-                    formatter.format(row.MontoTotal)
-                ]);
+                    // ✅ Llenar la tabla con los datos recibidos
+                    data.forEach(row => {
+                        $tabla.row.add([
+                            row.Preventista,
+                            row.CodigoArticulo,
+                            row.Descripcion,
+                            row.Proveedor,
+                            formatter.format(row.Cantidad),
+                            formatter.format(row.MontoTotal)
+                        ]);
+                    });
+
+                    // ✅ Refrescar la tabla para mostrar los nuevos datos
+                    $tabla.draw();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al cargar artículos más vendidos por preventista:", error);
+                    alert("Hubo un problema al obtener los datos.");
+                }
             });
-
-            // ✅ Refrescar la tabla para mostrar los nuevos datos
-            $tabla.draw();
-        },
-        error: function(xhr, status, error) {
-            console.error("Error al cargar artículos más vendidos por preventista:", error);
-            alert("Hubo un problema al obtener los datos.");
         }
-    });
-}
 
 
 
