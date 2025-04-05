@@ -173,13 +173,13 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCajaAnterior.php')) {
                                                             <select id="idUsuarioPreventista" class="form-control">
                                                                 <option value="" disabled selected>Seleccione un
                                                                     preventista</option>
-                                                                <option value="8">Movil101-Mica</option>
-                                                                <option value="9">Movil102-Gustavo</option>
+                                                                    <option value="8">Movil101-Mica</option>
+                                                                <option value="9">Movil102-Leticia</option>
                                                                 <option value="10">Movil103-Leo</option>
                                                                 <option value="11">Movil104-Alexander</option>
                                                                 <option value="12">Movil105-Diego</option>
                                                                 <option value="13">Movil106-Cristian</option>
-                                                                <option value="14">Movil107-Marianela</option>
+                                                                <option value="14">Movil107-Soledad</option>
                                                                 <option value="15">Movil8-Guille</option>
                                                                 <option value="16">Movil9-Soledad</option>
                                                                 <option value="35">Movil10-Interior Mica</option>
