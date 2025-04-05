@@ -182,6 +182,7 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCajaAnterior.php')) {
                                                                 <option value="14">Movil107-Marianela</option>
                                                                 <option value="15">Movil8-Guille</option>
                                                                 <option value="16">Movil9-Soledad</option>
+                                                                <option value="35">Movil10-Interior Mica</option>
                                                             </select>
                                                         </td>
                                                     </tr>
