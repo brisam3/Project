@@ -563,37 +563,42 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
 
             // Actualiza el contrareembolso al seleccionar un preventista
             document.getElementById('idUsuarioPreventista').addEventListener('change', function() {
-                const idUsuarioPreventista = this.value;
+    const idUsuarioPreventista = this.value;
 
-                $.ajax({
-                    url: '../../backend/controller/choferes/CierreCajaController.php',
-                    type: 'POST',
-                    data: {
-                        action: 'obtenerContrareembolso',
-                        idUsuarioPreventista: idUsuarioPreventista
-                    },
-                    success: function(response) {
-                        try {
-                            const data = JSON.parse(response);
+    $.ajax({
+        url: '../../backend/controller/choferes/CierreCajaController.php',
+        type: 'POST',
+        data: {
+            action: 'obtenerContrareembolso',
+            idUsuarioPreventista: idUsuarioPreventista
+        },
+        success: function(response) {
+            try {
+                const data = JSON.parse(response);
+                const contrareembolsoElement = document.getElementById('contrareembolso');
 
-                            if (!data.error) {
-                                const contrareembolso = parseFloat(data.total_ventas).toFixed(2);
-                                document.getElementById('contrareembolso').innerText =
-                                    `${contrareembolso}`;
-                                calcularDiferencia(); // Recalcula la diferencia
-                            } else {
-                                console.error('Error en la respuesta:', data.error);
-                            }
-                        } catch (e) {
-                            console.error('Error al procesar la respuesta JSON:', e);
-                        }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error('Detalles del error:', textStatus, errorThrown, jqXHR
-                            .responseText);
-                    }
-                });
-            });
+                if (!data.error && data.total_ventas) {
+                    const contrareembolso = parseFloat(data.total_ventas).toFixed(2);
+                    contrareembolsoElement.innerText = `${contrareembolso}`;
+                } else {
+                    contrareembolsoElement.innerText = `0.00`;
+                }
+
+                calcularDiferencia();
+            } catch (e) {
+                console.error('Error al procesar la respuesta JSON:', e);
+                document.getElementById('contrareembolso').innerText = `0.00`;
+                calcularDiferencia();
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Detalles del error:', textStatus, errorThrown, jqXHR.responseText);
+            document.getElementById('contrareembolso').innerText = `0.00`;
+            calcularDiferencia();
+        }
+    });
+});
+
             </script>
 
 
