@@ -166,20 +166,11 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
                                                             <select id="idUsuarioPreventista" class="form-control">
                                                                 <option value="" disabled selected>Seleccione un
                                                                     preventista</option>
-                                                                <option value="8">Movil101-Mica</option>
-                                                                <option value="9">Movil102-Leticia</option>
-                                                                <option value="10">Movil103-Leo</option>
-                                                                <option value="11">Movil104-Alexander</option>
-                                                                <option value="12">Movil105-Diego</option>
-                                                                <option value="13">Movil106-Cristian</option>
-                                                                <option value="14">Movil107-Soledad</option>
-                                                                <option value="15">Movil8-Guille</option>
-                                                                <option value="16">Movil9-Soledad</option>
-                                                                <option value="35">Movil10-Interior Mica</option>
-                                                                <option value="41">Chofer1-Miguel</option>
+                                                                <!-- Las opciones se insertan automáticamente por JavaScript -->
                                                             </select>
                                                         </td>
                                                     </tr>
+
                                                     <tr>
                                                         <td><i class="bx bx-money"></i> Efectivo</td>
                                                         <td><input type="number" id="total-efectivo"
@@ -364,6 +355,35 @@ if (!$accessController->checkAccess('/pages/choferes/CierreCaja.php')) {
             <script src="../../assets/js/dashboards-analytics.js"></script>
 
             <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                $.ajax({
+                    url: '../../backend/controller/choferes/CierreCajaController.php',
+                    type: 'POST',
+                    data: {
+                        action: 'getPreventistas'
+                    },
+                    success: function(response) {
+                        try {
+                            const preventistas = JSON.parse(response);
+                            const select = document.getElementById('idUsuarioPreventista');
+
+                            preventistas.forEach(p => {
+                                const option = document.createElement('option');
+                                option.value = p.idUsuario;
+                                option.textContent = p.nombre;
+                                select.appendChild(option);
+                            });
+                        } catch (e) {
+                            console.error('Error al procesar preventistas:', e);
+                        }
+                    },
+                    error: function() {
+                        console.error('No se pudo cargar la lista de preventistas');
+                    }
+                });
+            });
+
+
             function abrirModalBilletes() {
                 document.getElementById('modalBilletes').style.display = 'block';
             }

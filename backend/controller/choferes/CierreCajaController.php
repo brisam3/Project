@@ -184,6 +184,17 @@ class CierreCajaChoferController {
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
+    public function getPreventistas() {
+        try {
+            $stmt = $this->pdo->prepare("SELECT idUsuario, nombre FROM usuarios WHERE idTipoUsuario = 2");
+            $stmt->execute();
+            $preventistas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            echo json_encode($preventistas);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
     
     
     
@@ -194,15 +205,17 @@ class CierreCajaChoferController {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller = new CierreCajaChoferController();
     
-        // Determinar la acción solicitada
         $action = $_POST['action'] ?? 'guardar';
     
         if ($action === 'guardar') {
             $controller->guardarCierreCajaChofer();
         } elseif ($action === 'obtenerContrareembolso') {
             $controller->obtenerContrareembolso();
+        } elseif ($action === 'getPreventistas') {
+            $controller->getPreventistas();
         } else {
             echo json_encode(['error' => 'Acción no reconocida']);
         }
     }
+    
 ?>
